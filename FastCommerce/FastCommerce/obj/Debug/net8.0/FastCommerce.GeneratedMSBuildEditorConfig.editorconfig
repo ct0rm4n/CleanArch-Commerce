@@ -1,0 +1,39 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = FastCommerce
+build_property.RootNamespace = FastCommerce
+build_property.ProjectDir = D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce\FastCommerce\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce\FastCommerce
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/Projects/Aulas/SOLID - FastCommerce/FastCommerce - SOLID/FastCommerce/FastCommerce/Components/Admin/Post/PostDatails.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQb3N0XFBvc3REYXRhaWxzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/Aulas/SOLID - FastCommerce/FastCommerce - SOLID/FastCommerce/FastCommerce/Components/Admin/Post/PostList.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZG1pblxQb3N0XFBvc3RMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/Aulas/SOLID - FastCommerce/FastCommerce - SOLID/FastCommerce/FastCommerce/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/Aulas/SOLID - FastCommerce/FastCommerce - SOLID/FastCommerce/FastCommerce/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/Aulas/SOLID - FastCommerce/FastCommerce - SOLID/FastCommerce/FastCommerce/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 

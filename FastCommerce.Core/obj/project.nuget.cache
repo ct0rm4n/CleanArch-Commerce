@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "dnrbNqUUL9M8/FBivHPpzbasgDePs4FqYl/kNtlwYmkObsjq/sc+p8jI5yCCn554lCp6AwXxNLvLo9U/mpFN/w==",
+  "success": true,
+  "projectFilePath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\FastCommerce.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\torman\\.nuget\\packages\\autofac\\8.0.0\\autofac.8.0.0.nupkg.sha512",
+    "C:\\Users\\torman\\.nuget\\packages\\fluentvalidation\\11.9.1\\fluentvalidation.11.9.1.nupkg.sha512",
+    "C:\\Users\\torman\\.nuget\\packages\\system.diagnostics.diagnosticsource\\7.0.2\\system.diagnostics.diagnosticsource.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

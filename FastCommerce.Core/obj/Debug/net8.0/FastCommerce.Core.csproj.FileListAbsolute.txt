@@ -1,0 +1,12 @@
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\bin\Debug\net8.0\FastCommerce.Core.deps.json
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\bin\Debug\net8.0\FastCommerce.Core.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\bin\Debug\net8.0\FastCommerce.Core.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.csproj.AssemblyReference.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.AssemblyInfoInputs.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.AssemblyInfo.cs
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.csproj.CoreCompileInputs.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\refint\FastCommerce.Core.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\ref\FastCommerce.Core.dll

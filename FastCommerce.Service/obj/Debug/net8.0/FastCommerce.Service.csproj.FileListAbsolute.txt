@@ -1,0 +1,17 @@
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Service.deps.json
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Service.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Service.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Core.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Data.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Data.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\bin\Debug\net8.0\FastCommerce.Core.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.csproj.AssemblyReference.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.AssemblyInfoInputs.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.AssemblyInfo.cs
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.csproj.CoreCompileInputs.cache
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.csproj.CopyComplete
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\refint\FastCommerce.Service.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\FastCommerce.Service.pdb
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Service\obj\Debug\net8.0\ref\FastCommerce.Service.dll
