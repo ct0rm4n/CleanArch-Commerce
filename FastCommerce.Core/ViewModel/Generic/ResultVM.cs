@@ -1,12 +1,12 @@
-﻿using FastCommerce.Core.ViewModel.Generic.Abstracts;
-using FastCommerce.Core.Wrappers;
+﻿using Core.ViewModel.Generic.Abstracts;
+using Core.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FastCommerce.Core.ViewModel.Generic
+namespace Core.ViewModel.Generic
 {
     public abstract class ResultVM<T> where T : IBaseVM
     {

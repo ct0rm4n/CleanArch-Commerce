@@ -1,5 +1,5 @@
-﻿using FastCommerce.Core.Entities.Domain;
-namespace FastCommerce.Data.Commands.Repositories
+﻿using Core.Entities.Domain;
+namespace Data.Commands.Repositories
 {
     public class UserRepository : GenericRepository<User>
     {

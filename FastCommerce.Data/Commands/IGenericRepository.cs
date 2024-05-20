@@ -1,5 +1,5 @@
 ﻿
-namespace FastCommerce.Data.Commands
+namespace Data.Commands
 {
     public interface IGenericRepository<T>
     {

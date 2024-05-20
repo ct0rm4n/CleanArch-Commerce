@@ -1,5 +1,5 @@
 ﻿
-namespace FastCommerce.Core.Entities.Enum
+namespace Core.Entities.Enum
 {
     public enum StatusEntity
     {

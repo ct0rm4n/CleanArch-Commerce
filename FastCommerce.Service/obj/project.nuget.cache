@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W7pLk3SmHNlNjJ3bW4yDhl629d93mBWOxIlWmujRxm3+ntIrMg6eZuwZsoeWVoX7Ztqogp+auiiyHPVsEnjfBg==",
+  "dgSpecHash": "ZPQp3N3703oQFIn84/L7yGJrLJzQpTdijZQTDaQyYUgiWrAk4h0Bhnl8QZVxT+Df/t3z8dmg6dXL7CZM3jREmA==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Service\\FastCommerce.Service.csproj",
+  "projectFilePath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Service\\Service.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\torman\\.nuget\\packages\\autofac\\8.0.0\\autofac.8.0.0.nupkg.sha512",
     "C:\\Users\\torman\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

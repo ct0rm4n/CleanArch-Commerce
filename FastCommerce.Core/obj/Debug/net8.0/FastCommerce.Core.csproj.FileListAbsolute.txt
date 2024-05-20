@@ -10,3 +10,4 @@ D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\ob
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\refint\FastCommerce.Core.dll
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.pdb
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\ref\FastCommerce.Core.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Core\obj\Debug\net8.0\FastCommerce.Core.sourcelink.json

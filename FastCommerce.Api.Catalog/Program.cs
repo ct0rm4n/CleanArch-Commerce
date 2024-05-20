@@ -1,13 +1,15 @@
-using FastCommerce.Core.Entities.Domain.Blog;
-using FastCommerce.Core.Wrappers;
-using FastCommerce.Data.Interfaces;
-using FastCommerce.Data.Ioc;
+using Core.Entities.Domain.Blog;
+using Core.Wrappers;
+using Data.Interfaces;
+using Data.Ioc;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Hosting;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using FastCommerce.Service.Ioc;
+using Service.Ioc;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Core.ViewModel.Catalog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +23,11 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
 {
     builder.RegisterModule(new AutofacDataModule());
+});
+builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+{
     builder.RegisterModule(new AutofacPersistanceModule());
 });
-
 
 builder.Services.InjectConfigureServices();
 
@@ -92,6 +96,27 @@ app.MapGet("/blogpost/Search",
     }
 });
 
+app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
+{
+    try
+    {
+        
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = postService.GetValidationMessage(body).ToList();
+        if (validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+            //return Result<BlogPostVM>.Fail(StatusCodes.Status500InternalServerError, validation);
+
+        var insert = postService.Add(JsonConvert.DeserializeObject<BlogPost>(serialized));
+        return insert is not null 
+        ? TypedResults.Ok(insert) 
+        : TypedResults.NotFound();
+    }
+    catch(Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
 
 app.Run();
 

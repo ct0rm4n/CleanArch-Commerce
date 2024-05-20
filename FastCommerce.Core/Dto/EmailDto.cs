@@ -1,5 +1,5 @@
 ﻿
-namespace FastCommerce.Core.Dto
+namespace Core.Dto
 {
     public class EmailDto
     {

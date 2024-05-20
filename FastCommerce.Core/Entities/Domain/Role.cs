@@ -1,7 +1,7 @@
-﻿using FastCommerce.Core.Entities.Abstract;
-using FastCommerce.Core.Entities.Enum;
+﻿using Core.Entities.Abstract;
+using Core.Entities.Enum;
 
-namespace FastCommerce.Core.Entities.Domain
+namespace Core.Entities.Domain
 {
     public class Role : BaseEntity, IEntity
     {

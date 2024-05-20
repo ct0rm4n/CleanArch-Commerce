@@ -1,0 +1,155 @@
+﻿@page "/Admin/Post"
+@using Core.Entities.Domain.Blog
+@using Core.ViewModel.Catalog
+@using Core.Wrappers
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Newtonsoft.Json
+
+@inject IJSRuntime js;
+@rendermode InteractiveServer
+
+<h3><span class="bi bi-card-text" aria-hidden="true" b-4knz10sgzz=""></span> Post list</h3>
+
+@if (items == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <div id="data-tabele-default">
+        <div class="container" style="width: 100% !important">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="search-box">
+                                        <input type="search" autofocus @bind="descFilter" @bind:event="oninput" placeholder="Search..." />
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                                <div class="col-md-2">
+                                    <a type="button" data-toggle="modal" data-target="#postModal"
+                                       class="btn btn-primary" @onclick="(() => InitializeItemObject())">
+                                        <span class="bi bi-plus-circle-fill" aria-hidden="true" b-4knz10sgzz=""></span> Novo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <QuickGrid Items="FilteredItems" Pagination="pagination">
+                                <PropertyColumn Property="@(f => f.Name)" Title="Desc" Sortable="true">
+                                </PropertyColumn>
+                                <PropertyColumn Property="@(f => (MarkupString)f.Html)" Title="Html" Sortable="false" />
+                                <PropertyColumn Property="f => f.DateStart" Format="dddd, dd MMMM yyyy" Sortable="true" />
+                                <PropertyColumn Property="f => f.DateEnd" Format="dddd, dd MMMM yyyy" Sortable="true" />
+                                <TemplateColumn Title="Actions">
+                                    <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(context))" data-toggle="modal" data-target="#postModal" value="Edita" />
+                                    <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(context))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
+                                </TemplateColumn>
+                            </QuickGrid>
+                        </div>
+                        <Paginator State="@pagination" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+}
+
+
+
+
+
+<ConfirmaDialog OnClick="@Delete" />
+<BlogPostDatails postObject=postObj AlteracaoDados="@AlteracaoDados">
+    <Cabecalho>@cabecalho</Cabecalho>
+</BlogPostDatails>
+@code {
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    private readonly HttpClient _client = new HttpClient();
+    public List<BlogPost> items { get; set; }
+    string cabecalho = string.Empty;
+    string descFilter = string.Empty;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    BlogPostVM postObj = new BlogPostVM();
+    IQueryable<BlogPost> FilteredItems
+    {
+        get
+        {
+            var result = items.AsQueryable();
+            if (!string.IsNullOrEmpty(descFilter))
+            {
+                result = result.Where(f =>
+                    f.Name.Contains(descFilter, StringComparison.CurrentCultureIgnoreCase)
+                    || f.Html.Contains(descFilter, StringComparison.CurrentCultureIgnoreCase));
+            }
+            return result;
+        }
+    }
+
+    int PageIndex = 0;
+    int TotalPages = 1;
+    int PageSize = 6;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            string url = Configuration["Api.Catalog"];
+            var respose = new PagedResponse<List<BlogPost>>(null, 0, int.MaxValue);
+            if (items is null)
+            {
+                PageIndex = 1;
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/getall?PageSize={PageSize}&PageIndex={PageIndex}");
+                items = respose.Data;
+                TotalPages = respose.TotalPages;
+            }
+            await base.OnInitializedAsync();
+        }
+        catch(Exception ex)
+        {
+            //logger            
+        }
+
+    }
+    
+    private void InitializeItemObject()
+    {
+        postObj = new BlogPostVM();
+        postObj.DateStart = DateTime.Now;
+        postObj.DateEnd = (DateTime.Now).AddYears(2);
+        cabecalho = "Nova Post";
+    }
+    
+    private async void AlteracaoDados()
+    {
+        Thread.Sleep(2000);
+        StateHasChanged();
+    }
+
+    private async Task Delete()
+    {
+        await js.InvokeAsync<object>("CloseModal", "confirmaExclusaoModal");
+        
+        postObj = new BlogPostVM();
+    }
+
+    private void PreparaEdicao(BlogPost item)
+    {
+        cabecalho = "Edita Post";
+        var obj = JsonConvert.SerializeObject(item);
+        postObj = JsonConvert.DeserializeObject<BlogPostVM>(obj);
+    }
+
+    private void PreparaExclusao(BlogPost item)
+    {
+        var obj = JsonConvert.SerializeObject(item);
+        postObj = JsonConvert.DeserializeObject<BlogPostVM>(obj);
+    }
+}

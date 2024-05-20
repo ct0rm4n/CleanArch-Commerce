@@ -1,0 +1,505 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\bootstrap\bootstrap.min.css.map" />
+    <Content Remove="wwwroot\jquery\core.js" />
+    <Content Remove="wwwroot\jquery\jquery.js" />
+    <Content Remove="wwwroot\jquery\jquery.min.js" />
+    <Content Remove="wwwroot\jquery\jquery.min.map" />
+    <Content Remove="wwwroot\jquery\jquery.slim.js" />
+    <Content Remove="wwwroot\jquery\jquery.slim.min.js" />
+    <Content Remove="wwwroot\jquery\jquery.slim.min.map" />
+    <Content Remove="wwwroot\js\script.js" />
+    <Content Remove="wwwroot\js\Utils.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-grid.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-grid.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-reboot.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-reboot.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\css\bootstrap.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.bundle.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\dist\js\bootstrap.min.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\alert.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\alert.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\alert.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\button.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\button.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\button.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\carousel.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\carousel.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\carousel.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\collapse.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\collapse.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\collapse.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\dropdown.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\dropdown.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\dropdown.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\index.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\index.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\index.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\modal.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\modal.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\modal.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\popover.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\popover.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\popover.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\scrollspy.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\scrollspy.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\scrollspy.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tab.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tab.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tab.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\toast.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\toast.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\toast.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tooltip.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tooltip.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\tooltip.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\util.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\util.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\dist\util.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\alert.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\alert.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\button.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\button.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\carousel.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\carousel.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\collapse.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\collapse.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\dropdown.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\dropdown.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\index.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\index.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\modal.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\modal.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\popover.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\popover.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\scrollspy.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\scrollspy.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tab.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tab.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\toast.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\toast.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tools\sanitizer.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tools\sanitizer.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tooltip.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\tooltip.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\util.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\src\util.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\bootstrap-grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\bootstrap-reboot.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\bootstrap.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_alert.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_background-variant.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_badge.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_border-radius.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_box-shadow.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_breakpoints.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_buttons.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_caret.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_clearfix.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_deprecate.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_float.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_forms.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_gradients.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_grid-framework.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_hover.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_image.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_list-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_lists.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_nav-divider.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_reset-text.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_resize.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_screen-reader.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_size.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_table-row.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_text-hide.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_text-truncate.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_transition.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\mixins\_visibility.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_align.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_background.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_borders.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_clearfix.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_display.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_embed.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_flex.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_float.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_overflow.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_position.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_screenreaders.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_shadows.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_sizing.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_spacing.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_stretched-link.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_text.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\utilities\_visibility.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\vendor\_rfs.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_alert.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_badge.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_breadcrumb.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_button-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_buttons.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_carousel.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_close.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_code.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_custom-forms.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_dropdown.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_forms.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_functions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_images.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_input-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_jumbotron.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_list-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_media.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_mixins.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_modal.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_nav.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_navbar.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_popover.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_print.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_progress.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_reboot.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_root.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_spinners.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_tables.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_toasts.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_tooltip.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_transitions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_type.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_utilities.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\scss\_variables.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\jquery\core.js" />
+    <None Include="wwwroot\jquery\jquery.js" />
+    <None Include="wwwroot\jquery\jquery.min.js" />
+    <None Include="wwwroot\jquery\jquery.min.map" />
+    <None Include="wwwroot\jquery\jquery.slim.js" />
+    <None Include="wwwroot\jquery\jquery.slim.min.js" />
+    <None Include="wwwroot\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\js\script.js" />
+    <None Include="wwwroot\js\Utils.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Blazor.Bootstrap" Version="2.2.0" />
+    <PackageReference Include="Blazored.TextEditor" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\FastCommerce.Service\Service.csproj" />
+    <ProjectReference Include="..\UI.Client\UI.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Components\Admin\Admin.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Admin\Post\BlogPostDatails.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Admin\Post\PostList.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Admin\Users\CreateUser.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Admin\_Imports.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\ConfirmaDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\Pages\Error.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="wwwroot\app.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\bootstrap\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\bootstrap\LICENSE">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\bootstrap\package.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\bootstrap\README.md">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\datatable\jquery.dataTables.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\FONT-LICENSE">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.eot">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.otf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\font\fonts\open-iconic.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\ICON-LICENSE">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\open-iconic\README.md">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\site.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\datatable\jquery.dataTables.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\favicon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\07403dba-0654-4d3c-8e2c-5a0916b7d1b3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\0fcebb55-c31d-4f66-8302-09303a9241f0.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\13410446-23c1-436d-80f5-ced6b2d896fa.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\145e540a-54d1-4f82-8a5a-b4c858b97bbe.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\19321278-7f26-4a5f-9e4d-e4c593ca6371.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\1e0d8f73-7c88-4897-9591-a6c144a8b39b.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\22949640-7855-46c0-b253-40336405bdcc.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\2bd13c1b-ff19-484a-b971-2272bb9dd1f2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\30b10376-14c0-41e1-be81-23ba5c2467f2.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\33128df5-5852-4f1c-b023-30fad31ed560.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\35ce10b6-8ef6-4d1f-a75d-260461fcfb85.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\37415876-2635-4cf8-ad72-359cbb8532e3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\3ed9d7a3-876d-410e-ba5e-86f851bfc970.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\47b1023c-308e-4509-b394-9e877be3aaf2.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\49aecd34-f8a1-4d71-b653-0d4f5ab13295.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\4e2ae932-6fe9-4b91-8866-8dac758c0ad6.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\533e6e05-bae2-4f69-ac6f-d71ba754eb69.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\5d4b2387-2d05-4612-bfc5-664474a99a72.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\73eeda1e-cf21-4e7e-8d56-2ba10088ca86.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\78a20ce6-5778-4ac2-8764-88ad74ca09bb.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\7be3b8f9-e41c-4941-b09c-0cda9278dbad.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\7c9ee08f-401f-4650-85a8-dc8b2eed3cf0.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\7e416b19-a8e8-4bcb-8797-8a320523be9f.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\8a0fed8c-73bb-4fa8-ba3e-7689d79ba3d7.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\8cffb41a-effb-429e-94ba-db77d12bea49.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\8da42ff8-90ae-4c1a-b1cc-11fff75ba5f0.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\979553aa-8f97-447f-ba29-bdfce8ce883c.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\9b01d31a-f376-415e-bc5c-a10897b13e84.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\a37e53ab-4cac-49db-bcdf-bf4335c53a28.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\be3c995d-adee-4a32-8183-cb6cbd37bdec.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\c0a9346c-2f20-446e-9233-497667c15543.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\c98a50bd-1c51-4728-adec-c263396ce0fa.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\cacd5496-6bef-48bb-9471-7bcaf5b61de3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\d0517308-024c-4597-b781-54fc3cc70416.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\daec2997-29ca-42c8-b85c-6dd6a74977ed.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\e1bad311-556b-4bfc-b37e-61194762ba21.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\e92d5c6c-8759-4b8e-915f-7ff8086f76ec.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\ec592c75-a1aa-4ec9-b2e0-4a4c2c5a2f2c.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\f5466321-69c7-4373-9b65-ed21c99d4bdf.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\f868968e-55f1-42e8-a7c5-f03bc50556db.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\fadd5429-e58f-4651-8001-002ccc4c72f3.bmp">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\uploads\fda34ba5-8dde-47bb-b0ae-71c519b10abc.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Admin\Catalog\" />
+    <Folder Include="Components\Admin\Forum\" />
+  </ItemGroup>
+
+</Project>

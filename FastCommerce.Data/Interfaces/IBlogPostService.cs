@@ -1,16 +1,17 @@
-﻿using FastCommerce.Core.Entities.Domain;
-using FastCommerce.Core.Entities.Domain.Blog;
-using FastCommerce.Core.Wrappers;
+﻿using Core.Entities.Domain.Blog;
+using Core.ViewModel.Catalog;
+using Core.Wrappers;
 
-namespace FastCommerce.Data.Interfaces
+namespace Data.Interfaces
 {
-    public interface IBlogPostService
+    public partial interface IBlogPostService
     {
-        bool Add(BlogPost user);
+        BlogPost? Add(BlogPost blogPost);
         List<BlogPost> GetAll();
         bool Update(BlogPost user);
         bool Delete(BlogPost user);
         BlogPost Get(int Id);
         PagedResponse<List<BlogPost>> Search(PaginationFilter filter);
+        IList<string> GetValidationMessage(BlogPostVM viewModel);
     }
 }

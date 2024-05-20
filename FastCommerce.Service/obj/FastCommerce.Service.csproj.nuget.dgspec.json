@@ -70,16 +70,16 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.105/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj": {
+    "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj",
-        "projectName": "FastCommerce.Data",
-        "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj",
+        "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj",
+        "projectName": "Data",
+        "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj",
         "packagesPath": "C:\\Users\\torman\\.nuget\\packages\\",
         "outputPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\obj\\",
         "projectStyle": "PackageReference",
@@ -156,7 +156,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.105/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
@@ -189,8 +189,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj": {
-                "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj"
+              "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj": {
+                "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj"
               }
             }
           }
@@ -230,7 +230,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.105/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
