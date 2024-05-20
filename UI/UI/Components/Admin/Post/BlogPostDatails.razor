@@ -1,0 +1,171 @@
+﻿@using Blazored.TextEditor
+@using Core.Entities.Domain.Blog
+@using Core.ViewModel.Catalog
+@using Core.Wrappers
+@using System.Net
+@using Newtonsoft.Json
+@inject IJSRuntime js;
+
+
+<div class="modal" tabindex="-1" role="dialog" id="postModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Cabecalho</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@postObject" Enhance EditContext="_editContext" formname="BlogPostVM" OnValidSubmit="@HandleInValidSubmit">
+                     <ValidationSummary />
+                     @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @((MarkupString)errorMessage)
+                        </div>
+                    }
+                    <div class="form-group mt-2 mb-2">
+                         <label for="Nome">Name</label>
+                         <input type="hidden" id="Id" @bind-value="@postObject.Id" />
+                         <InputText id="Name" class="form-control" @bind-Value="@postObject.Name" />
+                         <ValidationMessage For="@(() => postObject.Name)" />
+                     </div>
+                     <BlazoredTextEditor @ref="@richEditor">
+                         <ToolbarContent>
+                             <select class="ql-header">
+                                 <option selected=""></option>
+                                 <option value="1"></option>
+                                 <option value="2"></option>
+                                 <option value="3"></option>
+                                 <option value="4"></option>
+                                 <option value="5"></option>
+                             </select>
+                             <span class="ql-formats">
+                                 <button class="ql-bold"></button>
+                                 <button class="ql-italic"></button>
+                                 <button class="ql-underline"></button>
+                                 <button class="ql-strike"></button>
+                             </span>
+                             <span class="ql-formats">
+                                 <select class="ql-color"></select>
+                                 <select class="ql-background"></select>
+                             </span>
+                             <span class="ql-formats">
+                                 <button class="ql-list" value="ordered"></button>
+                                 <button class="ql-list" value="bullet"></button>
+                             </span>
+                             <span class="ql-formats">
+                                 <button class="ql-link"></button>
+                             </span>
+                         </ToolbarContent>
+                         <EditorContent>
+
+                         </EditorContent>
+                     </BlazoredTextEditor>
+
+                     <ValidationMessage For="@(() => postObject.Html)" />
+
+                     <div class="form-group mb-6 mt-6">
+                         <label for="Start">Inicio : </label>
+                         <input id="Start" type="date" name="math" @bind-value="@postObject.DateStart" />
+                         <ValidationMessage For="@(() => postObject.DateStart)" />
+
+                         <label for="End">Fim em : </label>
+                         <input id="End" type="date" name="math" @bind-value="@postObject.DateEnd" />
+                         <ValidationMessage For="@(() => postObject.DateEnd)" />
+                     </div>                     
+
+                     <div class="form-group mt-2 mb-2">
+                         <label for="Publish">Publish</label>
+                         <input type="checkbox" id="Publish" @bind="@postObject.Publish" />
+                         <ValidationMessage For="@(() => postObject.Publish)" />
+                     </div>
+
+                     <button type="submit" class="btn btn-primary">Envia</button>
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancela</button>
+                 </EditForm>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+ @code {
+    private string? errorMessage;
+    [CascadingParameter] private EditContext _editContext { get; set; } = default!;
+    [Parameter]
+    public BlogPostVM postObject { get; set; } = new BlogPostVM();
+    BlazoredTextEditor richEditor = default!;
+
+    [Parameter]
+    public RenderFragment Cabecalho { get; set; }
+
+    [Parameter]
+    public Action AlteracaoDados { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    private readonly HttpClient _client = new HttpClient();
+
+    private async Task CloseItemModal()
+    {
+        await js.InvokeAsync<object>("CloseModal", "postModal");
+    }
+    protected async override Task OnParametersSetAsync()
+    {
+        /// Load the content here based on the parameters
+        try
+        {
+            if (postObject.Id != null && postObject.Id > 0 && !string.IsNullOrEmpty(postObject.Html))
+            {
+                await richEditor.LoadHTMLContent(postObject.Html);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Quill Exception: {ex}");
+        }
+    }
+    public async Task HandleInValidSubmit(EditContext editContext)
+    {        
+        await UpdateDescription();
+        var validationResult = true;
+        editContext.IsModified();
+        var msg = editContext.Validate();
+        IEnumerable<string> modelError = editContext.GetValidationMessages();
+        var respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}BlogPost/add", postObject);
+        if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
+        {
+            errorMessage = null;
+            await HandleSubmit();
+        }
+        else
+        {
+            var reponseError = respose.Content.ReadAsStringAsync().Result;
+            var reponseMessgaesList = JsonConvert.DeserializeObject<ProblemDetails>(reponseError);
+            errorMessage = "<ul>";
+            foreach (var error in JsonConvert.DeserializeObject<List<string>>(reponseMessgaesList.Detail))
+            {
+                 errorMessage = string.Format("{0}</br>{1}", errorMessage, $"<li>{error}</li>");
+            }
+            string.Format("{0}{1}", errorMessage, $"</ul>");
+            return;
+        }
+    }
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    public async Task HandleSubmit()
+    {        
+        
+        await CloseItemModal();
+        AlteracaoDados?.Invoke();
+    }
+    public async Task UpdateDescription()
+    {
+        postObject.Html = await richEditor.GetHTML();
+        StateHasChanged();
+    }
+}

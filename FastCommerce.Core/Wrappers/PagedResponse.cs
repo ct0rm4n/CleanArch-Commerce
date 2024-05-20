@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FastCommerce.Core.Wrappers
+namespace Core.Wrappers
 {
     public class PagedResponse<T> : Response<T>
     {

@@ -750,7 +750,7 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "FastCommerce.Core/1.0.0": {
+      "Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
@@ -758,10 +758,10 @@
           "FluentValidation": "11.9.1"
         },
         "compile": {
-          "bin/placeholder/FastCommerce.Core.dll": {}
+          "bin/placeholder/Core.dll": {}
         },
         "runtime": {
-          "bin/placeholder/FastCommerce.Core.dll": {}
+          "bin/placeholder/Core.dll": {}
         }
       }
     }
@@ -2205,17 +2205,17 @@
         "version.txt"
       ]
     },
-    "FastCommerce.Core/1.0.0": {
+    "Core/1.0.0": {
       "type": "project",
-      "path": "../FastCommerce.Core/FastCommerce.Core.csproj",
-      "msbuildProject": "../FastCommerce.Core/FastCommerce.Core.csproj"
+      "path": "../FastCommerce.Core/Core.csproj",
+      "msbuildProject": "../FastCommerce.Core/Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Autofac >= 8.0.0",
+      "Core >= 1.0.0",
       "Dapper >= 2.1.35",
-      "FastCommerce.Core >= 1.0.0",
       "Microsoft.Data.SqlClient >= 5.2.0",
       "Microsoft.Extensions.Configuration >= 8.0.0",
       "Microsoft.Extensions.DependencyInjection >= 8.0.0"
@@ -2228,9 +2228,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj",
-      "projectName": "FastCommerce.Data",
-      "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\FastCommerce.Data.csproj",
+      "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj",
+      "projectName": "Data",
+      "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\Data.csproj",
       "packagesPath": "C:\\Users\\torman\\.nuget\\packages\\",
       "outputPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Data\\obj\\",
       "projectStyle": "PackageReference",
@@ -2254,8 +2254,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\FastCommerce.Core.csproj": {
-              "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\FastCommerce.Core.csproj"
+            "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\Core.csproj": {
+              "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\Core.csproj"
             }
           }
         }
@@ -2307,7 +2307,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.104/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.105/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

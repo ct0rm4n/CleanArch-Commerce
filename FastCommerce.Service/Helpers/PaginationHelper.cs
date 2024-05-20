@@ -1,7 +1,7 @@
-﻿using FastCommerce.Core.Wrappers;
+﻿using Core.Wrappers;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace FastCommerce.Service.Helpers
+namespace Service.Helpers
 {
     public class PaginationHelper
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace FastCommerce.Core.Data
+namespace Core.Data
 {
     public interface ICommand : IQuery<Tuple<int, string>> { }
 }

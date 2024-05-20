@@ -1,8 +1,27 @@
 
+_________________________________
+
+
+Montar comparativo
+
 Falar sobre dapper -> benckmark
 
 
 Entity <=> Service <=> Model
 
+autofact
 
-fluent validation
+dapper
+_________________________________
+
+patterns:
+
+cqrs -> ddd
+micro orm
+
+_________________________________
+
+3 party service:
+
+ocelot gateway auth
+payments ->

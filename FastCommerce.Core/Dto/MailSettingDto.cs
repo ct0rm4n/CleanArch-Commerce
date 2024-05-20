@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace FastCommerce.Core.Dto
+namespace Core.Dto
 {
     public class MailSettingDto
     {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VhrV7yvCzHbvSiEDhmRaXiLOy5ZqoyYr8faQs11xscUPqtib9mk4Ml4bRKarkJLI9aaSLO6D7pdYCzpc6cB/Xg==",
+  "dgSpecHash": "iQ6FFQU1QbX13KhlANToC2aTzsXSUliK3wZClEF6FwM4N6AkZC+3zKvv942Iac+oXv7GgSrNt3pXKMJmHMc80A==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Api.Catalog\\FastCommerce.Api.Catalog.csproj",
+  "projectFilePath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Api.Catalog\\Api.Catalog.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\torman\\.nuget\\packages\\autofac\\8.0.0\\autofac.8.0.0.nupkg.sha512",
     "C:\\Users\\torman\\.nuget\\packages\\autofac.extensions.dependencyinjection\\9.0.0\\autofac.extensions.dependencyinjection.9.0.0.nupkg.sha512",

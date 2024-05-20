@@ -1,5 +1,5 @@
-﻿using FastCommerce.Core.Entities.Domain.Blog;
-namespace FastCommerce.Data.Commands.Repositories
+﻿using Core.Entities.Domain.Blog;
+namespace Data.Commands.Repositories
 {
     public class BlogPostRepository : GenericRepository<BlogPost>
     {

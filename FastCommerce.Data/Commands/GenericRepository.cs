@@ -1,13 +1,14 @@
 ﻿using Dapper;
-using FastCommerce.Core.Data;
+using Core.Data;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection;
 using System.Text;
+using System.Buffers;
 
-namespace FastCommerce.Data.Commands
+namespace Data.Commands
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -28,15 +29,39 @@ namespace FastCommerce.Data.Commands
                 string tableName = GetTableName();
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
+                
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
                 _connection.Open();
+
+                var response = _connection.Query<string>(query, entity);
+
                 rowsEffected = _connection.Execute(query, entity);
             }
             catch (Exception ex) { }
 
             return rowsEffected > 0 ? true : false;
         }
+        public (T,bool) AddReturn(T entity)
+        {
+            IEnumerable<T> result = null;
+            try
+            {
+                string tableName = GetTableName();
+                string columns = GetColumns(excludeKey: true);
+                string properties = GetPropertyNames(excludeKey: true);
+                string propertiesValues = GetPropertyValues(entity, excludeKey: true);
 
+                string query = $"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues})";
+                _connection.Open();
+                result = _connection.Query<T>(query);
+                //rowsEffected = _connection.Execute(query);
+            }
+            catch(Exception ex)
+            {
+                return (null, result.Count() > 0 ? true : false);
+            }
+            return (result.FirstOrDefault(), result.Count() > 0 ? true : false);
+        }
         public bool Delete(T entity)
         {
             int rowsEffected = 0;
@@ -167,8 +192,9 @@ namespace FastCommerce.Data.Commands
         private string GetColumns(bool excludeKey = false)
         {
             var type = typeof(T);
+
             var columns = string.Join(", ", type.GetProperties()
-                .Where(p => !excludeKey || !p.IsDefined(typeof(KeyAttribute)))
+                .Where(p => excludeKey && !p.Name.Equals("Id"))
                 .Select(p =>
                 {
                     var columnAttr = p.GetCustomAttribute<ColumnAttribute>();
@@ -182,6 +208,8 @@ namespace FastCommerce.Data.Commands
         {
             var properties = typeof(T).GetProperties()
                 .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+            if (excludeKey)
+                properties = properties.Where(x => !x.Name.Equals("Id"));
 
             var values = string.Join(", ", properties.Select(p =>
             {
@@ -190,6 +218,23 @@ namespace FastCommerce.Data.Commands
 
             return values;
         }
+
+        protected string GetPropertyValues(T entity, bool excludeKey = false)
+        {
+            var properties = typeof(T).GetProperties()
+                .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+            if (excludeKey)
+                properties = properties.Where(x => !x.Name.Equals("Id"));
+
+            var values = string.Join(", ", properties.Select(p =>
+            {
+                var value = p.GetValue(entity);
+                return value != null ? $"'{value.ToString()}'" : "NULL";
+            }));
+
+            return values;
+        }
+
 
         protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
         {
@@ -211,5 +256,6 @@ namespace FastCommerce.Data.Commands
 
             return null;
         }
+        
     }
 }

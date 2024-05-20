@@ -1,13 +1,13 @@
 ﻿using Autofac;
 using Autofac.Core;
-using FastCommerce.Core.Data;
-using FastCommerce.Data.Commands;
+using Core.Data;
+using Data.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Module = Autofac.Module;
 
-namespace FastCommerce.Data.Ioc
+namespace Data.Ioc
 {
     public class AutofacDataModule : Module
     {
@@ -22,7 +22,11 @@ namespace FastCommerce.Data.Ioc
             Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(DbContext));
 
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => (t.Name.EndsWith("Helper") || t.Name.EndsWith("Repository")))
+               .Where(t => (t.Name.Equals("GenericRepository") ))
+               .InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(dataAccess)
+               .Where(t => (t.Name.EndsWith("Helper") || (t.Name.EndsWith("Repository") && !t.Name.Equals("GenericRepository") && !t.Name.Equals("IGenericRepository"))))
                .AsImplementedInterfaces().InstancePerLifetimeScope();
             
             builder.Register(c =>

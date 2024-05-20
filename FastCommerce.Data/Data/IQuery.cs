@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace FastCommerce.Core.Data
+namespace Core.Data
 {
     public interface IQuery<T>
     {

@@ -1,0 +1,75 @@
+﻿@page "/Admin/CreateUser"
+@using System.Text.RegularExpressions
+@using Core.Dto;
+@using Core.ViewModel.Address
+@using Core.ViewModel.Customer
+@using Newtonsoft.Json
+@rendermode InteractiveServer
+
+
+<h3>CPF MASK</h3>
+<div class="container">
+    @if (IsValidCpf)
+    {
+        <span style="color: red">CPF Invalido</span>
+    }
+    <input type="text" @bind-value="cpf" @bind-value:event="oninput" @onkeyup="@(() => FormatCPF())" maxlength="14"/>
+    <hr />
+    address
+    <input type="text" @bind-value="cep" @bind-value:event="oninput" @onkeyup="@(() => GetCEP())" maxlength="8" />
+</div>
+
+
+@code {
+    public string cpf;
+
+    public bool IsValidCpf = false;
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    private readonly HttpClient _client = new HttpClient();
+
+
+    private async Task FormatCPF()
+    {
+        try
+        {
+            var cnpjValidator = new CpfVM(cpf);
+            cpf = cnpjValidator.CurrentCpf;
+            if (cnpjValidator.IsValidCpf == true && !string.IsNullOrEmpty(cnpjValidator.CurrentCpf))
+            {
+                IsValidCpf = true;
+            }
+            else
+            {
+                IsValidCpf = false;                
+            }
+        }
+        catch(Exception ex)
+        {
+            IsValidCpf = false;
+        }        
+    }
+
+
+    public string cep;
+    public bool IsValidCep = false;
+    public AddressVM addressDafalt = new AddressVM();
+    private async Task GetCEP()
+    {
+        try
+        {
+            var respose = (await _client.GetAsync($"{Configuration["Api.Shipping"]}shipping/getAddress?cep={cep}")).Content.ReadAsStringAsync();
+            var cepDto = JsonConvert.DeserializeObject<Core.Dto.CepDto>(await respose);
+
+            addressDafalt = new AddressVM();
+            //implementing factory
+            addressDafalt.Cep = cepDto.cep;
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }
+
+}

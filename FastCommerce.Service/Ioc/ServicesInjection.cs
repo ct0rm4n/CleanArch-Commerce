@@ -1,7 +1,7 @@
-﻿using FastCommerce.Data.Interfaces;
+﻿using Data.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FastCommerce.Service.Ioc
+namespace Service.Ioc
 {
     public static class ServicesInjection
     {

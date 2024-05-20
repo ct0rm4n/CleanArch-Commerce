@@ -1,0 +1,6 @@
+@FastCommerce.Api.Shipping_HostAddress = http://localhost:5289
+
+GET {{FastCommerce.Api.Shipping_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

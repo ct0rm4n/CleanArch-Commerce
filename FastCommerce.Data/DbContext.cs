@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using FastCommerce.Core.Data;
+using Core.Data;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace FastCommerce.Data
+namespace Data
 {
     public class DbContext : IDbContext
     {

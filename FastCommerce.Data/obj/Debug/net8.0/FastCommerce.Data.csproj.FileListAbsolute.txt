@@ -13,3 +13,4 @@ D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Data\ob
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Data\obj\Debug\net8.0\refint\FastCommerce.Data.dll
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Data\obj\Debug\net8.0\FastCommerce.Data.pdb
 D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Data\obj\Debug\net8.0\ref\FastCommerce.Data.dll
+D:\Projects\Aulas\SOLID - FastCommerce\FastCommerce - SOLID\FastCommerce.Data\obj\Debug\net8.0\FastCommerce.Data.sourcelink.json

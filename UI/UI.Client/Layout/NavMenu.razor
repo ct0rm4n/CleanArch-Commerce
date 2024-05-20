@@ -1,0 +1,123 @@
+﻿@implements IDisposable
+@inject NavigationManager NavigationManager
+@inject IJSRuntime js;
+@rendermode InteractiveServer
+
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FastCommerce</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <ul class="flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Dashboard
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Catalog
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=> widgetSubMenu =! widgetSubMenu">
+                <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(widgetSubMenu == false ? "block" : "none")"></span>
+                <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(widgetSubMenu == false ? "none" : "block")"></span>
+                WidgetManager
+            </NavLink>
+            @if (widgetSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Post">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Posts
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=> userSubMenu =! userSubMenu">
+                <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(userSubMenu == false ? "block" : "none")"></span>
+                <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(userSubMenu == false ? "none" : "block")"></span> 
+                UserManager
+            </NavLink>
+            @if(userSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Admin/Identity/Users">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> User
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Admin/Identity/Roles">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Roles
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Admin/Identity/ItemList">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Acl
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+    </ul>
+</div>
+
+
+
+@code {
+
+    private bool collapseNavMenu = true;
+    private bool catalogSubMenu, userSubMenu, widgetSubMenu;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        RouteChangeMenu(currentUrl);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    public void RouteChangeMenu(string path)
+    {
+        switch (path)
+        {
+            case string a when a.Contains("Catalog"):
+                catalogSubMenu = true;
+                break;
+            case string b when b.Contains("Identity"):
+                userSubMenu = true;
+                break;
+        }
+    }
+}
+

@@ -1,5 +1,5 @@
 ﻿
-namespace FastCommerce.Core.Wrappers
+namespace Core.Wrappers
 {
     public class Result<T>
     {

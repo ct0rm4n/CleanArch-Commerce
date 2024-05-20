@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FastCommerce.Core.Wrappers
+namespace Core.Wrappers
 {
     public class EntityUtils()
     {

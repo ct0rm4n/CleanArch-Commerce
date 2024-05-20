@@ -1,8 +1,8 @@
 ﻿
 
-using FastCommerce.Core.Entities.Enum;
+using Core.Entities.Enum;
 
-namespace FastCommerce.Core.Entities.Abstract
+namespace Core.Entities.Abstract
 {
     internal interface IEntity
     {

@@ -1,6 +1,6 @@
-﻿using FastCommerce.Core.Entities.Domain;
+﻿using Core.Entities.Domain;
 
-namespace FastCommerce.Data.Interfaces
+namespace Data.Interfaces
 {
     public interface IUserService 
     {
