@@ -7,10 +7,11 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Buffers;
+using Core.ViewModel.Generic.Abstracts;
 
 namespace Data.Commands
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T, IBaseVM> : IGenericRepository<T, IBaseVM> where T : class
     {
         IDbConnection _connection;
 
@@ -256,6 +257,34 @@ namespace Data.Commands
 
             return null;
         }
-        
+        public IList<string> GetValidationMessage(IBaseVM viewModel)
+        {
+            try
+            {
+                var validationContext = new ValidationContext(viewModel, serviceProvider: null, items: null);
+                var validationResults = new List<ValidationResult>();
+
+                var isValid = Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
+                var messages = new List<string>();
+                // If there any exception return them in the return result
+                if (!isValid)
+                {
+                    OperationStatus opStatus = new OperationStatus();
+
+                    foreach (ValidationResult message in validationResults)
+                    {
+                        messages.Add(message.ErrorMessage);
+                    }
+
+                    return messages;
+                }
+                return messages;
+            }
+            catch (Exception ex)
+            {
+                return new List<string>() { $"Error: {ex.Message}" };
+            }
+
+        }
     }
 }
