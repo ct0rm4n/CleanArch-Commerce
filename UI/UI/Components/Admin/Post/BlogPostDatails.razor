@@ -4,6 +4,7 @@
 @using Core.Wrappers
 @using System.Net
 @using Newtonsoft.Json
+@using UI.Server.Utils
 @inject IJSRuntime js;
 
 
@@ -91,7 +92,7 @@
     </div>
 </div>
 
- @code {
+@code {
     private string? errorMessage;
     [CascadingParameter] private EditContext _editContext { get; set; } = default!;
     [Parameter]
@@ -106,12 +107,14 @@
 
     [Inject]
     IConfiguration Configuration { get; set; }
+
     private readonly HttpClient _client = new HttpClient();
 
     private async Task CloseItemModal()
     {
         await js.InvokeAsync<object>("CloseModal", "postModal");
     }
+
     protected async override Task OnParametersSetAsync()
     {
         /// Load the content here based on the parameters
@@ -128,13 +131,10 @@
             Console.WriteLine($"Quill Exception: {ex}");
         }
     }
+
     public async Task HandleInValidSubmit(EditContext editContext)
     {        
         await UpdateDescription();
-        var validationResult = true;
-        editContext.IsModified();
-        var msg = editContext.Validate();
-        IEnumerable<string> modelError = editContext.GetValidationMessages();
         var respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}BlogPost/add", postObject);
         if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
         {
@@ -143,17 +143,11 @@
         }
         else
         {
-            var reponseError = respose.Content.ReadAsStringAsync().Result;
-            var reponseMessgaesList = JsonConvert.DeserializeObject<ProblemDetails>(reponseError);
-            errorMessage = "<ul>";
-            foreach (var error in JsonConvert.DeserializeObject<List<string>>(reponseMessgaesList.Detail))
-            {
-                 errorMessage = string.Format("{0}</br>{1}", errorMessage, $"<li>{error}</li>");
-            }
-            string.Format("{0}{1}", errorMessage, $"</ul>");
+            errorMessage = new HandlerErrorMessage().BuildError(respose.Content.ReadAsStringAsync().Result, errorMessage);
             return;
         }
     }
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 

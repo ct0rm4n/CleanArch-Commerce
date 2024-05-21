@@ -12,6 +12,6 @@ namespace Data.Interfaces
         bool Delete(BlogPost user);
         BlogPost Get(int Id);
         PagedResponse<List<BlogPost>> Search(PaginationFilter filter);
-        IList<string> GetValidationMessage(BlogPostVM viewModel);
+        public IList<string> GetValidation(BlogPostVM viewModel);
     }
 }

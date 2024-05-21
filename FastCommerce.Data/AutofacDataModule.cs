@@ -15,8 +15,8 @@ namespace Data.Ioc
         protected override void Load(ContainerBuilder builder)
         {
             
-            builder.RegisterGeneric(typeof(GenericRepository<>))
-                .As(typeof(IGenericRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(GenericRepository<,>))
+                .As(typeof(IGenericRepository<,>)).InstancePerLifetimeScope();
             var dataAccess = Assembly.GetExecutingAssembly();
 
             Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(DbContext));

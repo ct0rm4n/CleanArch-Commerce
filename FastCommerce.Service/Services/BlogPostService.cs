@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Domain.Blog;
 using Core.ViewModel.Catalog;
+using Core.ViewModel.Generic.Abstracts;
 using Core.Wrappers;
 using Data.Commands.Repositories;
 using Data.Interfaces;
@@ -105,36 +106,9 @@ namespace Service
             var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7279");
             return (pagedReponse);
         }
-
-        
-        public IList<string> GetValidationMessage(BlogPostVM viewModel)
+        public IList<string> GetValidation(BlogPostVM viewModel)
         {
-            try
-            {
-                var validationContext = new ValidationContext(viewModel, serviceProvider: null, items: null);
-                var validationResults = new List<ValidationResult>();
-
-                var isValid = Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
-                var messages = new List<string>();
-                // If there any exception return them in the return result
-                if (!isValid)
-                {
-                    OperationStatus opStatus = new OperationStatus();
-
-                    foreach (ValidationResult message in validationResults)
-                    {
-                        messages.Add(message.ErrorMessage);
-                    }
-
-                    return messages;
-                }
-                return messages;
-            }
-            catch(Exception ex)
-            {
-                return new List<string>() { $"Error: {ex.Message}" };
-            }
-
+            return _repository.GetValidationMessage(viewModel);
         }
     }
 }
