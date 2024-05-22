@@ -103,7 +103,7 @@ app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] Blo
         
         var serialized = JsonConvert.SerializeObject(body);
         List<string> validation = postService.GetValidation(body).ToList();
-        if (validation.Count() > 0)
+        if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
 
         var insert = postService.Add(JsonConvert.DeserializeObject<BlogPost>(serialized));
