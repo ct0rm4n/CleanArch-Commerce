@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Abstract;
 using Core.Entities.Enum;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entities.Domain.Blog
@@ -11,6 +12,7 @@ namespace Core.Entities.Domain.Blog
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
+        [Description("Name")]
         public string Name { get; set; }
         public string Html { get; set; }
         public string Url { get; set; }

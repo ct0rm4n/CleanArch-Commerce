@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities.Abstract
 {
@@ -9,6 +10,7 @@ namespace Core.Entities.Abstract
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
+        [Key]
         public int Id { get; set; }
         public DateTime? InsertedDate { get; set; }
         public DateTime? LastModifiedDate { get; set; }

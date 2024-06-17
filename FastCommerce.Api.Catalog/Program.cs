@@ -120,6 +120,28 @@ app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] Blo
     }
 });
 
+
+app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = postService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = postService.Update(JsonConvert.DeserializeObject<BlogPost>(serialized));
+        return insert is not false
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
 app.Run();
 
 
