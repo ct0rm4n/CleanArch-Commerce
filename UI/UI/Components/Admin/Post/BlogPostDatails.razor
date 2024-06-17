@@ -18,7 +18,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <EditForm Model="@postObject" Enhance EditContext="_editContext" formname="BlogPostVM" OnValidSubmit="@HandleInValidSubmit">
+                <EditForm Model="@postObject" formname="BlogPostVM" OnValidSubmit="@HandleInValidSubmit">
                      <ValidationSummary />
                      @if (!string.IsNullOrEmpty(errorMessage))
                     {
@@ -32,7 +32,7 @@
                          <InputText id="Name" class="form-control" @bind-Value="@postObject.Name" />
                          <ValidationMessage For="@(() => postObject.Name)" />
                      </div>
-                     <BlazoredTextEditor @ref="@richEditor">
+                    <BlazoredTextEditor @ref="@richEditor" >
                          <ToolbarContent>
                              <select class="ql-header">
                                  <option selected=""></option>
@@ -60,9 +60,12 @@
                                  <button class="ql-link"></button>
                              </span>
                          </ToolbarContent>
-                         <EditorContent>
-
-                         </EditorContent>
+                        <EditorContent>
+                            @if (!string.IsNullOrEmpty(postObject.Html))
+                            {
+                                @postObject.Html
+                            }
+                        </EditorContent>
                      </BlazoredTextEditor>
 
                      <ValidationMessage For="@(() => postObject.Html)" />
@@ -94,11 +97,10 @@
 
 @code {
     private string? errorMessage;
-    [CascadingParameter] private EditContext _editContext { get; set; } = default!;
     [Parameter]
     public BlogPostVM postObject { get; set; } = new BlogPostVM();
-    BlazoredTextEditor richEditor = default!;
-
+    BlazoredTextEditor richEditor;//= default!;
+    string htmlContent = string.Empty;
     [Parameter]
     public RenderFragment Cabecalho { get; set; }
 
@@ -122,7 +124,9 @@
         {
             if (postObject.Id != null && postObject.Id > 0 && !string.IsNullOrEmpty(postObject.Html))
             {
-                await richEditor.LoadHTMLContent(postObject.Html);
+                htmlContent = postObject.Html;
+                await richEditor.LoadContent(postObject.Html);
+                //await richEditor.InsertText(postObject.Html);
                 StateHasChanged();
             }
         }
@@ -153,13 +157,14 @@
 
     public async Task HandleSubmit()
     {        
-        
+
         await CloseItemModal();
         AlteracaoDados?.Invoke();
     }
     public async Task UpdateDescription()
     {
-        postObject.Html = await richEditor.GetHTML();
-        StateHasChanged();
+        var raw = (MarkupString)await richEditor.GetHTML();
+        postObject.Html = raw.Value;
+        //StateHasChanged();
     }
 }
