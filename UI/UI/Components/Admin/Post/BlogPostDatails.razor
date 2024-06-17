@@ -32,7 +32,7 @@
                          <InputText id="Name" class="form-control" @bind-Value="@postObject.Name" />
                          <ValidationMessage For="@(() => postObject.Name)" />
                      </div>
-                     <BlazoredTextEditor @ref="@richEditor">
+                    <BlazoredTextEditor @ref="@richEditor" @bind-Value="@htmlContent">
                          <ToolbarContent>
                              <select class="ql-header">
                                  <option selected=""></option>
@@ -97,7 +97,7 @@
     [Parameter]
     public BlogPostVM postObject { get; set; } = new BlogPostVM();
     BlazoredTextEditor richEditor;//= default!;
-
+    string htmlContent = string.Empty;
     [Parameter]
     public RenderFragment Cabecalho { get; set; }
 
@@ -121,9 +121,10 @@
         {
             if (postObject.Id != null && postObject.Id > 0 && !string.IsNullOrEmpty(postObject.Html))
             {
-
+                htmlContent = postObject.Html;
                 await richEditor.LoadHTMLContent(postObject.Html);
-                StateHasChanged();
+                await richEditor.InsertText(postObject.Html);
+                //StateHasChanged();
             }
         }
         catch (Exception ex)

@@ -106,7 +106,7 @@ namespace Service
                 .ToList();
 
             var totalRecords = data.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7279");
+            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
             return (pagedReponse);
         }
         public IList<string> GetValidation(BlogPostVM viewModel)

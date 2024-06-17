@@ -44,6 +44,7 @@ else
                                 <thead>
                                     <tr>
                                         <th>name</th>
+                                        <th>Description</th>
                                         <th>Start</th>
                                         <th>End</th>
                                         <th>Published</th>
@@ -70,53 +71,22 @@ else
                                         </tr>
                                     }
                                 </tbody>
+                                <tfoot>
+                                    @if (items is not null)
+                                    {
+                                        @if (!string.IsNullOrEmpty(pPage))
+                                        {
+                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(pPage))" value="Previous" />
+                                        }
+                                        @if (!string.IsNullOrEmpty(nPage))
+                                        {
+                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(nPage))" value="Next" />
+                                        }                                        
+                                    }
+                                    
+                                </tfoot>
                             </table>
-                            @* <QuickGrid Items="FilteredItems" Pagination="pagination">
-                                <PropertyColumn Property="@(f => f.Name)" Title="Desc" Sortable="true">
-                                </PropertyColumn>
-                                <PropertyColumn Property="@(f => (MarkupString)f.Html)" Title="Html" Sortable="false" />
-                                <PropertyColumn Property="f => f.DateStart" Format="dddd, dd MMMM yyyy" Sortable="true" />
-                                <PropertyColumn Property="f => f.DateEnd" Format="dddd, dd MMMM yyyy" Sortable="true" />
-                                <TemplateColumn Title="Actions">
-                                    <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(context))" data-toggle="modal" data-target="#postModal" value="Edita" />
-                                    <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(context))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
-                                </TemplateColumn>
-                            </QuickGrid> *@
-                        </div>
-                        <Paginator State="@pagination" />
-
-
-                        <div class="text-center">
-                            <div class="btn-group">
-                                @if (pagination.TotalItemCount.HasValue)
-                                {
-                                    if (pagination.CurrentPageIndex > 0)
-                                    {
-                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(0))">
-                                            &lt;&lt;
-                                        </button>
-
-                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.CurrentPageIndex - 1))">
-                                            &lt;
-                                        </button>
-                                    }
-
-                                    <button class="btn btn-outline-primary">
-                                        @(pagination.CurrentPageIndex + 1)
-                                    </button>
-
-                                    if (pagination.CurrentPageIndex < pagination.LastPageIndex)
-                                    {
-                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.CurrentPageIndex + 1))">
-                                            &gt;
-                                        </button>
-
-                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.LastPageIndex.GetValueOrDefault()))">
-                                            &gt;&gt;
-                                        </button>
-                                    }
-                                }
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -142,6 +112,8 @@ else
     public List<BlogPost> items { get; set; }
     string cabecalho = string.Empty;
     string descFilter = string.Empty;
+    string pPage = string.Empty;
+    string nPage = string.Empty;
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     int PageIndex = 0;
     int TotalPages = 1;
@@ -162,17 +134,37 @@ else
                 var respose = new PagedResponse<List<BlogPost>>(null, 0, int.MaxValue);
                 respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data;
+                await BuildPagger(respose);
             }
         }
         catch(Exception ex)
         {
-            
+
 
         }
     }
-    
 
+    private async Task ChangePage(string page)
+    {
+        try
+        {
+            string url = Configuration["Api.Catalog"];
+            var respose = new PagedResponse<List<BlogPost>>(null, 0, int.MaxValue);
+            respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{page}");
+            items = respose.Data;
+            await BuildPagger(respose);
+        }catch(Exception ex)
+        {
 
+        }
+    }
+    private async Task BuildPagger(PagedResponse<List<BlogPost>> respose)
+    {
+        if (respose.NextPage != null)
+            nPage = respose.NextPage.ToString();
+        if (respose.PreviousPage != null)
+            pPage = respose.PreviousPage.ToString();
+    }
     protected override async Task OnInitializedAsync()
     {
         try
@@ -185,6 +177,8 @@ else
                 
                 respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data; 
+
+                await BuildPagger(respose);
 
             }
             await base.OnInitializedAsync();
