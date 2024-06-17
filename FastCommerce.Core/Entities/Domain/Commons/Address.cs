@@ -1,15 +1,15 @@
 ﻿using Core.Entities.Abstract;
 using Core.Entities.Enum;
 
-namespace Core.Entities.Domain
+namespace Core.Entities.Domain.Commons
 {
-    public class Role : BaseEntity, IEntity
+    public class Address : BaseEntity, IEntity
     {
-
-        public Role()
+        public Address()
         {
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
+        public int CustomerAddressId { get; set; }
     }
 }

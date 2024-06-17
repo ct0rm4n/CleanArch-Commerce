@@ -25,7 +25,8 @@ else
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="search-box">
-                                        <input type="search" autofocus @bind="descFilter" @bind:event="oninput" placeholder="Search..." />
+
+                                        <input type="text" @bind-value="descFilter" @bind-value:event="oninput" @onkeyup="@(() => Search())" />
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -39,7 +40,38 @@ else
                             </div>
                         </div>
                         <div class="card-body">
-                            <QuickGrid Items="FilteredItems" Pagination="pagination">
+                            <table id="example" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>name</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Published</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in items)
+                                    {
+                                        <tr>
+                                            <td>@(item.Name)</td>
+                                            <td>@((MarkupString)item.Html)</td>
+                                            <td>
+                                                @(item.DateStart)
+                                            </td>
+                                            <td>
+                                                @(item.DateEnd)
+                                            </td>
+                                            <td>@(item.Publish)</td>
+                                            <td>
+                                                <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(item))" data-toggle="modal" data-target="#postModal" value="Edita" />
+                                                <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(item))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @* <QuickGrid Items="FilteredItems" Pagination="pagination">
                                 <PropertyColumn Property="@(f => f.Name)" Title="Desc" Sortable="true">
                                 </PropertyColumn>
                                 <PropertyColumn Property="@(f => (MarkupString)f.Html)" Title="Html" Sortable="false" />
@@ -49,9 +81,43 @@ else
                                     <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(context))" data-toggle="modal" data-target="#postModal" value="Edita" />
                                     <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(context))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
                                 </TemplateColumn>
-                            </QuickGrid>
+                            </QuickGrid> *@
                         </div>
                         <Paginator State="@pagination" />
+
+
+                        <div class="text-center">
+                            <div class="btn-group">
+                                @if (pagination.TotalItemCount.HasValue)
+                                {
+                                    if (pagination.CurrentPageIndex > 0)
+                                    {
+                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(0))">
+                                            &lt;&lt;
+                                        </button>
+
+                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.CurrentPageIndex - 1))">
+                                            &lt;
+                                        </button>
+                                    }
+
+                                    <button class="btn btn-outline-primary">
+                                        @(pagination.CurrentPageIndex + 1)
+                                    </button>
+
+                                    if (pagination.CurrentPageIndex < pagination.LastPageIndex)
+                                    {
+                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.CurrentPageIndex + 1))">
+                                            &gt;
+                                        </button>
+
+                                        <button class="btn btn-primary" @onclick="@(() => pagination.SetCurrentPageIndexAsync(pagination.LastPageIndex.GetValueOrDefault()))">
+                                            &gt;&gt;
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,26 +142,36 @@ else
     public List<BlogPost> items { get; set; }
     string cabecalho = string.Empty;
     string descFilter = string.Empty;
-    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    int PageIndex = 0;
+    int TotalPages = 1;
+
     BlogPostVM postObj = new BlogPostVM();
-    IQueryable<BlogPost> FilteredItems
+    private async void Search()
     {
-        get
+        await FilteredItems();
+    }
+    private async Task FilteredItems()
+    {
+        try
         {
             var result = items.AsQueryable();
             if (!string.IsNullOrEmpty(descFilter))
             {
-                result = result.Where(f =>
-                    f.Name.Contains(descFilter, StringComparison.CurrentCultureIgnoreCase)
-                    || f.Html.Contains(descFilter, StringComparison.CurrentCultureIgnoreCase));
+                string url = Configuration["Api.Catalog"];
+                var respose = new PagedResponse<List<BlogPost>>(null, 0, int.MaxValue);
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                items = respose.Data;
             }
-            return result;
+        }
+        catch(Exception ex)
+        {
+            
+
         }
     }
+    
 
-    int PageIndex = 0;
-    int TotalPages = 1;
-    int PageSize = 6;
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,9 +182,10 @@ else
             if (items is null)
             {
                 PageIndex = 1;
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/getall?PageSize={PageSize}&PageIndex={PageIndex}");
-                items = respose.Data;
-                TotalPages = respose.TotalPages;
+                
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<BlogPost>>>($"{url}BlogPost/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                items = respose.Data; 
+
             }
             await base.OnInitializedAsync();
         }
@@ -118,7 +195,18 @@ else
         }
 
     }
-    
+    private void OnTotalItemCountChanged(object sender, int? totalItemCount)
+    {
+        // Update UI based on totalItemCount
+        if (totalItemCount.HasValue)
+        {
+            // TotalItemCount is available, update Paginator or other UI elements
+        }
+        else
+        {
+            // TotalItemCount is not yet available, handle accordingly (e.g., display loading indicator)
+        }
+    }
     private void InitializeItemObject()
     {
         postObj = new BlogPostVM();

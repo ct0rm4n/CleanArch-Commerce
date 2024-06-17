@@ -84,6 +84,9 @@ app.MapGet("/blogpost/Search",
         if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
             paginationFilter = new PaginationFilter((int)PageNumber, 10, filterText);
 
+        if(!string.IsNullOrEmpty(filterText))
+            paginationFilter.SerachText = filterText;
+
         var result = postService.Search(paginationFilter);
         if (result.Data is null || result.Data.Count == 0)
             return Results.NotFound("No blog posts found matching the filter.");

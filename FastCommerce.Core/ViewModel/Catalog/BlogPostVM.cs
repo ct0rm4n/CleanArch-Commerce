@@ -9,8 +9,8 @@ namespace Core.ViewModel.Catalog
         [Required(ErrorMessage = "Post Name is required")]
         [StringLength(20)]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Post Body is required"), MinLength(20)]
-        [StringLength(20)]
+        [Required(ErrorMessage = "Post Body is required")]//, MinLength(20)]
+        //[StringLength(20)]
         public string Html { get; set; }
         public string Url { get; set; }
         public DateTime? DateStart { get; set; }

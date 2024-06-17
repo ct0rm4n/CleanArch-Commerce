@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Domain.Blog;
 using Core.ViewModel.Catalog;
+using Core.ViewModel.Generic;
 using Core.ViewModel.Generic.Abstracts;
 using Core.Wrappers;
 using Data.Commands.Repositories;
@@ -91,7 +92,9 @@ namespace Service
             var data = new List<BlogPost>();
             if (!string.IsNullOrEmpty(filter.SerachText))
             {
-                data = (GetAll()).ToList();
+                data = (GetAll()).ToList().Where(f =>
+                    f.Name.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
+                    || f.Html.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
             else
             {

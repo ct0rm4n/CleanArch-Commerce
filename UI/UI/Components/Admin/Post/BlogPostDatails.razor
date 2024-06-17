@@ -18,7 +18,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <EditForm Model="@postObject" Enhance EditContext="_editContext" formname="BlogPostVM" OnValidSubmit="@HandleInValidSubmit">
+                <EditForm Model="@postObject" formname="BlogPostVM" OnValidSubmit="@HandleInValidSubmit">
                      <ValidationSummary />
                      @if (!string.IsNullOrEmpty(errorMessage))
                     {
@@ -94,10 +94,9 @@
 
 @code {
     private string? errorMessage;
-    [CascadingParameter] private EditContext _editContext { get; set; } = default!;
     [Parameter]
     public BlogPostVM postObject { get; set; } = new BlogPostVM();
-    BlazoredTextEditor richEditor = default!;
+    BlazoredTextEditor richEditor;//= default!;
 
     [Parameter]
     public RenderFragment Cabecalho { get; set; }
@@ -122,6 +121,7 @@
         {
             if (postObject.Id != null && postObject.Id > 0 && !string.IsNullOrEmpty(postObject.Html))
             {
+
                 await richEditor.LoadHTMLContent(postObject.Html);
                 StateHasChanged();
             }
@@ -153,13 +153,14 @@
 
     public async Task HandleSubmit()
     {        
-        
+
         await CloseItemModal();
         AlteracaoDados?.Invoke();
     }
     public async Task UpdateDescription()
     {
-        postObject.Html = await richEditor.GetHTML();
-        StateHasChanged();
+        var raw = (MarkupString)await richEditor.GetHTML();
+        postObject.Html = raw.Value;
+        //StateHasChanged();
     }
 }

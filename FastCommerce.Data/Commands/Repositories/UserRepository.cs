@@ -1,4 +1,4 @@
-﻿using Core.Entities.Domain;
+﻿using Core.Entities.Domain.User;
 using Core.ViewModel.Customer;
 namespace Data.Commands.Repositories
 {

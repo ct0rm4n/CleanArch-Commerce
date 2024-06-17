@@ -1,4 +1,4 @@
-﻿using Core.Entities.Domain;
+﻿using Core.Entities.Domain.User;
 using Data.Commands.Repositories;
 using Data.Interfaces;
 namespace Service
