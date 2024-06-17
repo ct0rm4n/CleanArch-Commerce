@@ -32,7 +32,7 @@
                          <InputText id="Name" class="form-control" @bind-Value="@postObject.Name" />
                          <ValidationMessage For="@(() => postObject.Name)" />
                      </div>
-                    <BlazoredTextEditor @ref="@richEditor" @bind-Value="@htmlContent">
+                    <BlazoredTextEditor @ref="@richEditor">
                          <ToolbarContent>
                              <select class="ql-header">
                                  <option selected=""></option>
@@ -61,8 +61,11 @@
                              </span>
                          </ToolbarContent>
                          <EditorContent>
-
-                         </EditorContent>
+                            @if (string.IsNullOrEmpty(postObject.Html))
+                            {
+                                @postObject.Html
+                            }
+                        </EditorContent>
                      </BlazoredTextEditor>
 
                      <ValidationMessage For="@(() => postObject.Html)" />
@@ -122,8 +125,8 @@
             if (postObject.Id != null && postObject.Id > 0 && !string.IsNullOrEmpty(postObject.Html))
             {
                 htmlContent = postObject.Html;
-                await richEditor.LoadHTMLContent(postObject.Html);
-                await richEditor.InsertText(postObject.Html);
+                await richEditor.LoadContent(postObject.Html);
+                //await richEditor.InsertText(postObject.Html);
                 //StateHasChanged();
             }
         }
