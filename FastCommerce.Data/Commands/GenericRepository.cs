@@ -120,7 +120,7 @@ namespace Data.Commands
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string keyProperty = GetKeyPropertyName();
+                string keyProperty = GetPropertyValue(entity, keyColumn)?.ToString() ?? string.Empty;
 
                 StringBuilder query = new StringBuilder();
                 query.Append($"UPDATE {tableName} SET ");
@@ -130,14 +130,14 @@ namespace Data.Commands
                     var columnAttr = property.GetCustomAttribute<ColumnAttribute>();
 
                     string propertyName = property.Name;
-                    string columnName = columnAttr.Name;
-
-                    query.Append($"{columnName} = @{propertyName},");
+                    string propertyValue = GetPropertyValue(entity, propertyName)?.ToString() ?? string.Empty;
+                    if(!string.IsNullOrEmpty(propertyValue))
+                        query.Append($"{propertyName} = '{propertyValue}',");
                 }
 
                 query.Remove(query.Length - 1, 1);
 
-                query.Append($" WHERE {keyColumn} = @{keyProperty}");
+                query.Append($" WHERE {keyColumn} = '{keyProperty}'");
 
                 rowsEffected = _connection.Execute(query.ToString(), entity);
             }
@@ -235,7 +235,28 @@ namespace Data.Commands
 
             return values;
         }
+        public static object GetPropertyValue<T>(T entity, string propertyName)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
+            Type type = typeof(T);
+            PropertyInfo propertyInfo = type.GetProperty(propertyName);
+
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException($"Property '{propertyName}' not found on type '{type.Name}'.");
+            }
+
+            return propertyInfo.GetValue(entity);
+        }
 
         protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
         {
