@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Buffers;
 using Core.ViewModel.Generic.Abstracts;
+using static Dapper.SqlMapper;
 
 namespace Data.Commands
 {
@@ -62,6 +63,31 @@ namespace Data.Commands
             }
             return (result.FirstOrDefault(), result.Count() > 0 ? true : false);
         }
+
+        /*insert massivo*/
+        public IList<T> BulkInsertReturn(IEnumerable<T> entitys)
+        {
+            List<T> inserted = new List<T>();
+            try
+            {
+                string tableName = GetTableName();
+                string columns = GetColumns(excludeKey: true);
+                string properties = GetPropertyNames(excludeKey: true);
+                string propertiesValues = GetPropertyValues(entitys.FirstOrDefault(), excludeKey: true);                
+                var query = string.Empty;
+                Parallel.ForEach(entitys, entity =>
+                {
+                    query += $"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues});";
+
+                });
+                return inserted;
+            }
+            catch(Exception ex)
+            {
+                return inserted.ToList();
+            }
+        }
+
         public bool Delete(T entity)
         {
             int rowsEffected = 0;
@@ -158,7 +184,7 @@ namespace Data.Commands
                 return tableName;
             }
 
-            return type.Name + "s";
+            return type.Name;
         }
 
         public static string GetKeyColumnName()
