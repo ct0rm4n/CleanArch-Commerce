@@ -55,7 +55,6 @@ namespace Data.Commands
                 string query = $"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues})";
                 _connection.Open();
                 result = _connection.Query<T>(query);
-                //rowsEffected = _connection.Execute(query);
             }
             catch(Exception ex)
             {
