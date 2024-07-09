@@ -1,0 +1,220 @@
+﻿@page "/Admin/Settings"
+@using Core.Entities.Domain.Blog
+@using Core.ViewModel.Catalog
+@using Core.Wrappers
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Newtonsoft.Json
+@using Core.ViewModel.Generic.Abstracts
+@using Core.Entities.Abstract
+@inject IJSRuntime js;
+@rendermode InteractiveServer
+
+<h3><span class="bi bi-card-text" aria-hidden="true" b-4knz10sgzz=""></span> Settings list</h3>
+
+<div id="data-tabele-default">
+    <div class="container" style="width: 100% !important">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="search-box">
+                                    <input type="text" @bind-value="descFilter" @bind-value:event="oninput" @onkeyup="@(() => Search())" />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                            <div class="col-md-2">
+                                <a type="button" data-toggle="modal" data-target="#postModal"
+                                    class="btn btn-primary" @onclick="(() => InitializeItemObject())">
+                                    <span class="bi bi-plus-circle-fill" aria-hidden="true" b-4knz10sgzz=""></span> Novo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @if (items == null)
+                    {
+                        <p><em>Carregando...</em></p>
+                    }
+                    else
+                    {
+                        <div class="card-body">
+                            <table id="example" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>name</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in items)
+                                    {
+                                        <tr>
+                                            <td>@((MarkupString)item.Body)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    @if (items is not null)
+                                    {
+                                        @if (!string.IsNullOrEmpty(pPage))
+                                        {
+                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(pPage))" value="Previous" />
+                                        }
+                                        @if (!string.IsNullOrEmpty(nPage))
+                                        {
+                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(nPage))" value="Next" />
+                                        }
+                                    }
+
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    }                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+
+
+<ConfirmaDialog OnClick="@Delete" />
+
+<SettingsDatails SettingsObject=SettingsObj AlteracaoDados="@AlteracaoDados">
+    <Cabecalho>@cabecalho</Cabecalho>
+</SettingsDatails>
+
+@code {
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    private readonly HttpClient _client = new HttpClient();
+    public List<Settings> items { get; set; }
+    string cabecalho = string.Empty;
+    string descFilter = string.Empty;
+    string pPage = string.Empty;
+    string nPage = string.Empty;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    int PageIndex = 0;
+    int TotalPages = 1;
+
+    SettingsVM SettingsObj = new SettingsVM();
+    private async void Search()
+    {
+        await FilteredItems();
+    }
+    private async Task FilteredItems()
+    {
+        try
+        {
+            var result = items.AsQueryable();
+            if (!string.IsNullOrEmpty(descFilter))
+            {
+                string url = Configuration["Api.Catalog"];
+                var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}Settings/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                items = respose.Data;
+                await BuildPagger(respose);
+            }
+        }
+        catch(Exception ex)
+        {
+
+
+        }
+    }
+
+    private async Task ChangePage(string page)
+    {
+        try
+        {
+            string url = Configuration["Api.Catalog"];
+            var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
+            respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{page}");
+            items = respose.Data;
+            await BuildPagger(respose);
+        }catch(Exception ex)
+        {
+
+        }
+    }
+    private async Task BuildPagger(PagedResponse<List<Settings>> respose)
+    {
+        if (respose.NextPage != null)
+            nPage = respose.NextPage.ToString();
+        if (respose.PreviousPage != null)
+            pPage = respose.PreviousPage.ToString();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            string url = Configuration["Api.Catalog"];
+            var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
+            if (items is null)
+            {
+                PageIndex = 1;
+                
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}Settings/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                items = respose.Data; 
+
+                await BuildPagger(respose);
+
+            }
+            await base.OnInitializedAsync();
+        }
+        catch(Exception ex)
+        {
+            //logger            
+        }
+
+    }
+    private void OnTotalItemCountChanged(object sender, int? totalItemCount)
+    {
+        // Update UI based on totalItemCount
+        if (totalItemCount.HasValue)
+        {
+            // TotalItemCount is available, update Paginator or other UI elements
+        }
+        else
+        {
+            // TotalItemCount is not yet available, handle accordingly (e.g., display loading indicator)
+        }
+    }
+    private void InitializeItemObject()
+    {
+        SettingsObj = new SettingsVM();
+        SettingsObj.DateStart = DateTime.Now;
+        SettingsObj.DateEnd = (DateTime.Now).AddYears(2);
+        cabecalho = "Nova Configuracao";
+    }
+    
+    private async void AlteracaoDados()
+    {
+        Thread.Sleep(2000);
+        StateHasChanged();
+    }
+
+    private async Task Delete()
+    {
+        await js.InvokeAsync<object>("CloseModal", "confirmaExclusaoModal");
+        
+        SettingsObj = new SettingsVM();
+    }
+
+    private void PreparaEdicao(Settings item)
+    {
+        cabecalho = "Edita Post";
+        var obj = JsonConvert.SerializeObject(item);
+        SettingsObj = JsonConvert.DeserializeObject<SettingsVM>(obj);
+    }
+
+    private void PreparaExclusao(Settings item)
+    {
+        var obj = JsonConvert.SerializeObject(item);
+        SettingsObj = JsonConvert.DeserializeObject<SettingsVM>(obj);
+    }
+}

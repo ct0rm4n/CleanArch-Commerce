@@ -13,5 +13,6 @@ namespace Data.Interfaces
         BlogPost Get(int Id);
         PagedResponse<List<BlogPost>> Search(PaginationFilter filter);
         public IList<string> GetValidation(BlogPostVM viewModel);
+        public IEnumerable<BlogPost> BulkInsertReturn(IEnumerable<BlogPost> entitys);
     }
 }
