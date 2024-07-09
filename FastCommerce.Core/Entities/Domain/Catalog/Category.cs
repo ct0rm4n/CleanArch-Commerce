@@ -3,9 +3,9 @@ using Core.Entities.Enum;
 
 namespace Core.Entities.Domain.Catalog
 {
-    public class Categorie : BaseEntity, IEntity
+    public class Category : BaseEntity, IEntity
     {
-        public Categorie()
+        public Category()
         {
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;

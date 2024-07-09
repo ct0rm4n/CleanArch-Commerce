@@ -1,5 +1,5 @@
-﻿using Core.Entities.Domain.Blog;
-using Core.ViewModel.Catalog;
+﻿using Core.Entities.Abstract;
+using Core.ViewModel.Generic.Abstracts;
 using Core.Wrappers;
 using Data.Commands.Repositories;
 using Data.Interfaces;
@@ -7,16 +7,16 @@ using Service.Helpers;
 
 namespace Service
 {
-    public partial class BlogPostService : IBlogPostService
+    public partial class SettingsService : ISettingsService
     {
-        private readonly BlogPostRepository _repository = new BlogPostRepository();
+        private readonly SettingsRepository _repository = new SettingsRepository();
                 
-        public BlogPost? Add(BlogPost blogPost)
+        public Settings? Add(Settings Settings)
         {
             var isAdded = false;
             try
             {
-                var inserted = _repository.AddReturn(blogPost);
+                var inserted = _repository.AddReturn(Settings);
                 isAdded = inserted.Item2;
                 return inserted.Item1;
             }
@@ -27,40 +27,40 @@ namespace Service
             
         }
 
-        public List<BlogPost> GetAll()
+        public List<Settings> GetAll()
         {
-            List<BlogPost> blogPosts = new List<BlogPost>();
+            List<Settings> Settingss = new List<Settings>();
             try
             {
-                blogPosts = _repository.GetAll().ToList();
+                Settingss = _repository.GetAll().ToList();
             }
             catch (Exception ex)
             {
             }
 
-            return blogPosts;
+            return Settingss;
         }
 
-        public BlogPost Get(int Id)
+        public Settings Get(int Id)
         {
-            BlogPost blogPost = new BlogPost();
+            Settings Settings = new Settings();
             try
             {
-                blogPost = _repository.GetById(Id);
+                Settings = _repository.GetById(Id);
             }
             catch (Exception ex)
             {
             }
 
-            return blogPost;
+            return Settings;
         }
 
-        public bool Update(BlogPost blogPost)
+        public bool Update(Settings Settings)
         {
             bool isUpdated = false;
             try
             {
-                isUpdated = _repository.Update(blogPost);
+                isUpdated = _repository.Update(Settings);
             }
             catch (Exception ex)
             {
@@ -69,28 +69,28 @@ namespace Service
             return isUpdated;
         }
 
-        public bool Delete(BlogPost blogPost)
+        public bool Delete(Settings Settings)
         {
             bool isDeleted = false;
             try
             {                
-                isDeleted = _repository.Delete(blogPost);
+                isDeleted = _repository.Delete(Settings);
             }
             catch (Exception ex)
             {
             }
             return isDeleted;
         }
-        public PagedResponse<List<BlogPost>> Search(PaginationFilter filter)
+        public PagedResponse<List<Settings>> Search(PaginationFilter filter)
         {
 
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var data = new List<BlogPost>();
+            var data = new List<Settings>();
             if (!string.IsNullOrEmpty(filter.SerachText))
             {
                 data = (GetAll()).ToList().Where(f =>
-                    f.Name.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
-                    || f.Html.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    f.Body.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
+                    || f.Body.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
             else
             {
@@ -102,15 +102,15 @@ namespace Service
                 .ToList();
 
             var totalRecords = data.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Settings>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/Settings/getall");
             return (pagedReponse);
         }
-        public IList<string> GetValidation(BlogPostVM viewModel)
+        public IList<string> GetValidation(SettingsVM viewModel)
         {
             return _repository.GetValidationMessage(viewModel);
         }
 
-        public IEnumerable<BlogPost> BulkInsertReturn(IEnumerable<BlogPost> entitys)
+        public IEnumerable<Settings> BulkInsertReturn(IEnumerable<Settings> entitys)
         {
             return _repository.BulkInsertReturn(entitys);
         }

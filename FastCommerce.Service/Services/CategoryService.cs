@@ -1,22 +1,22 @@
 ﻿using Core.Entities.Domain.Blog;
+using Core.Entities.Domain.Catalog;
 using Core.ViewModel.Catalog;
 using Core.Wrappers;
 using Data.Commands.Repositories;
 using Data.Interfaces;
 using Service.Helpers;
 
-namespace Service
+namespace Service.Services
 {
-    public partial class BlogPostService : IBlogPostService
+    public class CategoryService : ICategoryService
     {
-        private readonly BlogPostRepository _repository = new BlogPostRepository();
-                
-        public BlogPost? Add(BlogPost blogPost)
+        private readonly CategoryRepository _repository = new CategoryRepository();
+        public Category? Add(Category model)
         {
             var isAdded = false;
             try
             {
-                var inserted = _repository.AddReturn(blogPost);
+                var inserted = _repository.AddReturn(model);
                 isAdded = inserted.Item2;
                 return inserted.Item1;
             }
@@ -24,43 +24,13 @@ namespace Service
             {
                 return null;
             }
-            
         }
-
-        public List<BlogPost> GetAll()
-        {
-            List<BlogPost> blogPosts = new List<BlogPost>();
-            try
-            {
-                blogPosts = _repository.GetAll().ToList();
-            }
-            catch (Exception ex)
-            {
-            }
-
-            return blogPosts;
-        }
-
-        public BlogPost Get(int Id)
-        {
-            BlogPost blogPost = new BlogPost();
-            try
-            {
-                blogPost = _repository.GetById(Id);
-            }
-            catch (Exception ex)
-            {
-            }
-
-            return blogPost;
-        }
-
-        public bool Update(BlogPost blogPost)
+        public bool Update(Category model)
         {
             bool isUpdated = false;
             try
             {
-                isUpdated = _repository.Update(blogPost);
+                isUpdated = _repository.Update(model);
             }
             catch (Exception ex)
             {
@@ -68,24 +38,51 @@ namespace Service
 
             return isUpdated;
         }
-
-        public bool Delete(BlogPost blogPost)
+        public bool Delete(Category category)
         {
             bool isDeleted = false;
             try
-            {                
-                isDeleted = _repository.Delete(blogPost);
+            {
+                isDeleted = _repository.Delete(category);
             }
             catch (Exception ex)
             {
             }
             return isDeleted;
         }
-        public PagedResponse<List<BlogPost>> Search(PaginationFilter filter)
-        {
 
+        public Category Get(int Id)
+        {
+            Category model = new Category();
+            try
+            {
+                model = _repository.GetById(Id);
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+        }
+
+        public List<Category> GetAll()
+        {
+            List<Category> list = new List<Category>();
+            try
+            {
+                list = _repository.GetAll().ToList();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return list;
+        }
+
+
+        public PagedResponse<List<Category>> Search(PaginationFilter filter)
+        {
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var data = new List<BlogPost>();
+            var data = new List<Category>();
             if (!string.IsNullOrEmpty(filter.SerachText))
             {
                 data = (GetAll()).ToList().Where(f =>
@@ -102,17 +99,13 @@ namespace Service
                 .ToList();
 
             var totalRecords = data.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Category>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
             return (pagedReponse);
         }
-        public IList<string> GetValidation(BlogPostVM viewModel)
+
+        public IList<string> GetValidation(CategoryVM viewModel)
         {
             return _repository.GetValidationMessage(viewModel);
-        }
-
-        public IEnumerable<BlogPost> BulkInsertReturn(IEnumerable<BlogPost> entitys)
-        {
-            return _repository.BulkInsertReturn(entitys);
         }
     }
 }

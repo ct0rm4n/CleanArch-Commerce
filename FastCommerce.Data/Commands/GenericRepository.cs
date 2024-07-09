@@ -8,6 +8,10 @@ using System.Reflection;
 using System.Text;
 using System.Buffers;
 using Core.ViewModel.Generic.Abstracts;
+using static Dapper.SqlMapper;
+using Core.Wrappers;
+using System.Linq.Expressions;
+using System.Diagnostics;
 
 namespace Data.Commands
 {
@@ -55,7 +59,6 @@ namespace Data.Commands
                 string query = $"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues})";
                 _connection.Open();
                 result = _connection.Query<T>(query);
-                //rowsEffected = _connection.Execute(query);
             }
             catch(Exception ex)
             {
@@ -63,6 +66,44 @@ namespace Data.Commands
             }
             return (result.FirstOrDefault(), result.Count() > 0 ? true : false);
         }
+
+        /*insert massivo, suggestion Sr. JayP*/
+        public IEnumerable<T> BulkInsertReturn(IEnumerable<T> entitys)
+        {
+            IEnumerable<T> result = null;
+            try
+            {
+                string tableName = GetTableName();
+                string columns = GetColumns(excludeKey: true);
+                string properties = GetPropertyNames(excludeKey: true);
+                
+                var query = new StringBuilder();
+                query.Append($"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES");
+                int count = 0;
+                for (int i = 0; i < entitys.Count(); i++)
+                {
+                    count++;
+                    var entity = entitys.ElementAt(i);
+                    string propertyValues = GetPropertyValues(entity, excludeKey: true);
+                    query.Append(count == 1 ? $" ({propertyValues})" : $", ({propertyValues})");
+                }
+                
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                _connection.Open();
+                result = _connection.Query<T>(query.ToString());
+                stopwatch.Stop();
+                long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                Console.WriteLine($"Query execution time: {elapsedMilliseconds} milliseconds");
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                return result;
+            }
+        }
+        
         public bool Delete(T entity)
         {
             int rowsEffected = 0;
@@ -159,7 +200,7 @@ namespace Data.Commands
                 return tableName;
             }
 
-            return type.Name + "s";
+            return type.Name;
         }
 
         public static string GetKeyColumnName()

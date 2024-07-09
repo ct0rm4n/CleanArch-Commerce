@@ -3,13 +3,16 @@ using Core.Wrappers;
 using Data.Interfaces;
 using Data.Ioc;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.Hosting;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Service.Ioc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Core.ViewModel.Catalog;
+using Core.Entities.Domain.Catalog;
+using Core.Entities.Enum;
+using Core.Entities.Abstract;
+using Core.ViewModel.Generic.Abstracts;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -132,6 +135,234 @@ app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] 
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
 
         var insert = postService.Update(JsonConvert.DeserializeObject<BlogPost>(serialized));
+        return insert is not false
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
+{
+    try
+    {
+        IList<BlogPost> blogPosts = new List<BlogPost>();
+        for (int i = 0; i < 100000; i++)
+        {
+            blogPosts.Add(new BlogPost
+            {
+                Name = $"Post {i}",
+                Html = $"<div><div><b>Chorume guid {Guid.NewGuid().ToString()}</b></div></div>",
+                Status = StatusEntity.Inserted
+            });
+        }        
+        var bookList  = postService.BulkInsertReturn(blogPosts);
+
+        return bookList is not EmptyResult
+        ? TypedResults.Ok(bookList)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
+/*Catgeory*/
+app.MapGet("/Category/Get/{id}", Results<Ok<Category>, NotFound> (ICategoryService cService, int id) =>
+        cService.Get(id) is { } category
+            ? TypedResults.Ok(category)
+            : TypedResults.NotFound());
+
+app.MapGet("/Category/GetALl",
+    async (ICategoryService cService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10);
+
+            var result = cService.Search(paginationFilter);
+
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No items found matching the filter.");
+
+            return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapGet("/Category/Search",
+    async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ICategoryService cService) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize, filterText);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10, filterText);
+
+            if (!string.IsNullOrEmpty(filterText))
+                paginationFilter.SerachText = filterText;
+
+            var result = cService.Search(paginationFilter);
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapPost("/Category/Add", async (ICategoryService cService, [FromBody] CategoryVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = cService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = cService.Add(JsonConvert.DeserializeObject<Category>(serialized));
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
+app.MapPost("/Category/update", async (ICategoryService cService, [FromBody] CategoryVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = cService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = cService.Update(JsonConvert.DeserializeObject<Category>(serialized));
+        return insert is not false
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+/*Settings*/
+app.MapGet("/Settings/Get/{id}", Results<Ok<Settings>, NotFound> (ISettingsService setService, int id) =>
+        setService.Get(id) is { } post
+            ? TypedResults.Ok(post)
+            : TypedResults.NotFound());
+
+app.MapGet("/Settings/GetALl",
+    async (ISettingsService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10);
+
+            var result = setService.Search(paginationFilter);
+
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapGet("/Settings/Search",
+    async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ISettingsService setService) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize, filterText);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10, filterText);
+
+            if (!string.IsNullOrEmpty(filterText))
+                paginationFilter.SerachText = filterText;
+
+            var result = setService.Search(paginationFilter);
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapPost("/Settings/Add", async (ISettingsService setService, [FromBody] SettingsVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Add(JsonConvert.DeserializeObject<Settings>(serialized));
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
+app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] SettingsVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Update(JsonConvert.DeserializeObject<Settings>(serialized));
         return insert is not false
         ? TypedResults.Ok(insert)
         : TypedResults.NotFound();
