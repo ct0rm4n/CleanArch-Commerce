@@ -39,6 +39,25 @@
         </li>
 
         <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=> settingsSubMenu =! settingsSubMenu">
+                <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "block" : "none")"></span>
+                <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "none" : "block")"></span>
+                Config
+            </NavLink>
+            @if (settingsSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Settings">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Settings
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+
+        <li class="nav-item px-3">
             <NavLink class="nav-link" @onclick="()=> widgetSubMenu =! widgetSubMenu">
                 <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(widgetSubMenu == false ? "block" : "none")"></span>
                 <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(widgetSubMenu == false ? "none" : "block")"></span>
@@ -94,10 +113,10 @@
 
 @code {
 
-    private bool collapseNavMenu = true;
-    private bool catalogSubMenu, userSubMenu, widgetSubMenu;
+    //private bool collapseNavMenu = true;
+    private bool catalogSubMenu, userSubMenu, widgetSubMenu, settingsSubMenu;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    //private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private string? currentUrl;
 
