@@ -13,6 +13,8 @@ using Core.Entities.Domain.Catalog;
 using Core.Entities.Enum;
 using Core.Entities.Abstract;
 using Core.ViewModel.Generic.Abstracts;
+using Core.ViewModel.Banner;
+using Core.Entities.Domain.Banner;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -372,6 +374,107 @@ app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] S
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
+/*Banner*/
+app.MapGet("/Banner/Get/{id}", Results<Ok<Banner>, NotFound> (IBannerService setService, int id) =>
+        setService.Get(id) is { } post
+            ? TypedResults.Ok(post)
+            : TypedResults.NotFound());
+
+app.MapGet("/Banner/GetALl",
+    async (IBannerService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10);
+
+            var result = setService.Search(paginationFilter);
+
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapGet("/Banner/Search",
+    async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IBannerService setService) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize, filterText);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10, filterText);
+
+            if (!string.IsNullOrEmpty(filterText))
+                paginationFilter.SerachText = filterText;
+
+            var result = setService.Search(paginationFilter);
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapPost("/Banner/Add", async (IBannerService setService, [FromBody] BannerVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Add(JsonConvert.DeserializeObject<Banner>(serialized));
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
+app.MapPost("/Banner/update", async (IBannerService setService, [FromBody] BannerVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Update(JsonConvert.DeserializeObject<Banner>(serialized));
+        return insert is not false
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
 
 app.Run();
 
