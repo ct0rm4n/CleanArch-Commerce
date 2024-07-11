@@ -1,5 +1,4 @@
-﻿using Core.Entities.Domain.Blog;
-using Core.Entities.Domain.Catalog;
+﻿using Core.Entities.Domain.Catalog;
 using Core.ViewModel.Catalog;
 using Core.Wrappers;
 using Data.Commands.Repositories;

@@ -58,24 +58,6 @@
         await js.InvokeAsync<object>("CloseModal", "postModal");
     }
 
-    protected async override Task OnParametersSetAsync()
-    {
-        /// Load the content here based on the parameters
-        try
-        {
-            if (SettingsObject.Id != null && SettingsObject.Id > 0 && !string.IsNullOrEmpty(SettingsObject.Body))
-            {
-                htmlContent = SettingsObject.Body;
-                await richEditor.LoadContent(SettingsObject.Body);
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Quill Exception: {ex}");
-        }
-    }
-
     public async Task HandleInValidSubmit(EditContext editContext)
     {        
         var respose = new HttpResponseMessage();
