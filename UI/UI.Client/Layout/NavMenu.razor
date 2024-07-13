@@ -13,6 +13,9 @@
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <div class="search-wrapper">
+        <input type="text" id="search-bar" placeholder="Search..." />
+    </div>
     <ul class="flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -24,7 +27,7 @@
             <NavLink class="nav-link" @onclick="()=> catalogSubMenu =! catalogSubMenu">
                 <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(catalogSubMenu == false ? "block" : "none")"></span>
                 <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(catalogSubMenu == false ? "none" : "block")"></span>
-                Category
+                Catalog
             </NavLink>
             @if (catalogSubMenu)
             {
@@ -34,28 +37,24 @@
                             <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Category
                         </NavLink>
                     </li>
-                </ul>
-            }
-        </li>
-
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" @onclick="()=> settingsSubMenu =! settingsSubMenu">
-                <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "block" : "none")"></span>
-                <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "none" : "block")"></span>
-                Config
-            </NavLink>
-            @if (settingsSubMenu)
-            {
-                <ul class="nav flex-column">
                     <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Settings">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Settings
+                        <NavLink class="nav-link" href="/Admin/Product">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Product
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Manufacturer">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Manufacturer
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Manufacturer">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Tags
                         </NavLink>
                     </li>
                 </ul>
             }
-        </li>
-
+        </li>       
 
         <li class="nav-item px-3">
             <NavLink class="nav-link" @onclick="()=> widgetSubMenu =! widgetSubMenu">
@@ -113,9 +112,57 @@
             }
         </li>
 
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="()=> settingsSubMenu =! settingsSubMenu">
+                <span class="bi bi-caret-right-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "block" : "none")"></span>
+                <span class="bi bi-caret-down-fill fs-3" aria-hidden="true" style="margin-top: -30px; display: @(settingsSubMenu == false ? "none" : "block")"></span>
+                Config
+            </NavLink>
+            @if (settingsSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Settings">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Settings
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Settings">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Payments
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Settings">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Shipping
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+
     </ul>
 </div>
-
+<script>
+    $(document).ready(function () {
+        $("#search-bar").keyup(function () {
+            var searchTerm = $(this).val().toLowerCase();
+            $(".nav-link").each(function () {
+                var menuItemText = $(this).text().toLowerCase();
+                if (menuItemText.indexOf(searchTerm) !== -1) {
+                    $(this).parent().show();
+                } else {
+                    $(this).parent().hide();
+                }
+            });
+        });
+    });
+</script>
 
 
 @code {
