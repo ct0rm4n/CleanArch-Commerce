@@ -39,3 +39,4 @@ function handleData(event) {
 function stopRecording() {
     // No longer needed as the stop button listener handles this
 }
+
