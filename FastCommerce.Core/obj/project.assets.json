@@ -139,9 +139,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\FastCommerce.Core.csproj",
-      "projectName": "FastCommerce.Core",
-      "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\FastCommerce.Core.csproj",
+      "projectUniqueName": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\Core.csproj",
+      "projectName": "Core",
+      "projectPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\Core.csproj",
       "packagesPath": "C:\\Users\\torman\\.nuget\\packages\\",
       "outputPath": "D:\\Projects\\Aulas\\SOLID - FastCommerce\\FastCommerce - SOLID\\FastCommerce.Core\\obj\\",
       "projectStyle": "PackageReference",
@@ -202,7 +202,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.105/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.107/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

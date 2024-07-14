@@ -1,6 +1,8 @@
 ﻿@inject IJSRuntime js;
 @using Blazored.TextEditor
 @using Core.ViewModel.Banner
+@using System.Net
+@using UI.Server.Utils
 
 
 @rendermode InteractiveServer
@@ -15,7 +17,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <EditForm Model="@itemObject" formname="bannerVM"
+                <EditForm Model="@itemObject" formname="bannerVM" EditContext="@editContext"
                            OnValidSubmit="@HandleSubmit" enctype="multipart/form-data">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
@@ -43,13 +45,13 @@
                      </div>
                     <div class="form-group mb-3 mt-3">
                         <label for="ConclusaoEm">Inicio em : </label>
-                        <input id="ConclusaoEm" type="date" name="math" @bind-value="@itemObject.Start" />
-                        <ValidationMessage For="@(() => itemObject.Start)" />
+                        <input id="ConclusaoEm" type="date" name="math" @bind-value="@itemObject.DateStart" />
+                        <ValidationMessage For="@(() => itemObject.DateStart)" />
                     </div>
                     <div class="form-group mb-3 mt-3">
                         <label for="ConclusaoEm">Possui fim ? </label>
-                        <input id="ConclusaoEm" type="date" name="math" @bind-value="@itemObject.Start" />
-                        <ValidationMessage For="@(() => itemObject.Start)" />
+                        <input id="ConclusaoEm" type="date" name="math" @bind-value="@itemObject.DateStart" />
+                        <ValidationMessage For="@(() => itemObject.DateStart)" />
                     </div>
                     <button type="submit" class="btn btn-primary">Envia</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancela</button>
@@ -62,11 +64,16 @@
 
 @code {
     private string? errorMessage;
-    List<IBrowserFile> arquivos = new();
+    private EditContext editContext;
+    List<IBrowserFile> arquivos ;
     int tamanhoMaximoArquivo = 1 * 1024 * 1024;
-    BannerVM arquivoUpload = new();
-    List<BannerVM> uploads = new();
-    [CascadingParameter] private EditContext _editContext { get; set; } = default!;
+    BannerVM arquivoUpload = new BannerVM();
+    
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    private readonly HttpClient _client = new HttpClient();
 
     [Parameter]
     public BannerVM itemObject { get; set; } = new BannerVM();
@@ -82,12 +89,7 @@
         await js.InvokeAsync<object>("CloseModal", "bannerModal");
     }
 
-    public async Task HandleInValidSubmit(EditContext editContext)
-    {
-        bool formIsValid = editContext.Validate();        
-        //var validationResult = await Validator.ValidateAsync(itemObject);
-             
-    }
+    
     private async Task SelectFiles(InputFileChangeEventArgs e)
     {
         arquivos = e.GetMultipleFiles(tamanhoMaximoArquivo).ToList();
@@ -113,30 +115,34 @@
     {
         var erro = false;
         var extensoesPermitidas = new string[] { ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
-        int contador = 0;
-        //var validate = await Validator.ValidateAsync(itemObject);
-        if (itemObject.Id > 0 && arquivos.Count() > 0)
+        int contador = 0;        
+        try
         {
-            foreach (var arquivo in arquivos)
+            var respose = new HttpResponseMessage();
+            if (itemObject.Id == 0)
             {
-                try
-                {
-                    //(int statusCode, string statusMessage) = await service.UploadAsync(arquivo, tamanhoMaximoArquivo, extensoesPermitidas);
-                    
-                    errorMessage = ($" {arquivo.Name} ");
-                    //itemObject.Name = statusMessage;
-                    //await service.CreateOrUpdate(itemObject);
-                    AlteracaoDados?.Invoke();
-                    await CloseItemModal();
-                    contador++;
-                    
-                }
-                catch (Exception ex)
-                {
-                    erro = true;
-                    errorMessage = ($"Arquivo : {arquivo.Name} Erro : {ex.Message}");
-                }
+                
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Banner/add", itemObject);
             }
+            else
+            {
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Banner/update", itemObject);
+            }
+            if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
+            {
+                errorMessage = null;
+                await HandleSubmit();
+            }
+            else
+            {
+                errorMessage = new HandlerErrorMessage().BuildError(respose.Content.ReadAsStringAsync().Result, errorMessage);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            erro = true;
+            errorMessage = ($"Arquivo : {ex.Message} Erro : {ex.InnerException}");
         }
     }
 }

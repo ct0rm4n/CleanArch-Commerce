@@ -18,8 +18,9 @@ namespace Data.Commands
     public class GenericRepository<T, IBaseVM> : IGenericRepository<T, IBaseVM> where T : class
     {
         IDbConnection _connection;
+        readonly string schema = "FastCommerce.dbo";
 
-        readonly string connectionString = "Data Source=127.0.0.1; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
+        readonly string connectionString = $"Data Source=127.0.0.1; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
 
         public GenericRepository()
         {
@@ -35,7 +36,7 @@ namespace Data.Commands
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
                 
-                string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
+                string query = $"INSERT INTO {schema}.{tableName} ({columns}) VALUES ({properties})";
                 _connection.Open();
 
                 var response = _connection.Query<string>(query, entity);
@@ -56,7 +57,7 @@ namespace Data.Commands
                 string properties = GetPropertyNames(excludeKey: true);
                 string propertiesValues = GetPropertyValues(entity, excludeKey: true);
 
-                string query = $"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues})";
+                string query = $"INSERT INTO  {schema}.{tableName} ({columns}) OUTPUT inserted.* VALUES ({propertiesValues})";
                 _connection.Open();
                 result = _connection.Query<T>(query);
             }
@@ -78,7 +79,7 @@ namespace Data.Commands
                 string properties = GetPropertyNames(excludeKey: true);
                 
                 var query = new StringBuilder();
-                query.Append($"INSERT INTO {tableName} ({columns}) OUTPUT inserted.* VALUES");
+                query.Append($"INSERT INTO  {schema}.{tableName} ({columns}) OUTPUT inserted.* VALUES");
                 int count = 0;
                 for (int i = 0; i < entitys.Count(); i++)
                 {
@@ -112,7 +113,7 @@ namespace Data.Commands
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
                 string keyProperty = GetKeyPropertyName();
-                string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
+                string query = $"DELETE FROM  {schema}.{tableName} WHERE {keyColumn} = @{keyProperty}";
                 _connection.Open();
                 rowsEffected = _connection.Execute(query, entity);
             }
@@ -127,7 +128,7 @@ namespace Data.Commands
             try
             {
                 string tableName = GetTableName();
-                string query = $"SELECT * FROM {tableName}";
+                string query = $"SELECT * FROM  {schema}.{tableName}";
                 _connection.Open();
                 result = _connection.Query<T>(query);
             }
@@ -145,7 +146,7 @@ namespace Data.Commands
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
+                string query = $"SELECT * FROM  {schema}.{tableName} WHERE {keyColumn} = '{Id}'";
                 _connection.Open();
                 result = _connection.Query<T>(query);
             }
@@ -164,7 +165,7 @@ namespace Data.Commands
                 string keyProperty = GetPropertyValue(entity, keyColumn)?.ToString() ?? string.Empty;
 
                 StringBuilder query = new StringBuilder();
-                query.Append($"UPDATE {tableName} SET ");
+                query.Append($"UPDATE  {schema}.{tableName} SET ");
 
                 foreach (var property in GetProperties(true))
                 {

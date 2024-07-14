@@ -89,8 +89,8 @@ namespace Service
             if (!string.IsNullOrEmpty(filter.SerachText))
             {
                 data = (GetAll()).ToList().Where(f =>
-                    f.Name.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
-                    || f.Name.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    f.Title.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
+                    || f.Title.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
             else
             {
