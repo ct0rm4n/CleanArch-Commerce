@@ -68,7 +68,7 @@
     List<IBrowserFile> arquivos ;
     int tamanhoMaximoArquivo = 1 * 1024 * 1024;
     BannerVM arquivoUpload = new BannerVM();
-    
+
 
     [Inject]
     IConfiguration Configuration { get; set; }
@@ -89,7 +89,7 @@
         await js.InvokeAsync<object>("CloseModal", "bannerModal");
     }
 
-    
+
     private async Task SelectFiles(InputFileChangeEventArgs e)
     {
         arquivos = e.GetMultipleFiles(tamanhoMaximoArquivo).ToList();
@@ -121,7 +121,7 @@
             var respose = new HttpResponseMessage();
             if (itemObject.Id == 0)
             {
-                
+
                 respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Banner/add", itemObject);
             }
             else
@@ -131,7 +131,7 @@
             if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
             {
                 errorMessage = null;
-                await HandleSubmit();
+                return;
             }
             else
             {
@@ -142,7 +142,7 @@
         catch (Exception ex)
         {
             erro = true;
-            errorMessage = ($"Arquivo : {ex.Message} Erro : {ex.InnerException}");
+            errorMessage = new HandlerErrorMessage().BuildError(null, ($"Message : {ex.Message} InnerException : {ex.InnerException}"));
         }
     }
 }
