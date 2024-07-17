@@ -68,7 +68,7 @@ namespace Data.Commands
             return (result.FirstOrDefault(), result.Count() > 0 ? true : false);
         }
 
-        /*insert massivo, suggestion Sr. JayP*/
+
         public IEnumerable<T> BulkInsertReturn(IEnumerable<T> entitys)
         {
             IEnumerable<T> result = null;
