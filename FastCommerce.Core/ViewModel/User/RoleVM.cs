@@ -10,6 +10,7 @@ namespace Core.ViewModel.User
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Observation { get; set; } = string.Empty;
         public DateTime? InsertedDate { get; set; }
