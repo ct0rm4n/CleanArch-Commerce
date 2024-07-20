@@ -499,7 +499,7 @@ app.MapGet("/Role/GetALl",
             var result = setService.Search(paginationFilter);
 
             if (result.Data is null || result.Data.Count == 0)
-                return Results.NotFound("No blog posts found matching the filter.");
+                return Results.NotFound("No Role posts found matching the filter.");
 
             return Results.Ok(result);
         }

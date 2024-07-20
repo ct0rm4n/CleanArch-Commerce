@@ -1,0 +1,100 @@
+﻿@using Blazored.TextEditor
+@using Core.Entities.Domain.Blog
+@using Core.ViewModel.Catalog
+@using Core.ViewModel.User
+@using Core.Wrappers
+@using System.Net
+@using Newtonsoft.Json
+@using UI.Server.Utils
+@inject IJSRuntime js;
+
+
+<div class="modal" tabindex="-1" role="dialog" id="postModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Cabecalho</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@roleObject" formname="RoleVM" OnValidSubmit="@HandleInValidSubmit">
+                     <ValidationSummary />
+                     @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @((MarkupString)errorMessage)
+                        </div>
+                    }
+                    <div class="form-group mt-2 mb-2">
+                         <label for="Nome">Name</label>
+                         <input type="hidden" id="Id" @bind-value="@roleObject.Id" />
+                         <InputText id="Name" class="form-control" @bind-Value="@roleObject.Name" />
+                         <ValidationMessage For="@(() => roleObject.Name)" />
+                    </div>
+                   
+                     <button type="submit" class="btn btn-primary">Envia</button>
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancela</button>
+                 </EditForm>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? errorMessage;
+    [Parameter]
+    public RoleVM roleObject { get; set; } = new RoleVM();
+
+    [Parameter]
+    public RenderFragment Cabecalho { get; set; }
+
+    [Parameter]
+    public Action AlteracaoDados { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    private readonly HttpClient _client = new HttpClient();
+
+    private async Task CloseItemModal()
+    {
+        await js.InvokeAsync<object>("CloseModal", "postModal");
+    }
+
+ 
+
+    public async Task HandleInValidSubmit(EditContext editContext)
+    {        
+        var respose = new HttpResponseMessage();
+        if(roleObject.Id == 0){
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Role/add", roleObject);
+        }
+        else
+        {
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Role/update", roleObject);
+        }
+        if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
+        {
+            errorMessage = null;
+            await HandleSubmit();
+        }
+        else
+        {
+            errorMessage = new HandlerErrorMessage().BuildError(respose.Content.ReadAsStringAsync().Result, errorMessage);
+            return;
+        }
+    }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    public async Task HandleSubmit()
+    {
+        await CloseItemModal();
+        AlteracaoDados?.Invoke();
+    }
+    
+}
