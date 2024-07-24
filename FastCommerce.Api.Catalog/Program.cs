@@ -17,6 +17,7 @@ using Core.ViewModel.Banner;
 using Core.Entities.Domain.Banner;
 using Core.Entities.Domain.User;
 using Core.ViewModel.User;
+using Core.Entities.Domain;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -540,7 +541,6 @@ app.MapPost("/Role/Add", async (IRoleService setService, [FromBody] RoleVM body)
 {
     try
     {
-
         var serialized = JsonConvert.SerializeObject(body);
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
@@ -578,6 +578,108 @@ app.MapPost("/Role/update", async (IRoleService setService, [FromBody] RoleVM bo
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
+/*product*/
+app.MapGet("/product/Get/{id}", Results<Ok<Product>, NotFound> (IProductService setService, int id) =>
+        setService.Get(id) is { } post
+            ? TypedResults.Ok(post)
+            : TypedResults.NotFound());
+
+app.MapGet("/product/Getall",
+    async (IProductService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10);
+
+            var result = setService.Search(paginationFilter);
+
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No Role posts found matching the filter.");
+
+            return Results.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapGet("/Product/Search",
+    async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IProductService setService) =>
+    {
+        try
+        {
+            var paginationFilter = new PaginationFilter();
+            if (PageNumber.HasValue && PageNumber > 0 && PageSize.HasValue && PageSize > 0)
+                paginationFilter = new PaginationFilter((int)PageNumber, (int)PageSize, filterText);
+
+            if ((PageNumber.HasValue && PageNumber > 0) && (PageSize == null || PageSize == 0))
+                paginationFilter = new PaginationFilter((int)PageNumber, 10, filterText);
+
+            if (!string.IsNullOrEmpty(filterText))
+                paginationFilter.SerachText = filterText;
+
+            var result = setService.Search(paginationFilter);
+            if (result.Data is null || result.Data.Count == 0)
+                return Results.NotFound("No blog posts found matching the filter.");
+
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    });
+
+app.MapPost("/Product/Add", async (IProductService setService, [FromBody] ProductVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Add(JsonConvert.DeserializeObject<Product>(serialized));
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
+app.MapPost("/Product/update", async (IProductService setService, [FromBody] ProductVM body) =>
+{
+    try
+    {
+
+        var serialized = JsonConvert.SerializeObject(body);
+        List<string> validation = setService.GetValidation(body).ToList();
+        if (validation is not null && validation.Count() > 0)
+            return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+        var insert = setService.Update(JsonConvert.DeserializeObject<Product>(serialized));
+        return insert is not false
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
 
 
 app.Run();
