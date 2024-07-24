@@ -1,15 +1,16 @@
 ﻿using Core.Entities.Abstract;
 using Core.Entities.Enum;
 
-namespace Core.Entities.Domain
+namespace Core.ViewModel.Catalog
 {
-    public class Product : BaseEntity, IEntity
+    public class ProductVM : BaseEntity, IEntity
     {
-        public Product()
+        public ProductVM()
         {
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public string ShortDescription { get; set; }
@@ -21,3 +22,4 @@ namespace Core.Entities.Domain
         public string Type { get; set; }
     }
 }
+

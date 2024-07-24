@@ -1,0 +1,47 @@
+﻿<title>Product List and Grid View</title>
+<meta name"viewport" content="width=device-width, user-scalable=no, initial=scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
+
+<hr>
+<h2 class="text-center">TOP PRODUCTS</h2>
+<hr>
+
+<!--Buttons of grid and list-->
+
+<div class="container mb-3 mt-3">
+    <div class="buttons">
+        <i class="bi bi-grid-3x3-gap" id="showdiv1" aria-hidden="true" onclick="ChangeView('grid')"></i> &nbsp;  <i class="bi bi-list-task" id="showdiv2" aria-hidden="true" onclick="ChangeView('list')"></i>
+    </div>
+</div>
+<div class="container grid-container">
+    <div class="row">
+        @if (listProduct is not null)
+        {
+            @foreach (var item in listProduct)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card">
+                        <img class="card-img-top" src="https://picsum.photos/362/180" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.</h5>
+                            <p class="card-text">@item.ShortDescription</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ChangeView(type) {
+        console.log(type)
+        if (type == "grid") {
+            var $gridCont = $('.grid-container')
+            $gridCont.removeClass('list-view');
+        }
+        else if (type == "list") {
+            var $gridCont = $('.grid-container');
+            $gridCont.hasClass('list-view') ? $gridCont.removeClass('list-view') : $gridCont.addClass('list-view');
+        }
+    }
+</script>
