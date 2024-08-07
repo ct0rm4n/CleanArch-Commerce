@@ -155,7 +155,7 @@ app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
     try
     {
         IList<BlogPost> blogPosts = new List<BlogPost>();
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             blogPosts.Add(new BlogPost
             {
