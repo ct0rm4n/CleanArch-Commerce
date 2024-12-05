@@ -10,12 +10,7 @@
 
 <h3><span class="bi bi-card-text" aria-hidden="true" b-4knz10sgzz=""></span> Post list</h3>
 
-@if (items == null)
-{
-    <p><em>Carregando...</em></p>
-}
-else
-{
+
     <div id="data-tabele-default">
         <div class="container" style="width: 100% !important">
             <div class="row">
@@ -51,41 +46,48 @@ else
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach (var item in items)
-                                    {
-                                        <tr>
-                                            <td>@(item.Name)</td>
-                                            <td>@((MarkupString)item.Html)</td>
-                                            <td>
-                                                @(item.DateStart)
-                                            </td>
-                                            <td>
-                                                @(item.DateEnd)
-                                            </td>
-                                            <td>@(item.Publish)</td>
-                                            <td>
-                                                <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(item))" data-toggle="modal" data-target="#postModal" value="Edita" />
-                                                <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(item))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                                <tfoot>
-                                    @if (items is not null)
-                                    {
-                                        @if (!string.IsNullOrEmpty(pPage))
+                                @if (items == null)
+                                {
+                                    <p><em>Carregando...</em></p>
+                                }
+                                else
+                                {
+                                    <tbody>
+                                        @foreach (var item in items)
                                         {
-                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(pPage))" value="Previous" />
+                                            <tr>
+                                                <td>@(item.Name)</td>
+                                                <td>@((MarkupString)item.Html)</td>
+                                                <td>
+                                                    @(item.DateStart)
+                                                </td>
+                                                <td>
+                                                    @(item.DateEnd)
+                                                </td>
+                                                <td>@(item.Publish)</td>
+                                                <td>
+                                                    <Input type="button" class="btn btn-primary" @onclick="(() => PreparaEdicao(item))" data-toggle="modal" data-target="#postModal" value="Edita" />
+                                                    <input type="button" class="btn btn-danger" @onclick="(() => PreparaExclusao(item))" data-toggle="modal" data-target="#confirmaExclusaoModal" value="Deleta" />
+                                                </td>
+                                            </tr>
                                         }
-                                        @if (!string.IsNullOrEmpty(nPage))
+                                    </tbody>
+                                    <tfoot>
+                                        @if (items is not null)
                                         {
-                                            <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(nPage))" value="Next" />
-                                        }                                        
-                                    }
-                                    
-                                </tfoot>
-                            </table>
+                                            @if (!string.IsNullOrEmpty(pPage))
+                                            {
+                                                <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(pPage))" value="Previous" />
+                                            }
+                                            @if (!string.IsNullOrEmpty(nPage))
+                                            {
+                                                <Input type="button" class="btn btn-primary" @onclick="(() => ChangePage(nPage))" value="Next" />
+                                            }
+                                        }
+
+                                    </tfoot>
+                                }
+                        </table>
                             
                         </div>
                     </div>
@@ -95,7 +97,7 @@ else
 
     </div>
     
-}
+
 
 
 
