@@ -12,6 +12,7 @@ namespace Data.Interfaces
         bool Delete(BlogPost user);
         BlogPost Get(int Id);
         PagedResponse<List<BlogPost>> Search(PaginationFilter filter);
+        (List<BlogPost>, int) GetPagged(string text, int page_size = 20, int page = 1);
         public IList<string> GetValidation(BlogPostVM viewModel);
         public IEnumerable<BlogPost> BulkInsertReturn(IEnumerable<BlogPost> entitys);
     }

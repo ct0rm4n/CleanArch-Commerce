@@ -21,7 +21,8 @@ namespace UI.Client.Components.ProductGrid
             if (listProduct is null)
             {
                 PageIndex = 1;
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>($"{Configuration["Api.Catalog"]}product/Getall?PageSize=6");
+                var path = $"{Configuration["Api.Catalog"]}product/Getall?PageSize=6";
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>(path);
                 listProduct = respose.Data;
                 TotalPages = respose.TotalPages;
             }

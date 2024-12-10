@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FastCommerce.Core\Core.csproj" />
-    <ProjectReference Include="..\FastCommerce.Core\FastCommerce.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,8 @@ using static Dapper.SqlMapper;
 using Core.Wrappers;
 using System.Linq.Expressions;
 using System.Diagnostics;
+using Core.ViewModel.Generic;
+using System.Dynamic;
 
 namespace Data.Commands
 {
@@ -20,7 +22,7 @@ namespace Data.Commands
         IDbConnection _connection;
         readonly string schema = "FastCommerce.dbo";
 
-        readonly string connectionString = $"Data Source=127.0.0.1; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
+        readonly string connectionString = @"Data Source=DESKTOP-NLK5736\SQLEXPRESS; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
 
         public GenericRepository()
         {
@@ -138,6 +140,43 @@ namespace Data.Commands
 
             return result;
         }
+
+        public (IEnumerable<T>, int) GetPagged(string text, List<string> enity, int page_size=20, int page=1)
+        {
+            IEnumerable<dynamic> result_abstract = null;
+            int total = 0;
+            try
+            {
+                string tableName = GetTableName();
+                string whereClause = string.Empty;
+                if (!string.IsNullOrEmpty(text) && enity?.Any() == true)
+                {
+                    var conditions = enity.Select(e => $"{e} ILIKE @Text");
+                    whereClause = $"WHERE {string.Join(" OR ", conditions)}";
+                }
+                string query = $@"SELECT *, COUNT(*) OVER() AS total  
+                FROM {schema}.{tableName} ORDER BY Id {whereClause} 
+                OFFSET {(page - 1) * page_size} ROWS FETCH NEXT {page_size} ROWS ONLY";
+
+                _connection.Open();
+                result_abstract = _connection.Query<dynamic>(query, new { Text = $"%{text}%" });
+                if (result_abstract.Any())
+                {
+                    total = result_abstract.First().total ?? 0;
+                }
+            }
+            catch (Exception ex)
+            {               
+            }
+            finally
+            {
+                _connection.Close();
+            }
+            var result  = result_abstract.Select(x => (IDictionary<string, object>)x).ToList();
+            var result_entity = ConvertToList<T>(result);
+            return (result_entity, total);
+        }
+        
 
         public T GetById(int Id)
         {
@@ -348,6 +387,55 @@ namespace Data.Commands
                 return new List<string>() { $"Error: {ex.Message}" };
             }
 
+        }
+
+        public static List<T> ConvertToList<T>(List<IDictionary<string, object>> dictionaries)
+        {
+            var resultList = new List<T>();
+
+            foreach (var dictionary in dictionaries)
+            {
+                var obj = Activator.CreateInstance<T>();
+
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    if (dictionary.ContainsKey(property.Name))
+                    {
+                        var value = dictionary[property.Name];
+
+                        if (value != null && property.CanWrite)
+                        {
+                            if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                            {
+                                property.SetValue(obj, value == null ? null : Convert.ChangeType(value, Nullable.GetUnderlyingType(property.PropertyType)));
+                            }
+                            else
+                            {
+                                if (property.PropertyType.IsEnum)
+                                {
+                                    var enumValue = Enum.TryParse(property.PropertyType, value.ToString(), out var parsedEnumValue);
+                                    if (enumValue)
+                                    {
+                                        property.SetValue(obj, parsedEnumValue);
+                                    }
+                                    else
+                                    {
+                                        property.SetValue(obj, null);
+                                    }
+                                }
+                                else
+                                {
+                                    property.SetValue(obj, Convert.ChangeType(value, property.PropertyType));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                resultList.Add(obj);
+            }
+
+            return resultList;
         }
     }
 }

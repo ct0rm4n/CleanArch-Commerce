@@ -42,6 +42,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.Client", "UI\UI.Client\U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Ocelot", "Api.Ocelot\Api.Ocelot.csproj", "{37326F6E-4EF1-4653-AAFA-BB3BF6637855}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{37326F6E-4EF1-4653-AAFA-BB3BF6637855}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37326F6E-4EF1-4653-AAFA-BB3BF6637855}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37326F6E-4EF1-4653-AAFA-BB3BF6637855}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

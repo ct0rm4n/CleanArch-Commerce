@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Domain.Blog;
 using Core.ViewModel.Catalog;
 using Core.Wrappers;
+using Dapper;
 using Data.Commands.Repositories;
 using Data.Interfaces;
 using Service.Helpers;
@@ -40,6 +41,22 @@ namespace Service
 
             return blogPosts;
         }
+
+        public (List<BlogPost>, int) GetPagged(string text, int page_size= 20, int page = 1)
+        {
+            IEnumerable<BlogPost> blogPosts = new List<BlogPost>();
+            int total = page; 
+            try
+            {
+                var entity = new List<string>() { "Name", "Url", "Html"};
+                (blogPosts, page) = _repository.GetPagged(text, entity, page_size, page);
+            }
+            catch (Exception ex)
+            {
+            }
+            return (blogPosts.AsList<BlogPost>(), page);
+        }
+
 
         public BlogPost Get(int Id)
         {
@@ -86,23 +103,10 @@ namespace Service
 
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var data = new List<BlogPost>();
-            if (!string.IsNullOrEmpty(filter.SerachText))
-            {
-                data = (GetAll()).ToList().Where(f =>
-                    f.Name.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)
-                    || f.Html.Contains(filter.SerachText, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
-            else
-            {
-                data = (GetAll()).ToList();
-            }
-            var pagedData = data
-                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                .Take(validFilter.PageSize)
-                .ToList();
+            var totalRecords = 0;
 
-            var totalRecords = data.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(pagedData, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
+            (data, totalRecords) = GetPagged(filter.SerachText, validFilter.PageSize, validFilter.PageNumber);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<BlogPost>(data, validFilter, totalRecords, "", "https://localhost:7152/BlogPost/getall");
             return (pagedReponse);
         }
         public IList<string> GetValidation(BlogPostVM viewModel)
