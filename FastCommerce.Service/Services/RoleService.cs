@@ -9,7 +9,12 @@ namespace Service.Services
 {
     public class RoleService : IRoleService
     {
-        private readonly RoleRepository _repository = new RoleRepository();
+        private readonly RoleRepository _repository;
+
+        public RoleService(RoleRepository repository) {
+            _repository = repository;
+        }
+
 
         public Role Add(Role banner)
         {

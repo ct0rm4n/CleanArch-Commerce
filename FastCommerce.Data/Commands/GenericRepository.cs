@@ -14,19 +14,25 @@ using System.Linq.Expressions;
 using System.Diagnostics;
 using Core.ViewModel.Generic;
 using System.Dynamic;
+using Microsoft.Extensions.Configuration;
 
 namespace Data.Commands
 {
     public class GenericRepository<T, IBaseVM> : IGenericRepository<T, IBaseVM> where T : class
     {
-        IDbConnection _connection;
-        readonly string schema = "FastCommerce.dbo";
+        #region ===[ Private Members ]=============================================================
 
-        readonly string connectionString = @"Data Source=DESKTOP-NLK5736\SQLEXPRESS; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
+        private readonly IConfiguration configuration;        
+        private IDbConnection _connection;
+        private readonly string schema = "FastCommerce.dbo";
 
-        public GenericRepository()
+        #endregion
+        //readonly string connectionString = @"Data Source=DESKTOP-NLK5736\SQLEXPRESS; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
+
+        public GenericRepository(IConfiguration configuration)
         {
-            _connection = new SqlConnection(connectionString);            
+            _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));            
+            this.configuration = configuration;
         }
 
         public bool Add(T entity)

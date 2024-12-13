@@ -5,12 +5,18 @@ namespace Service
 {
     public class UserService : IUserService
     {
+        private readonly UserRepository userRepository;
+
+
+        public UserService(UserRepository userRepository) {
+            this.userRepository = userRepository;
+        }
+
         public bool Add(User user)
         {
             bool isAdded = false;
             try
             {
-                UserRepository userRepository = new UserRepository();
                 isAdded = userRepository.Add(user);
             }
             catch (Exception ex)
@@ -24,7 +30,6 @@ namespace Service
             List<User> users = new List<User>();
             try
             {
-                UserRepository userRepository = new UserRepository();
                 users = userRepository.GetAll().ToList();
             }
             catch (Exception ex)
@@ -39,7 +44,6 @@ namespace Service
             User user = new User();
             try
             {
-                UserRepository userRepository = new UserRepository();
                 user = userRepository.GetById(Id);
             }
             catch (Exception ex)
@@ -54,7 +58,6 @@ namespace Service
             bool isUpdated = false;
             try
             {
-                UserRepository userRepository = new UserRepository();
                 isUpdated = userRepository.Update(user);
             }
             catch (Exception ex)
@@ -69,7 +72,6 @@ namespace Service
             bool isDeleted = false;
             try
             {
-                UserRepository userRepository = new UserRepository();
                 isDeleted = userRepository.Delete(user);
             }
             catch (Exception ex)

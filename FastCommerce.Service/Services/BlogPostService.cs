@@ -10,8 +10,13 @@ namespace Service
 {
     public partial class BlogPostService : IBlogPostService
     {
-        private readonly BlogPostRepository _repository = new BlogPostRepository();
-                
+        private readonly BlogPostRepository _repository;
+
+        public BlogPostService(BlogPostRepository repository)
+        { 
+            _repository = repository;
+        }
+
         public BlogPost? Add(BlogPost blogPost)
         {
             var isAdded = false;

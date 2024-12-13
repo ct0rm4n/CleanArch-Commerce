@@ -9,7 +9,12 @@ namespace Service
 {
     public partial class ProductService : IProductService
     {
-        private readonly ProductRepository _repository = new ProductRepository();
+        private readonly ProductRepository _repository;
+
+        public ProductService(ProductRepository repository)
+        {
+            _repository = repository;
+        }
                 
         public Product? Add(Product banner)
         {

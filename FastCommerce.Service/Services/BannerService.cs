@@ -9,8 +9,12 @@ namespace Service
 {
     public partial class BannerService : IBannerService
     {
-        private readonly BannerRepository _repository = new BannerRepository();
-                
+        private readonly BannerRepository _repository;
+
+        public BannerService(BannerRepository repository)
+        {
+            _repository = repository;
+        }    
         public Banner? Add(Banner banner)
         {
             var isAdded = false;

@@ -9,7 +9,13 @@ namespace Service
 {
     public partial class SettingsService : ISettingsService
     {
-        private readonly SettingsRepository _repository = new SettingsRepository();
+        private readonly SettingsRepository _repository;
+
+        public SettingsService(SettingsRepository repository)
+        {
+            _repository = repository;
+        }
+
                 
         public Settings? Add(Settings Settings)
         {

@@ -17,7 +17,7 @@ namespace Data.Ioc
             
             var dataAccess = Assembly.GetExecutingAssembly();
 
-            Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(DbContext));
+            Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(IConfiguration));
 
             builder.RegisterAssemblyTypes(dataAccess)
                 .Where(t => t.Name.EndsWith("Repository"))

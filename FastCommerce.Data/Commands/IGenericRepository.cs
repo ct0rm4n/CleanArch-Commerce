@@ -10,6 +10,7 @@ namespace Data.Commands
         bool Add(T entity);
         bool Update(T entity);
         bool Delete(T entity);
+        IEnumerable<T> BulkInsertReturn(IEnumerable<T> entitys);
         IList<string> GetValidationMessage(IBaseVM viewModel);
     }
 }

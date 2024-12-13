@@ -17,23 +17,31 @@ namespace Data.Ioc
             
             builder.RegisterGeneric(typeof(GenericRepository<,>))
                 .As(typeof(IGenericRepository<,>)).InstancePerLifetimeScope();
+
             var dataAccess = Assembly.GetExecutingAssembly();
+            Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(IConfiguration));
+            //builder.Register(c =>
+            //{
+            //    IConfiguration config = c.Resolve<IConfiguration>();
+            //    return config;
+            //}).AsSelf().InstancePerLifetimeScope();
 
-            Assembly repoServiceAssembly = Assembly.GetAssembly(typeof(DbContext));
 
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => (t.Name.Equals("GenericRepository") ))
-               .InstancePerLifetimeScope();
+               .Where(t => (t.Name.EndsWith("Repository") ))
+               .InstancePerLifetimeScope().WithParameter((pi, ctx) => pi.ParameterType == typeof(IConfiguration) && pi.Name == "configuration",
+                          (pi, ctx) => ctx.Resolve<IConfiguration>());          
+
 
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => (t.Name.EndsWith("Helper") || (t.Name.EndsWith("Repository") && !t.Name.Equals("GenericRepository") && !t.Name.Equals("IGenericRepository"))))
+               .Where(t => (t.Name.EndsWith("Helper") || (t.Name.EndsWith("Service") && !t.Name.Equals("IGenericRepository"))))
                .AsImplementedInterfaces().InstancePerLifetimeScope();
-            
-            builder.Register(c =>
-            {
-                IConfiguration config = c.Resolve<IConfiguration>();
-                return new DbContext(config.GetSection("ConnectionStrings:SqlConnection").Value);
-            }).AsSelf().InstancePerLifetimeScope();
+
+            //builder.Register(c =>
+            //{
+            //    IConfiguration config = c.Resolve<IConfiguration>();
+            //    return config;
+            //}).AsSelf().InstancePerLifetimeScope();
         }
     }
 }

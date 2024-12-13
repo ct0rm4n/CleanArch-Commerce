@@ -9,7 +9,13 @@ namespace Service.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly CategoryRepository _repository = new CategoryRepository();
+        private readonly CategoryRepository _repository;
+
+        public CategoryService(CategoryRepository repository)
+        {
+            _repository = repository;
+        }
+
         public Category? Add(Category model)
         {
             var isAdded = false;
