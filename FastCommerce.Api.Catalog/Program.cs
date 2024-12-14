@@ -137,7 +137,7 @@ app.MapGet("/blogpost/Search",
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
 {
@@ -158,7 +158,7 @@ app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] Blo
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
@@ -180,7 +180,7 @@ app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] 
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
 {
@@ -206,7 +206,7 @@ app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 /*Catgeory*/
@@ -238,7 +238,7 @@ app.MapGet("/Category/GetALl",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>(); 
 
 app.MapGet("/Category/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ICategoryService cService) =>
@@ -265,7 +265,7 @@ app.MapGet("/Category/Search",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>(); 
 
 app.MapPost("/Category/Add", async (ICategoryService cService, [FromBody] CategoryVM body) =>
 {
@@ -286,7 +286,7 @@ app.MapPost("/Category/Add", async (ICategoryService cService, [FromBody] Catego
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.MapPost("/Category/update", async (ICategoryService cService, [FromBody] CategoryVM body) =>
@@ -308,12 +308,13 @@ app.MapPost("/Category/update", async (ICategoryService cService, [FromBody] Cat
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
+
 /*Settings*/
 app.MapGet("/Settings/Get/{id}", Results<Ok<Settings>, NotFound> (ISettingsService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/Settings/GetALl",
     async (ISettingsService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
@@ -338,7 +339,7 @@ app.MapGet("/Settings/GetALl",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/Settings/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ISettingsService setService) =>
@@ -365,7 +366,7 @@ app.MapGet("/Settings/Search",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapPost("/Settings/Add", async (ISettingsService setService, [FromBody] SettingsVM body) =>
 {
@@ -386,7 +387,7 @@ app.MapPost("/Settings/Add", async (ISettingsService setService, [FromBody] Sett
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] SettingsVM body) =>
@@ -408,12 +409,13 @@ app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] S
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
+
 /*Banner*/
 app.MapGet("/Banner/Get/{id}", Results<Ok<Banner>, NotFound> (IBannerService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/Banner/GetALl",
     async (IBannerService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
@@ -438,7 +440,7 @@ app.MapGet("/Banner/GetALl",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/Banner/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IBannerService setService) =>
