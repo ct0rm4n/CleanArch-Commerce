@@ -18,13 +18,42 @@ using Core.Entities.Domain.Banner;
 using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Core.Entities.Domain;
+using Microsoft.OpenApi.Models;
+using Service.Filter;
+using Microsoft.AspNetCore.Authorization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+    {
+        Description = "api key.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "basic"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "basic"
+                },
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -38,8 +67,10 @@ builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(ne
 });
 
 builder.Services.InjectConfigureServices();
+builder.Services.AddSingleton<AuthorizationActionFilter>();
 
 var app = builder.Build();
+var auth = app.Configuration;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,8 +86,9 @@ app.MapGet("/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostServi
             ? TypedResults.Ok(post)
             : TypedResults.NotFound());
 
-app.MapGet("/blogpost/GetALl",
-    async (IBlogPostService postService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+
+
+app.MapGet("/blogpost/GetALl", async (IBlogPostService postService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
         {
@@ -78,7 +110,7 @@ app.MapGet("/blogpost/GetALl",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/blogpost/Search", 
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber,[FromQuery]int? PageSize,[FromServices] IBlogPostService postService) =>
