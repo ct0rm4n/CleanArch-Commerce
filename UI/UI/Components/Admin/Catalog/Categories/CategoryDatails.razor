@@ -166,4 +166,9 @@
         postObject.Html = raw.Value;
         //StateHasChanged();
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+    }
 }

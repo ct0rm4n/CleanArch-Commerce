@@ -168,6 +168,7 @@
         try
         {
             DefaultUrl = Configuration["Api.Catalog"];
+            _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Banner>>(null, 0, int.MaxValue);
             if (items is null)
             {

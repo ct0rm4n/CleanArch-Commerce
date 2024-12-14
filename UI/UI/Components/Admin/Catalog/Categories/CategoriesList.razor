@@ -160,11 +160,13 @@
         if (respose.PreviousPage != null)
             pPage = respose.PreviousPage.ToString();
     }
+    
     protected override async Task OnInitializedAsync()
     {
         try
         {
             string url = Configuration["Api.Catalog"];
+            _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Category>>(null, 0, int.MaxValue);
             if (items is null)
             {

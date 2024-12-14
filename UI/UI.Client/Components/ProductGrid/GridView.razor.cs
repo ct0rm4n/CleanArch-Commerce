@@ -22,6 +22,7 @@ namespace UI.Client.Components.ProductGrid
             {
                 PageIndex = 1;
                 var path = $"{Configuration["Api.Catalog"]}product/Getall?PageSize=6";
+                _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
                 respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>(path);
                 listProduct = respose.Data;
                 TotalPages = respose.TotalPages;

@@ -145,4 +145,9 @@
             errorMessage = new HandlerErrorMessage().BuildError(null, ($"Message : {ex.Message} InnerException : {ex.InnerException}"));
         }
     }
+
+    protected override async Task OnInitializedAsync()
+    {        
+        _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+    }
 }

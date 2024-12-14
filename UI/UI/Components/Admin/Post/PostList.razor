@@ -172,6 +172,7 @@
         try
         {
             string url = Configuration["Api.Catalog"];
+            _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<BlogPost>>(null, 0, int.MaxValue);
             if (items is null)
             {
@@ -236,4 +237,6 @@
         var obj = JsonConvert.SerializeObject(item);
         postObj = JsonConvert.DeserializeObject<BlogPostVM>(obj);
     }
+
+    
 }

@@ -17,6 +17,7 @@ namespace UI.Client.Components
             var respose = new PagedResponse<List<Banner>>(null, 0, int.MaxValue);
             if (listBanner is null)
             {
+                _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
                 respose = await _client.GetFromJsonAsync<PagedResponse<List<Banner>>>($"{Configuration["Api.Catalog"]}banner/getall?PageSize=" + int.MaxValue);
                 listBanner = respose.Data;
             }

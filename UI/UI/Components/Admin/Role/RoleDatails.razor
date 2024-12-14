@@ -96,5 +96,8 @@
         await CloseItemModal();
         AlteracaoDados?.Invoke();
     }
-    
+    protected override async Task OnInitializedAsync()
+    {
+        _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+    }
 }

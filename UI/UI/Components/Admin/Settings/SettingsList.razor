@@ -153,6 +153,7 @@
         try
         {
             string url = Configuration["Api.Catalog"];
+            _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
             if (items is null)
             {
