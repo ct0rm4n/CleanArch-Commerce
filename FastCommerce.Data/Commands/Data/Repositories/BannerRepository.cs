@@ -1,7 +1,8 @@
 ﻿using Core.Entities.Domain.Banner;
 using Core.ViewModel.Banner;
+using Data.Commands.Data;
 using Microsoft.Extensions.Configuration;
-namespace Data.Commands.Repositories
+namespace Data.Commands.Data.Repositories
 {
     public class BannerRepository : GenericRepository<Banner, BannerVM>
     {

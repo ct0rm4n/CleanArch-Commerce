@@ -1,7 +1,4 @@
 using Autofac.Extensions.DependencyInjection;
-using Data.Ioc;
-using Service.Ioc;
-using Autofac;
 using UI.Server.Components;
 using UI.Client.Pages;
 
@@ -20,16 +17,16 @@ builder.Services.AddRazorComponents()
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
-{
-    builder.RegisterModule(new AutofacDataModule());
-});
-builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
-{
-    builder.RegisterModule(new AutofacPersistanceModule());
-});
+//builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+//{
+//    builder.RegisterModule(new AutofacDataModule());
+//});
+//builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+//{
+//    builder.RegisterModule(new AutofacPersistanceModule());
+//});
 
-builder.Services.InjectConfigureServices();
+//builder.Services.InjectConfigureServices();
 
 builder.Services.AddRazorPages();
 //builder.Services.AddBlazorBootstrap();

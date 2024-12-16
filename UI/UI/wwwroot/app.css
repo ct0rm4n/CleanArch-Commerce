@@ -166,3 +166,42 @@ a, .btn-link {
 #data-tabele-default .container{
     min-width: 100%;
 }
+
+.cart-container {
+    position: relative;
+    display: inline-block;
+}
+
+.shopping-cart {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /*    padding: 15px;*/
+    padding-right: -10px !important;
+    display: none;
+    animation: floatEffect 0.3s ease;
+    z-index: 100;
+}
+
+@keyframes floatEffect {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.clearfix img{
+    width: 30px;
+}
+.shopping-cart-header {
+    background-color: #343a40;
+    display: flex;
+}

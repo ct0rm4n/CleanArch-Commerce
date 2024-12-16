@@ -1,9 +1,5 @@
 ﻿using Autofac;
-using Autofac.Core;
-using Core.Data;
-using Data.Commands;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Module = Autofac.Module;
 

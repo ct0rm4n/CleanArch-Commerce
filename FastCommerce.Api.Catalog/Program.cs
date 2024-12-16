@@ -21,6 +21,7 @@ using Core.Entities.Domain;
 using Microsoft.OpenApi.Models;
 using Service.Filter;
 using Microsoft.AspNetCore.Authorization;
+using Service.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,7 +67,7 @@ builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(ne
     builder.RegisterModule(new AutofacPersistanceModule());
 });
 
-builder.Services.InjectConfigureServices();
+//builder.Services.InjectConfigureServices();
 builder.Services.AddSingleton<AuthorizationActionFilter>();
 
 var app = builder.Build();
@@ -712,8 +713,33 @@ app.MapPost("/Product/update", async (IProductService setService, [FromBody] Pro
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
+//login
 
 
+app.MapPost("/login", async (IAuthService setService, [FromBody] LoginVM body) =>
+{
+    try
+    {
+        var (token, logged) = setService.Login(body.Email, body.Password);
+        return TypedResults.Ok(new { Token = token, Logged = logged });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+app.MapGet("/loginvalidate", async (IAuthService setService, [FromQuery] string token) =>
+{
+    try
+    {
+        var (token_valid, logged) = setService.LoginValidate(token);
+        return TypedResults.Ok(new { Token = token_valid, Logged = logged });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
 
 
 app.Run();

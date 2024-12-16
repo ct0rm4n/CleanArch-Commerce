@@ -1,7 +1,7 @@
 ﻿
 using Core.ViewModel.Generic.Abstracts;
 
-namespace Data.Commands
+namespace Data.Commands.Data
 {
     public interface IGenericRepository<T, IBaseVM>
     {

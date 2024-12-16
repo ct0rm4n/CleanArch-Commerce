@@ -1,0 +1,134 @@
+﻿@inject IJSRuntime js;
+@using System.Net
+@using Core.ViewModel.User
+@page "/login"
+@using Newtonsoft.Json
+@using UI.Client.Layout
+@inject NavigationManager NavigationManager
+@layout HomeLayout
+
+@rendermode InteractiveServer
+
+<EditForm Model="@itemObject" formname="loginVM" EditContext="@editContext"
+          OnValidSubmit="@HandleSubmit" enctype="multipart/form-data">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @((MarkupString)errorMessage)
+        </div>
+    }
+    <div class="form-group mt-2 mb-2">
+        <label for="Nome">E-mail</label>
+        <InputText id="Email" class="form-control" @bind-Value="@itemObject.Email" />
+        <ValidationMessage For="@(() => itemObject.Email)" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label for="Nome">Password</label>
+        <InputText id="Password" class="form-control" @bind-Value="@itemObject.Password" />
+        <ValidationMessage For="@(() => itemObject.Password)" />
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Envia</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancela</button>
+</EditForm>
+
+@code {
+    private string? errorMessage;
+    private EditContext editContext;
+    public string token;
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    public class AuthResponse
+    {
+        public string Token { get; set; }
+        public bool Logged { get; set; }
+    }
+    private readonly HttpClient _client = new HttpClient();
+
+    public LoginVM itemObject { get; set; } = new LoginVM();
+    protected override async Task OnAfterRenderAsync(bool firterRender)
+    {
+        if (firterRender)
+        {
+            var token = await GetFromSessionStorage("access_token");
+            if (token is not null && token != "null" && !string.IsNullOrEmpty(token))
+            {
+                var respose = new HttpResponseMessage();
+                respose = await _client.GetAsync($"{Configuration["Api.Catalog"]}LoginValidate?token={token}");
+                token = (respose.Content.ReadAsStringAsync().Result);
+                var token_auth = JsonConvert.DeserializeObject<AuthResponse>(token);
+                if ((respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created) && token_auth is not null && token_auth.Logged)
+                {
+                    errorMessage = null;
+                    NavigationManager.NavigateTo($"/userinfo");
+                }
+                await RemoveFromSessionStorage("access_token");
+            }
+        }        
+        await base.OnAfterRenderAsync(firterRender);
+    }
+
+    private async Task HandleSubmit()
+    {
+        var erro = false;
+
+        try
+        {
+            var respose = new HttpResponseMessage();            
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Login", itemObject); 
+            var token = (respose.Content.ReadAsStringAsync().Result);
+            var token_auth = JsonConvert.DeserializeObject<AuthResponse>(token);
+            if(token_auth.Token is not null)
+                await StoreToken(token_auth);
+
+            if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
+            {
+                errorMessage = null;
+                return;
+            }
+            else
+            {
+                errorMessage = "new HandlerErrorMessage().BuildError(respose.Content.ReadAsStringAsync().Result, errorMessage)";
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            erro = true;
+            errorMessage = $"Message : {ex.Message} InnerException : {ex.InnerException}";
+        }
+    }
+    private async Task SaveToSessionStorage(string key, string value)
+    {
+        await js.InvokeVoidAsync("sessionStorage.setItem", key, value);
+    }
+
+    private async Task<string> GetFromSessionStorage(string key)
+    {
+        return await js.InvokeAsync<string>("sessionStorage.getItem", key);
+    }
+
+    private async Task RemoveFromSessionStorage(string key)
+    {
+        await js.InvokeVoidAsync("sessionStorage.removeItem", key);
+    }
+
+    private async Task StoreToken(AuthResponse auth)
+    {
+        await SaveToSessionStorage("access_token", auth.Token);
+    }
+
+    private async Task RetrieveToken()
+    {
+        token = await GetFromSessionStorage("access_token");
+    }
+
+    private async Task ClearToken()
+    {
+        await RemoveFromSessionStorage("access_token");
+        token = null;
+    }
+
+}

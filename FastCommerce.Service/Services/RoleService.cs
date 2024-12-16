@@ -1,7 +1,7 @@
 ﻿using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Core.Wrappers;
-using Data.Commands.Repositories;
+using Data.Commands.Data.Repositories;
 using Data.Interfaces;
 using Service.Helpers;
 

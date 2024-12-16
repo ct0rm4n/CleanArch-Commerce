@@ -1,7 +1,7 @@
 ﻿using Core.Entities.Abstract;
 using Core.ViewModel.Generic.Abstracts;
 using Core.Wrappers;
-using Data.Commands.Repositories;
+using Data.Commands.Data.Repositories;
 using Data.Interfaces;
 using Service.Helpers;
 

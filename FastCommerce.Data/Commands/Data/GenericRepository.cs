@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Core.Data;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
@@ -7,34 +6,31 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Buffers;
-using Core.ViewModel.Generic.Abstracts;
 using static Dapper.SqlMapper;
-using Core.Wrappers;
-using System.Linq.Expressions;
 using System.Diagnostics;
-using Core.ViewModel.Generic;
-using System.Dynamic;
 using Microsoft.Extensions.Configuration;
 
-namespace Data.Commands
+namespace Data.Commands.Data
 {
     public class GenericRepository<T, IBaseVM> : IGenericRepository<T, IBaseVM> where T : class
     {
         #region ===[ Private Members ]=============================================================
 
-        private readonly IConfiguration configuration;        
+        private readonly IConfiguration configuration;
         private IDbConnection _connection;
         private readonly string schema = "FastCommerce.dbo";
 
         #endregion
-        //readonly string connectionString = @"Data Source=DESKTOP-NLK5736\SQLEXPRESS; Initial Catalog=FastCommerce; User Id=sa; Password=sa;TrustServerCertificate=True";
-
+        
         public GenericRepository(IConfiguration configuration)
         {
-            _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));            
+            _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));
             this.configuration = configuration;
         }
-
+        public IDbConnection GetConnection()
+        {
+            return new SqlConnection(configuration.GetConnectionString("SqlConnection"));
+        }
         public bool Add(T entity)
         {
             int rowsEffected = 0;
@@ -43,7 +39,7 @@ namespace Data.Commands
                 string tableName = GetTableName();
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
-                
+
                 string query = $"INSERT INTO {schema}.{tableName} ({columns}) VALUES ({properties})";
                 _connection.Open();
 
@@ -55,7 +51,7 @@ namespace Data.Commands
 
             return rowsEffected > 0 ? true : false;
         }
-        public (T,bool) AddReturn(T entity)
+        public (T, bool) AddReturn(T entity)
         {
             IEnumerable<T> result = null;
             try
@@ -69,7 +65,7 @@ namespace Data.Commands
                 _connection.Open();
                 result = _connection.Query<T>(query);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return (null, result.Count() > 0 ? true : false);
             }
@@ -85,7 +81,7 @@ namespace Data.Commands
                 string tableName = GetTableName();
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
-                
+
                 var query = new StringBuilder();
                 query.Append($"INSERT INTO  {schema}.{tableName} ({columns}) OUTPUT inserted.* VALUES");
                 int count = 0;
@@ -96,7 +92,7 @@ namespace Data.Commands
                     string propertyValues = GetPropertyValues(entity, excludeKey: true);
                     query.Append(count == 1 ? $" ({propertyValues})" : $", ({propertyValues})");
                 }
-                
+
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 _connection.Open();
@@ -107,12 +103,12 @@ namespace Data.Commands
 
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return result;
             }
         }
-        
+
         public bool Delete(T entity)
         {
             int rowsEffected = 0;
@@ -140,14 +136,15 @@ namespace Data.Commands
                 _connection.Open();
                 result = _connection.Query<T>(query);
             }
-            catch (Exception ex) {
-                
+            catch (Exception ex)
+            {
+
             }
 
             return result;
         }
 
-        public (IEnumerable<T>, int) GetPagged(string text, List<string> enity, int page_size=20, int page=1)
+        public (IEnumerable<T>, int) GetPagged(string text, List<string> enity, int page_size = 20, int page = 1)
         {
             IEnumerable<dynamic> result_abstract = null;
             int total = 0;
@@ -172,17 +169,17 @@ namespace Data.Commands
                 }
             }
             catch (Exception ex)
-            {               
+            {
             }
             finally
             {
                 _connection.Close();
             }
-            var result  = result_abstract.Select(x => (IDictionary<string, object>)x).ToList();
+            var result = result_abstract.Select(x => (IDictionary<string, object>)x).ToList();
             var result_entity = ConvertToList<T>(result);
             return (result_entity, total);
         }
-        
+
 
         public T GetById(int Id)
         {
@@ -218,7 +215,7 @@ namespace Data.Commands
 
                     string propertyName = property.Name;
                     string propertyValue = GetPropertyValue(entity, propertyName)?.ToString() ?? string.Empty;
-                    if(!string.IsNullOrEmpty(propertyValue))
+                    if (!string.IsNullOrEmpty(propertyValue))
                         query.Append($"{propertyName} = '{propertyValue}',");
                 }
 
@@ -235,7 +232,7 @@ namespace Data.Commands
 
 
 
-        private string GetTableName()
+        public string GetTableName()
         {
             string tableName = "";
             var type = typeof(T);

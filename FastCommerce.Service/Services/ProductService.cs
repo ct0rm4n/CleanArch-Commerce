@@ -1,7 +1,7 @@
 ﻿using Core.Entities.Domain;
 using Core.ViewModel.Catalog;
 using Core.Wrappers;
-using Data.Commands.Repositories;
+using Data.Commands.Data.Repositories;
 using Data.Interfaces;
 using Service.Helpers;
 

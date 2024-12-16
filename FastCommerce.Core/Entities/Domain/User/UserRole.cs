@@ -14,12 +14,10 @@ namespace Core.Entities.Domain.User
         public UserRole()
         {
             InsertedDate = DateTime.Now;
+            LastModifiedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
-        public DateTime? InsertedDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
-        public StatusEntity Status { get; set; }
-        public User User { get; set; }
-        public Role Role { get; set; }
+        public virtual User User { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

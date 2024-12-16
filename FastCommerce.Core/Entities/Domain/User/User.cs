@@ -8,14 +8,14 @@ namespace Core.Entities.Domain.User
         public User()
         {
             InsertedDate = DateTime.Now;
+            LastModifiedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
-        public DateTime? InsertedDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
-        public StatusEntity Status { get; set; }
-
-        //Relational Properties
-        public ICollection<UserRole> UserRoles { get; set; }
-
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
