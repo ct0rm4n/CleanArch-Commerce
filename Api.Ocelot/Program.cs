@@ -1,25 +1,28 @@
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using MMLib.SwaggerForOcelot.DependencyInjection;
+using SwaggerOcelot.Gateway;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-var config = builder.Configuration;
-
-config.AddJsonFile("appsettings.json", true, true).AddJsonFile("ocelot.config.json");
-
-builder.Services.AddOcelot();
-
-var app = builder.Build();
-await app.UseOcelot();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace Api.Ocelot
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args).ConfigureAppConfiguration(config =>
+            {
+                config.AddOcelotWithSwaggerSupport(options =>
+                {
+                    options.Folder = "OcelotConfiguration";
+                });
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>().UseUrls(new string[] { "http://localhost:5000" });
+            });
+    }
 }
-
-app.UseHttpsRedirection();
-
-
-app.Run();

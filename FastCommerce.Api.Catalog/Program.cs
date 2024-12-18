@@ -22,6 +22,7 @@ using Microsoft.OpenApi.Models;
 using Service.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
+using Autofac.Core;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,7 +39,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "basic"
     });
-
+    
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -54,7 +55,10 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
+    
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog Web Api", Version = "v1" });
 });
+
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -74,22 +78,21 @@ var app = builder.Build();
 var auth = app.Configuration;
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseDeveloperExceptionPage();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Web Api"));
+
 
 app.UseHttpsRedirection();
 
-app.MapGet("/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
+app.MapGet("/api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound());
 
 
 
-app.MapGet("/blogpost/GetALl", async (IBlogPostService postService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
+app.MapGet("/api/Catalog/blogpost/GetALl", async (IBlogPostService postService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
         {
@@ -113,7 +116,7 @@ app.MapGet("/blogpost/GetALl", async (IBlogPostService postService, [FromQuery] 
         }
     }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapGet("/blogpost/Search", 
+app.MapGet("/api/Catalog/blogpost/Search", 
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber,[FromQuery]int? PageSize,[FromServices] IBlogPostService postService) =>
 {
     try
@@ -140,7 +143,7 @@ app.MapGet("/blogpost/Search",
     }
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
+app.MapPost("/api/Catalog/blogpost/Add", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
 {
     try
     {
@@ -162,7 +165,7 @@ app.MapPost("/blogpost/Add", async (IBlogPostService postService, [FromBody] Blo
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
 
-app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
+app.MapPost("/api/Catalog/blogpost/update", async (IBlogPostService postService, [FromBody] BlogPostVM body) =>
 {
     try
     {
@@ -183,7 +186,7 @@ app.MapPost("/blogpost/update", async (IBlogPostService postService, [FromBody] 
     }
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
+app.MapPost("/api/Catalog/blogpost/massInsert", async (IBlogPostService postService) =>
 {
     try
     {
@@ -211,12 +214,12 @@ app.MapPost("/blogpost/massInsert", async (IBlogPostService postService) =>
 
 
 /*Catgeory*/
-app.MapGet("/Category/Get/{id}", Results<Ok<Category>, NotFound> (ICategoryService cService, int id) =>
+app.MapGet("/api/Catalog/Category/Get/{id}", Results<Ok<Category>, NotFound> (ICategoryService cService, int id) =>
         cService.Get(id) is { } category
             ? TypedResults.Ok(category)
             : TypedResults.NotFound());
 
-app.MapGet("/Category/GetALl",
+app.MapGet("/api/Catalog/Category/GetALl",
     async (ICategoryService cService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
@@ -241,7 +244,7 @@ app.MapGet("/Category/GetALl",
         }
     }).AddEndpointFilter<AuthorizationActionFilter>(); 
 
-app.MapGet("/Category/Search",
+app.MapGet("/api/Catalog/Category/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ICategoryService cService) =>
     {
         try
@@ -268,7 +271,7 @@ app.MapGet("/Category/Search",
         }
     }).AddEndpointFilter<AuthorizationActionFilter>(); 
 
-app.MapPost("/Category/Add", async (ICategoryService cService, [FromBody] CategoryVM body) =>
+app.MapPost("/api/Catalog/Category/Add", async (ICategoryService cService, [FromBody] CategoryVM body) =>
 {
     try
     {
@@ -290,7 +293,7 @@ app.MapPost("/Category/Add", async (ICategoryService cService, [FromBody] Catego
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
 
-app.MapPost("/Category/update", async (ICategoryService cService, [FromBody] CategoryVM body) =>
+app.MapPost("/api/Catalog/Category/update", async (ICategoryService cService, [FromBody] CategoryVM body) =>
 {
     try
     {
@@ -312,12 +315,12 @@ app.MapPost("/Category/update", async (ICategoryService cService, [FromBody] Cat
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
 /*Settings*/
-app.MapGet("/Settings/Get/{id}", Results<Ok<Settings>, NotFound> (ISettingsService setService, int id) =>
+app.MapGet("/api/Catalog/Settings/Get/{id}", Results<Ok<Settings>, NotFound> (ISettingsService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapGet("/Settings/GetALl",
+app.MapGet("/api/Catalog/Settings/GetALl",
     async (ISettingsService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
@@ -342,7 +345,7 @@ app.MapGet("/Settings/GetALl",
         }
     }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapGet("/Settings/Search",
+app.MapGet("/api/Catalog/Settings/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] ISettingsService setService) =>
     {
         try
@@ -369,7 +372,7 @@ app.MapGet("/Settings/Search",
         }
     }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapPost("/Settings/Add", async (ISettingsService setService, [FromBody] SettingsVM body) =>
+app.MapPost("/api/Catalog/Settings/Add", async (ISettingsService setService, [FromBody] SettingsVM body) =>
 {
     try
     {
@@ -391,7 +394,7 @@ app.MapPost("/Settings/Add", async (ISettingsService setService, [FromBody] Sett
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
 
-app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] SettingsVM body) =>
+app.MapPost("/api/Catalog/Settings/update", async (ISettingsService setService, [FromBody] SettingsVM body) =>
 {
     try
     {
@@ -413,12 +416,12 @@ app.MapPost("/Settings/update", async (ISettingsService setService, [FromBody] S
 }).AddEndpointFilter<AuthorizationActionFilter>();
 
 /*Banner*/
-app.MapGet("/Banner/Get/{id}", Results<Ok<Banner>, NotFound> (IBannerService setService, int id) =>
+app.MapGet("/api/Catalog/Banner/Get/{id}", Results<Ok<Banner>, NotFound> (IBannerService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapGet("/Banner/GetALl",
+app.MapGet("/api/Catalog/Banner/GetALl",
     async (IBannerService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
@@ -443,7 +446,7 @@ app.MapGet("/Banner/GetALl",
         }
     }).AddEndpointFilter<AuthorizationActionFilter>();
 
-app.MapGet("/Banner/Search",
+app.MapGet("/api/Catalog/Banner/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IBannerService setService) =>
     {
         try
@@ -470,7 +473,7 @@ app.MapGet("/Banner/Search",
         }
     });
 
-app.MapPost("/Banner/Add", async (IBannerService setService, [FromBody] BannerVM body) =>
+app.MapPost("/api/Catalog/Banner/Add", async (IBannerService setService, [FromBody] BannerVM body) =>
 {
     try
     {
@@ -492,7 +495,7 @@ app.MapPost("/Banner/Add", async (IBannerService setService, [FromBody] BannerVM
 });
 
 
-app.MapPost("/Banner/update", async (IBannerService setService, [FromBody] BannerVM body) =>
+app.MapPost("/api/Catalog/Banner/update", async (IBannerService setService, [FromBody] BannerVM body) =>
 {
     try
     {
@@ -515,12 +518,12 @@ app.MapPost("/Banner/update", async (IBannerService setService, [FromBody] Banne
 
 
 /*role*/
-app.MapGet("/Role/Get/{id}", Results<Ok<Role>, NotFound> (IRoleService setService, int id) =>
+app.MapGet("/api/Catalog/Role/Get/{id}", Results<Ok<Role>, NotFound> (IRoleService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound());
 
-app.MapGet("/Role/GetALl",
+app.MapGet("/api/Catalog/Role/GetALl",
     async (IRoleService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
@@ -545,7 +548,7 @@ app.MapGet("/Role/GetALl",
         }
     });
 
-app.MapGet("/Role/Search",
+app.MapGet("/api/Catalog/Role/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IRoleService setService) =>
     {
         try
@@ -572,7 +575,7 @@ app.MapGet("/Role/Search",
         }
     });
 
-app.MapPost("/Role/Add", async (IRoleService setService, [FromBody] RoleVM body) =>
+app.MapPost("/api/Catalog/Role/Add", async (IRoleService setService, [FromBody] RoleVM body) =>
 {
     try
     {
@@ -593,7 +596,7 @@ app.MapPost("/Role/Add", async (IRoleService setService, [FromBody] RoleVM body)
 });
 
 
-app.MapPost("/Role/update", async (IRoleService setService, [FromBody] RoleVM body) =>
+app.MapPost("/api/Catalog/Role/update", async (IRoleService setService, [FromBody] RoleVM body) =>
 {
     try
     {
@@ -614,12 +617,12 @@ app.MapPost("/Role/update", async (IRoleService setService, [FromBody] RoleVM bo
     }
 });
 /*product*/
-app.MapGet("/product/Get/{id}", Results<Ok<Product>, NotFound> (IProductService setService, int id) =>
+app.MapGet("/api/Catalog/product/Get/{id}", Results<Ok<Product>, NotFound> (IProductService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound());
 
-app.MapGet("/product/Getall",
+app.MapGet("/api/Catalog/product/Getall",
     async (IProductService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
     {
         try
@@ -644,7 +647,7 @@ app.MapGet("/product/Getall",
         }
     });
 
-app.MapGet("/Product/Search",
+app.MapGet("/api/Catalog/Product/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IProductService setService) =>
     {
         try
@@ -671,7 +674,7 @@ app.MapGet("/Product/Search",
         }
     });
 
-app.MapPost("/Product/Add", async (IProductService setService, [FromBody] ProductVM body) =>
+app.MapPost("/api/Catalog/Product/Add", async (IProductService setService, [FromBody] ProductVM body) =>
 {
     try
     {
@@ -693,7 +696,7 @@ app.MapPost("/Product/Add", async (IProductService setService, [FromBody] Produc
 });
 
 
-app.MapPost("/Product/update", async (IProductService setService, [FromBody] ProductVM body) =>
+app.MapPost("/api/Catalog/Product/update", async (IProductService setService, [FromBody] ProductVM body) =>
 {
     try
     {
@@ -716,7 +719,7 @@ app.MapPost("/Product/update", async (IProductService setService, [FromBody] Pro
 //login
 
 
-app.MapPost("/login", async (IAuthService setService, [FromBody] LoginVM body) =>
+app.MapPost("/api/Catalog/login", async (IAuthService setService, [FromBody] LoginVM body) =>
 {
     try
     {
@@ -728,7 +731,7 @@ app.MapPost("/login", async (IAuthService setService, [FromBody] LoginVM body) =
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
-app.MapGet("/loginvalidate", async (IAuthService setService, [FromQuery] string token) =>
+app.MapGet("/api/Catalog/loginvalidate", async (IAuthService setService, [FromQuery] string token) =>
 {
     try
     {

@@ -1,0 +1,11 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "ServiceName": "catalog",
+      "UpstreamPathTemplate": "/catalog-gate/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "SwaggerKey": "catalog"
+    }
+  ]
+}

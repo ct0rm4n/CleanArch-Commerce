@@ -86,12 +86,12 @@
             if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
             {
                 errorMessage = null;
-                return;
+                
             }
             else
             {
                 errorMessage = "new HandlerErrorMessage().BuildError(respose.Content.ReadAsStringAsync().Result, errorMessage)";
-                return;
+                
             }
         }
         catch (Exception ex)

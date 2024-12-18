@@ -1,0 +1,11 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "ServiceName": "checkout",
+      "UpstreamPathTemplate": "/checkout-gate/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "SwaggerKey": "checkout"
+    }
+  ]
+}
