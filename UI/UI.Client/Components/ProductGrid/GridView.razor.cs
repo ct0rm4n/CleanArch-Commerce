@@ -21,7 +21,7 @@ namespace UI.Client.Components.ProductGrid
             if (listProduct is null)
             {
                 PageIndex = 1;
-                var path = $"{Configuration["Api.Catalog"]}product/Getall?PageSize=6";
+                var path = $"{Configuration["Api.Gateway"]}catalog-gate/Catalog/product/Getall?PageSize=6";
                 _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
                 respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>(path);
                 listProduct = respose.Data;
@@ -37,7 +37,7 @@ namespace UI.Client.Components.ProductGrid
         private async Task OpenPage(int page)
         {
             PageIndex = page;
-            var respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>($"{Configuration["Api.Catalog"]}product/Getall?PageNumber={page}&PageSize=6");
+            var respose = await _client.GetFromJsonAsync<PagedResponse<List<Product>>>($"{Configuration["Api.Gateway"]}catalog-gate/Catalog/product/Getall?PageNumber={page}&PageSize=6");
             listProduct = respose.Data;
             StateHasChanged();
         }
