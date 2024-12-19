@@ -85,7 +85,12 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Web
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
+app.MapGet("api/catalog", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
+        postService.Get(1) is { } post
+            ? TypedResults.Ok(post)
+            : TypedResults.NotFound());
+
+app.MapGet("api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(id) is { } post
             ? TypedResults.Ok(post)
             : TypedResults.NotFound());

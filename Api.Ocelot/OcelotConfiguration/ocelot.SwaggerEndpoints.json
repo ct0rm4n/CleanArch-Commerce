@@ -6,7 +6,7 @@
         {
           "Name": "Catalog Web API",
           "Version": "v1",
-          "url": "http://localhost:5001/swagger/v1/swagger.json",
+          "url": "http://localhost:5002/swagger/v1/swagger.json",
           "Service": {
             "Name": "catalog",
             "Path": "/swagger/v1/swagger.json"
@@ -20,7 +20,7 @@
         {
           "Name": "Checkout Web Api",
           "Version": "v1",
-          "url": "http://localhost:5002/swagger/v1/swagger.json",
+          "url": "http://localhost:5001/swagger/v1/swagger.json",
           "Service": {
             "Name": "checkout",
             "Path": "/swagger/v1/swagger.json"

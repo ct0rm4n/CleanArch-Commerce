@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Ocelot", "Api.Ocelot\Ap
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{57D1461C-C5B3-4D67-B9AC-A419DC1A7869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Checkout", "..\Api.Checkout\Api.Checkout.csproj", "{7664234E-7FA3-4D01-BBC7-379E3A698A7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Checkout", "..\Api.Checkout\Api.Checkout.csproj", "{7664234E-7FA3-4D01-BBC7-379E3A698A7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

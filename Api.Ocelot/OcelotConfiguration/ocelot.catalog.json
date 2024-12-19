@@ -4,8 +4,15 @@
       "DownstreamPathTemplate": "/api/{everything}",
       "ServiceName": "catalog",
       "UpstreamPathTemplate": "/catalog-gate/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
-      "SwaggerKey": "catalog"
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "SwaggerKey": "catalog",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ]
     }
   ]
 }

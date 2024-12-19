@@ -4,8 +4,15 @@
       "DownstreamPathTemplate": "/api/{everything}",
       "ServiceName": "checkout",
       "UpstreamPathTemplate": "/checkout-gate/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
-      "SwaggerKey": "checkout"
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "SwaggerKey": "checkout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ]      
     }
-  ]
+  ]  
 }
