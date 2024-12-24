@@ -10,8 +10,8 @@
       "PassThroughHeaders": true,
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "host.docker.internal",
+          "Port": 5001
         }
       ]
     }

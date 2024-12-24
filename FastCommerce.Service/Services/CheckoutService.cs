@@ -10,17 +10,19 @@ namespace Service.Services
     {
         private readonly IUserService _userService;
         private readonly ShoppingCartItemRepository _shoppingCartItemRepository;
-        public CheckoutService(IUserService userService, ShoppingCartItemRepository shoppingCartItemRepository)
+        private readonly UserRepository _userRepository;
+        public CheckoutService(IUserService userService, ShoppingCartItemRepository shoppingCartItemRepository, UserRepository userRepository)
         {
             _userService = userService;
             _shoppingCartItemRepository = shoppingCartItemRepository;
+            _userRepository = userRepository;
         }
         public ShoppingCartItem Add(ShoppingCartItem item)
         {
             var isAdded = false;
             try
             {
-                var inserted = _shoppingCartItemRepository.AddReturn(item);
+                var inserted = _shoppingCartItemRepository.AddOrUpdate(item);
                 isAdded = inserted.Item2;
                 return inserted.Item1;
             }

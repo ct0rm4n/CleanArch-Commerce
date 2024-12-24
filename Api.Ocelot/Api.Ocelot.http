@@ -1,4 +1,4 @@
-@Api.Ocelot_HostAddress = http://localhost:5291
+@Api.Ocelot_HostAddress = http://127.0.0.1:5291
 
 GET {{Api.Ocelot_HostAddress}}/weatherforecast/
 Accept: application/json

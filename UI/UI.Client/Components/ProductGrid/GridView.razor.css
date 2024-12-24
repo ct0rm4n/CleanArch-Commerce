@@ -33,3 +33,113 @@
 
 }
 }
+
+.center {
+    width: 150px;
+    margin: 40px auto;
+}
+/*toast*/
+/* ---- start demo code ---- */
+
+
+h1 {
+    font-weight: 600;
+    padding: 10px;
+}
+
+button {
+    background: #fff;
+    border: 0;
+    border-radius: 4px;
+    display: block;
+    cursor: pointer;
+    margin: 10px;
+    padding: 5px 10px;
+}
+
+.custom-toast {
+    display: flex;
+    align-items: center;
+}
+
+    .custom-toast img {
+        background-size: 50px 50px;
+        height: 50px;
+        width: 50px;
+    }
+
+    .custom-toast p {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+/* ---- end demo code ---- */
+
+#toasts {
+    min-height: 0;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 400px;
+}
+
+    #toasts .toast {
+        background: #d6d8d9;
+        border-radius: 3px;
+        box-shadow: 2px 2px 3px rgba(0, 0, 0, .1);
+        color: rgba(0,0,0, .6);
+        cursor: default;
+        margin-bottom: 20px;
+        opacity: 0;
+        position: relative;
+        padding: 20px;
+        transform: translateY(15%);
+        transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+        width: 100%;
+        will-change: opacity, transform;
+        z-index: 1100;
+    }
+
+        #toasts .toast.success {
+            background: #26d68a;
+        }
+
+        #toasts .toast.warning {
+            background: #ffa533;
+        }
+
+        #toasts .toast.info {
+            background: #2cbcff;
+        }
+
+        #toasts .toast.error {
+            background: #f44336;
+        }
+
+        #toasts .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+        }
+
+        #toasts .toast.hide {
+            height: 0;
+            margin: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0 30px;
+            transition: all .5s ease-in-out;
+        }
+
+        #toasts .toast .close {
+            cursor: pointer;
+            font-size: 24px;
+            height: 16px;
+            margin-top: -10px;
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            width: 16px;
+        }
+
+/*end toast*/

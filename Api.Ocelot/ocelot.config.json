@@ -161,7 +161,7 @@
       "ExceptionsAllowedBeforeBreaking": 0,
       "TimeoutValue": 0
     },
-    "BaseUrl": "http://localhost:5000",
+    "BaseUrl": "http://host.docker.internal:5000",
     "LoadBalancerOptions": {
       "Expiry": 2147483647,
       "Key": "",

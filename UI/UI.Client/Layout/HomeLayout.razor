@@ -1,5 +1,11 @@
 ﻿@inherits LayoutComponentBase
+@using Components.Checkout
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="_content/Blazor.Bootstrap/blazor.bootstrap.css" rel="stylesheet" />
 
+</head>
 <body>
     <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-xl">
@@ -55,49 +61,10 @@
                         <input class="form-control me-2" type="search" aria-label="Search">
                     </form>
                     <div id="botons-list" class="user-icons d-flex mb-2">
-                        <div id="button_menu" class="profile" data-info=""><i class="bi bi-person"></i>
+                        <div id="button_menu"  onclick="window.location.href='/login'" class="profile" data-info=""><i class="bi bi-person"></i>
                         </div>
 
-                        <div class="cart-container">
-                            <i class="bi bi-cart3" id="cart-icon"></i>
-                            <div class="shopping-cart" id="shopping-cart">
-                                <div class="shopping-cart-header">
-                                    <i class="fa fa-shopping-cart cart-icon"></i><span class="badge">16</span>
-                                    <div class="shopping-cart-total">
-                                        <span class="lighter-text">Total:</span>
-                                        <span class="main-color-text total">$461.15</span>
-                                    </div>
-                                </div> <!--end shopping-cart-header -->
-
-                                <ul class="shopping-cart-items">
-                                    <li class="clearfix">
-                                        <img src="https://www.qispackaging.com.au/getmetafile/fefe4afb-dd4d-495e-ad59-209f29b47052/XMREDTREE.aspx" alt="item1" />
-                                        <span class="item-name">XMREDTREE</span>
-                                        <span class="item-detail">Pack 100</span>
-                                        <span class="item-price">$49.50</span>
-                                        <span class="item-quantity">Quantity: 01</span>
-                                    </li>
-
-                                    <li class="clearfix">
-                                        <img src="https://www.qispackaging.com.au/getmetafile/306f6d39-792f-4c8c-b101-9c6aef675758/XMWHREIN.aspx" alt="item1" />
-                                        <span class="item-name">XMWHREIN</span>
-                                        <span class="item-detail">Pack 100</span>
-                                        <span class="item-price">$34.06</span>
-                                        <span class="item-quantity">Quantity: 10</span>
-                                    </li>
-
-                                    <li class="clearfix">
-                                        <img src="https://www.qispackaging.com.au/getmetafile/b2f41988-a7b4-432c-b9c2-25bcb9afbcc3/XMJBRR.aspx" alt="item1" />
-                                        <span class="item-name">XMJBRR</span>
-                                        <span class="item-detail">Pack 25</span>
-                                        <span class="item-price">$14.21</span>
-                                        <span class="item-quantity">Quantity: 5</span>
-                                    </li>
-                                </ul>
-
-                                <a href="#" class="button">Checkout <i class="fa fa-chevron-right"></i></a>
-                            </div> <!--end shopping-cart -->
-                        </div>
+                        <UI.Client.Components.Checkout.CartFlyout></UI.Client.Components.Checkout.CartFlyout>
                     </div>
                 </div>
                 <div class="contact-info d-md-flex">
@@ -111,26 +78,4 @@
     @Body
 </body>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const cartIcon = document.getElementById("cart-icon");
-        const shoppingCart = document.getElementById("shopping-cart");
-
-        cartIcon.addEventListener("click", () => {
-            const isVisible = shoppingCart.style.display === "block";
-            shoppingCart.style.display = isVisible ? "none" : "block";
-        });
-
-        window.addEventListener("click", (e) => {
-            if (!document.querySelector(".cart-container").contains(e.target)) {
-                shoppingCart.style.display = "none";
-            }
-        });
-        /* Session Storage */
-        window.sessionStorageHelper = {
-            
-        };
-    });
-    
-</script>
 

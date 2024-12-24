@@ -38,8 +38,28 @@ namespace Data.Commands.Data.Repositories
                 return null;
             }
         }
+        public async Task<User> GetCurrentUserByToken(string Token)
+        {
+            try
+            {
+                string tableName = GetTableName();
+                string query = $"select u.* from {schema}.[AuthUser] as auth_table " +
+                    $"left join [User] u on auth_table.UserId = u.Id " +
+                    $"WHERE auth_table.Token = '{Token}' AND " +
+                    $"auth_table.Expiration < GETDATE() AND auth_table.IsActive = 1";
+
+                var connection = this.GetConnection();
+                connection.Open();
+                var result = connection.Query<User>(query);
+                var query_result = (result).Count() > 0 ? true : false;
+                return result?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
 
-       
     }
 }

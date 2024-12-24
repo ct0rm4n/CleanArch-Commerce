@@ -17,16 +17,6 @@ builder.Services.AddRazorComponents()
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-//builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
-//{
-//    builder.RegisterModule(new AutofacDataModule());
-//});
-//builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
-//{
-//    builder.RegisterModule(new AutofacPersistanceModule());
-//});
-
-//builder.Services.InjectConfigureServices();
 
 builder.Services.AddRazorPages();
 //builder.Services.AddBlazorBootstrap();

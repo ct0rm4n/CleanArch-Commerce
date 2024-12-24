@@ -2,10 +2,9 @@
 
 # Esta fase é usada durante a execução no VS no modo rápido (Padrão para a configuração de Depuração)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
+USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 6667
 
 
 # Esta fase é usada para compilar o projeto de serviço
@@ -13,7 +12,6 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["UI/UI/UI.Server.csproj", "UI/UI/"]
-COPY ["FastCommerce.Service/Service.csproj", "FastCommerce.Service/"]
 COPY ["FastCommerce.Data/Data.csproj", "FastCommerce.Data/"]
 COPY ["FastCommerce.Core/Core.csproj", "FastCommerce.Core/"]
 COPY ["UI/UI.Client/UI.Client.csproj", "UI/UI.Client/"]

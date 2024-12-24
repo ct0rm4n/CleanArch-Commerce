@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>57d1461c-c5b3-4d67-b9ac-a419dc1a7869</ProjectGuid>
+    <ProjectGuid>070c0416-1957-4794-ac47-ea7d4cb87733</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>ui.server</DockerServiceName>

@@ -7,7 +7,8 @@ namespace Data.Interfaces
         bool Add(User user);
         List<User> GetAll();
         User? Login(string email, string password);
-        bool ValidateAuth(User user_auth, string token);
+        Task<User> GetCurrentUserByToken(string Token);
+        (bool, string) ValidateAuth(User? user_auth, string token);
         User Get(int Id);
         bool Update(User user);
         bool Delete(User user);

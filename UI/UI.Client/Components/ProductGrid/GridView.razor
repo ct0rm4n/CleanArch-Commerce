@@ -1,4 +1,8 @@
-﻿<title>Product List and Grid View</title>
+﻿@using BlazorBootstrap
+﻿
+@rendermode InteractiveServer
+
+<title>Product List and Grid View</title>
 <meta name"viewport" content="width=device-width, user-scalable=no, initial=scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
 
 <hr>
@@ -6,7 +10,7 @@
 <hr>
 
 <!--Buttons of grid and list-->
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <div class="container mb-3 mt-3">
     <div class="buttons">
         <i class="bi bi-grid-3x3-gap" id="showdiv1" aria-hidden="true" onclick="ChangeView('grid')"></i> &nbsp;  <i class="bi bi-list-task" id="showdiv2" aria-hidden="true" onclick="ChangeView('list')"></i>
@@ -18,12 +22,68 @@
         {
             @foreach (var item in listProduct)
             {
+                @*   
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://picsum.photos/362/180" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@item.</h5>
-                            <p class="card-text">@item.ShortDescription</p>
+                     <div class="card">
+                         <img class="card-img-top" src="https://picsum.photos/362/180" alt="Card image cap">
+                         <div class="card-body">
+                             <h5 class="card-title">@item.Name</h5>
+                             <p class="card-text">@item.ShortDescription</p>
+                         </div>
+                     </div>
+                 </div>
+                 *@
+
+                <div class="col-12 col-md-6 col-lg-4 card">
+                    <img class="card-img-top" src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/vans.png" style="width: 362px;" alt="Vans">
+                    <div class="card-img-overlay d-flex justify-content-end">
+                        <a href="#" class="card-link text-danger like">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Vans Sk8-Hi MTE Shoes</h4>
+                        <h6 class="card-subtitle mb-2 text-muted">Style: VA33TXRJ5</h6>
+                        <p class="card-text">
+                            The Vans All-Weather MTE Collection features footwear and apparel designed to withstand the elements whilst still looking cool.
+                        </p>
+                        <div class="options d-flex flex-fill">
+                            <select class="custom-select mr-1">
+                                <option selected>Color</option>
+                                <option value="1">Green</option>
+                                <option value="2">Blue</option>
+                                <option value="3">Red</option>
+                            </select>
+                            <select class="custom-select ml-1">
+                                <option selected>Size</option>
+                                <option value="1">41</option>
+                                <option value="2">42</option>
+                                <option value="3">43</option>
+                            </select>
+                        </div>
+
+                        <div class="buy d-flex justify-content-between align-items-center" style="justify-self: end; width: 100%">
+
+                            <div class="w-100" style="display: flex; justify-content: space-between; width: 100%;">
+                                <div class="price text-success" style="width: 50%;"><h5 class="mt-4">$125</h5></div>
+                                <div class="input-group" style="width: 50%;">
+                                    <div class="mt-3">
+                                        <div class="input-group mb-1" style="width: 150px;">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" @onclick="(()=>Decrementar(item.Id))">-</span>
+                                            </div>
+                                            
+                                            <input type="text" class="col-lg-2 form-control" value="@Quantidade" aria-label="Amount (to the nearest dollar)">
+                                            
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" @onclick="(()=>Incrementar(item.Id))">+</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @* <a href="#" class="btn btn-danger mt-3"><i class="fas fa-shopping-cart"></i> Add to Cart</a> *@
                         </div>
                     </div>
                 </div>
@@ -44,4 +104,135 @@
             $gridCont.hasClass('list-view') ? $gridCont.removeClass('list-view') : $gridCont.addClass('list-view');
         }
     }
+    ; (function (window, $) {
+        "use strict";
+
+        var defaultConfig = {
+            type: '',
+            autoDismiss: false,
+            container: '#toasts',
+            autoDismissDelay: 4000,
+            transitionDuration: 500
+        };
+
+        $.toast = function (config) {
+            var size = arguments.length;
+            var isString = typeof (config) === 'string';
+
+            if (isString && size === 1) {
+                config = {
+                    message: config
+                };
+            }
+
+            if (isString && size === 2) {
+                config = {
+                    message: arguments[1],
+                    type: arguments[0]
+                };
+            }
+
+            return new toast(config);
+        };
+
+        var toast = function (config) {
+            config = $.extend({}, defaultConfig, config);
+            // show "x" or not
+            var close = config.autoDismiss ? '' : '&times;';
+
+            // toast template
+            var toast = $([
+                '<div class="toast ' + config.type + '">',
+                '<p>' + config.message + '</p>',
+                '<div class="close">' + close + '</div>',
+                '</div>'
+            ].join(''));
+
+            // handle dismiss
+            toast.find('.close').on('click', function () {
+                var toast = $(this).parent();
+
+                toast.addClass('hide');
+
+                setTimeout(function () {
+                    toast.remove();
+                }, config.transitionDuration);
+            });
+
+            // append toast to toasts container
+            $(config.container).append(toast);
+
+            // transition in
+            setTimeout(function () {
+                toast.addClass('show');
+            }, config.transitionDuration);
+
+            // if auto-dismiss, start counting
+            if (config.autoDismiss) {
+                setTimeout(function () {
+                    toast.find('.close').click();
+                }, config.autoDismissDelay);
+            }
+
+            return this;
+        };
+
+    })(window, jQuery);
+
+    /* ---- start demo code ---- */
+
+    var count = 1;
+    var types = ['default', 'error', 'warning', 'info'];
+
+    $('button').click(function () {
+        var data = this.dataset;
+
+        switch (data.type) {
+            case 'types':
+                $.toast(data.kind, 'This is a ' + data.kind + ' toast.');
+                break;
+            case 'html':
+                $.toast('<div class="custom-toast"><img src="https://dysfunc.github.io/animat.io/images/ron_burgundy.png"><p>You stay classy San Deigo</p></div>');
+                break;
+
+            case 'auto':
+                $.toast({
+                    autoDismiss: true,
+                    message: 'This is my auto-dismiss toast message'
+                });
+
+                break;
+
+            default:
+                $.toast('Hello there!');
+        }
+    });
+    function ToastOpen(type) {
+        //var data = this.dataset;
+        alert("x")
+        switch (type) {
+
+            // case 'types':
+            //     $.toast(data.kind, 'This is a ' + data.kind + ' toast.');
+            //     break;
+
+            case 'html':
+                $.toast('<div class="custom-toast"><img src="https://dysfunc.github.io/animat.io/images/ron_burgundy.png"><p>You stay classy San Deigo</p></div>');
+                break;
+
+            case 'auto':
+                $.toast({
+                    autoDismiss: true,
+                    message: 'This is my auto-dismiss toast message'
+                });
+
+                break;
+
+            default:
+                $.toast('Hello there!');
+        }
+    }
+
+    /* ---- end demo code ---- */
+
 </script>
