@@ -21,8 +21,9 @@ namespace Service.Services
             var auth_user = Authenticate(username, password);
             if (auth_user.valid)
             {
-                if(_userService.ValidateAuth(auth_user.user, null))
-                    return (null, true);
+                var auth = _userService.ValidateAuth(auth_user.user, null);
+                if (auth.Item1)
+                    return auth.Item2 is not null ? (auth.Item2, true) : (null, false);
 
                 string token = GenerateToken();
                 DateTime expiration = DateTime.Now.AddMinutes(30);
@@ -44,10 +45,11 @@ namespace Service.Services
         }
         public (string Token, bool Logged) LoginValidate(string token)
         {
-            if (_userService.ValidateAuth(null,token))
-                return (null, true);
+            var auth = _userService.ValidateAuth(null, token);
+            if (auth.Item1)
+                return (auth.Item2, auth.Item1);
             else
-                return (null, false);
+                return (auth.Item2, auth.Item1);
         }
         private (bool valid, User user) Authenticate(string username, string password)
         {

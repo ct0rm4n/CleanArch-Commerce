@@ -22,7 +22,7 @@ namespace Api.Ocelot
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>().UseUrls(new string[] { "http://localhost:5000" });
+                webBuilder.UseStartup<Startup>().UseUrls(new string[] { "http://host.docker.internal:5000" });
             });
     }
 }

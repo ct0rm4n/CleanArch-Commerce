@@ -77,11 +77,13 @@
         try
         {
             var respose = new HttpResponseMessage();            
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Login", itemObject); 
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/Login", itemObject);
             var token = (respose.Content.ReadAsStringAsync().Result);
             var token_auth = JsonConvert.DeserializeObject<AuthResponse>(token);
-            if(token_auth.Token is not null)
+            if(token_auth.Token is not null){
                 await StoreToken(token_auth);
+                NavigationManager.NavigateTo($"/");
+            }
 
             if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
             {

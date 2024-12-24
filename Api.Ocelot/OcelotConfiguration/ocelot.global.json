@@ -1,6 +1,6 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000",
+    "BaseUrl": "http://host.docker.internal:5000",
     "ServiceDiscoveryProvider": {
       "Type": "AppConfiguration"
     }

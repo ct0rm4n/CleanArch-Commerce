@@ -9,8 +9,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "host.docker.internal",
+          "Port": 5002
         }
       ]      
     }

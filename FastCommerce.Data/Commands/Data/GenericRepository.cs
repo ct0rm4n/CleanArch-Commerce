@@ -274,7 +274,7 @@ namespace Data.Commands.Data
         }
 
 
-        private string GetColumns(bool excludeKey = false)
+        public string GetColumns(bool excludeKey = false)
         {
             var type = typeof(T);
 

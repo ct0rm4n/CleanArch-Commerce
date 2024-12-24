@@ -1,12 +1,71 @@
+version: '3.8'
 services:
-  ui.server:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+  api.ocelot:
+    build:
+      context: .
+      dockerfile: Api.Ocelot/Dockerfile
+    container_name: api-ocelot
     ports:
-      - "8080"
-      - "8081"
+      - "5000:5000"    
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5000
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+       - ./Api.Ocelot/ocelot.json:/app/ocelot.json
+
+  api.catalog:
+    build:
+      context: .
+      dockerfile: FastCommerce.Api.Catalog/Dockerfile
+    container_name: api-catalog
+    ports:
+      - "5001:5001"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5001
+
+  api.checkout:
+    build:
+      context: .
+      dockerfile: Api.Checkout/Dockerfile
+    container_name: api-checkout
+    ports:
+      - "5002:5002"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5002
+
+  ui.server:
+    build:
+      context: .
+      dockerfile: UI/UI/Dockerfile
+    container_name: ui-server
+    ports:
+      - "5005:5005"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5005
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "teste@12345"
+      ACCEPT_EULA: "Y"
+    networks:
+      - fastcommerce
+
+networks:
+  fastcommerce:
+
+      

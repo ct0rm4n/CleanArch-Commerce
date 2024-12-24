@@ -1,7 +1,10 @@
-﻿using Core.Entities.Domain;
+﻿using BlazorBootstrap;
+using Core.Entities.Domain;
 using Core.ViewModel.Catalog;
 using Core.Wrappers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace UI.Client.Components.ProductGrid
@@ -10,13 +13,22 @@ namespace UI.Client.Components.ProductGrid
     {
         [Inject]
         IConfiguration Configuration { get; set; }
-        private readonly HttpClient _client = new HttpClient();
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+
+        [Inject]
+        public IJSRuntime js { get; set; }
+
+        public HttpClient _client = new HttpClient();
         public List<Product> listProduct { get; set; }
         int PageIndex = 0;
         int TotalPages = 1;
-
+        public string token_jwt { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            
             var respose = new PagedResponse<List<Product>>(null, 0, int.MaxValue);
             if (listProduct is null)
             {
@@ -47,6 +59,93 @@ namespace UI.Client.Components.ProductGrid
             base.OnParametersSet();
         }
 
+        private int Quantidade = 0;
+        public string token { get; set; } = string.Empty;
 
+        private void Decrementar(int productId)
+        {
+            if (Quantidade > 1)
+            {
+                Quantidade--;
+            }
+            
+            ChangeCart(Quantidade, productId);
+        }
+
+        private void Incrementar(int productId)
+        {
+            Quantidade++;
+            ChangeCart(Quantidade, productId);
+        }
+
+        private void ShowMessage(string toastType)
+        {
+
+            var msg = new 
+            {
+                Type = toastType,
+                Title = "Carrinho atualizado!",
+                HelpText = $"{DateTime.Now}",
+                Message = $"Hello, world! This is a toast message. DateTime: {DateTime.Now}",
+            };
+
+            js.InvokeVoidAsync("ToastOpen", "html");
+        }
+        public async Task ChangeCart(int qtd, int productId)
+        {
+            try
+            {
+                _client = new HttpClient();
+                token_jwt = await GetFromSessionStorage("access_token");
+                var path = $"{Configuration["Api.Gateway"]}checkout-gate/Checkout/add/{productId}?qtd={qtd}";
+                if(string.IsNullOrEmpty(token_jwt))
+                    NavigationManager.NavigateTo($"/login");
+
+                _client.DefaultRequestHeaders.Add("Authorization", token_jwt);
+                var base_request = _client.PostAsync(path, null).Result;
+                if (base_request.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    NavigationManager.NavigateTo($"/login");
+                }
+                ShowMessage("Dark");
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+        private async Task SaveToSessionStorage(string key, string value)
+        {
+            await js.InvokeVoidAsync("sessionStorage.setItem", key, value);
+        }
+
+        private async Task<string> GetFromSessionStorage(string key)
+        {
+            try
+            {
+                return await js.InvokeAsync<string>("sessionStorage.getItem", key);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
+        }
+
+        private async Task RemoveFromSessionStorage(string key)
+        {
+            await js.InvokeVoidAsync("sessionStorage.removeItem", key);
+        }
+
+
+        private async Task RetrieveToken()
+        {
+            token = await GetFromSessionStorage("access_token");
+        }
+
+        private async Task ClearToken()
+        {
+            await RemoveFromSessionStorage("access_token");
+        }
     }
 }

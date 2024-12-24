@@ -724,7 +724,7 @@ app.MapPost("/api/Catalog/Product/update", async (IProductService setService, [F
 //login
 
 
-app.MapPost("/api/Catalog/login", async (IAuthService setService, [FromBody] LoginVM body) =>
+app.MapPost("/api/login", async (IAuthService setService, [FromBody] LoginVM body) =>
 {
     try
     {
@@ -736,7 +736,7 @@ app.MapPost("/api/Catalog/login", async (IAuthService setService, [FromBody] Log
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
-app.MapGet("/api/Catalog/loginvalidate", async (IAuthService setService, [FromQuery] string token) =>
+app.MapGet("/api/loginvalidate", async (IAuthService setService, [FromQuery] string token) =>
 {
     try
     {

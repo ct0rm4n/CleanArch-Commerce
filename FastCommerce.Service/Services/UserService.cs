@@ -27,17 +27,49 @@ namespace Service
             }
             return user;
         }
-        public bool ValidateAuth(User? user_auth, string token)
+        public async Task<User> GetCurrentUserByToken(string Token)
         {
-            if (token is not null && !authRepository.ValidateLoginToken(token).Result)
+            User user = new User();
+            try
             {
-                return false;
+                user = await userRepository.GetCurrentUserByToken(Token);
             }
-            else if (user_auth is not null && !authRepository.ValidateLogin(user_auth.Id).Result)
+            catch (Exception ex)
             {
-                return false;
             }
-            return true;
+            return user;
+        }
+        public (bool,string) ValidateAuth(User? user_auth, string token)
+        {
+            if (user_auth is not null)
+            {
+                var validate_auth = authRepository.ValidateLogin(user_auth.Id).Result;
+                if (token is not null && !validate_auth.Item1)
+                {
+                    return (false, null);
+                }
+                else if (user_auth is not null && validate_auth.Item1)
+                {
+                    return (true, validate_auth.Item2);
+                }
+                else
+                {
+                    return (false, null);
+                }
+            }
+            else
+            {
+                var validate_auth = authRepository.ValidateLoginToken(token).Result;
+                if (token is not null && validate_auth.Valid)
+                {
+                    return (true, token);
+                }                
+                else
+                {
+                    return (false, null);
+                }
+            }
+            
         }
 
         public User Auth(User user, string token, DateTime expiration)
