@@ -34,7 +34,7 @@ To run this project, you will need to have the following software installed:
 ## Environment Setup
 
 1. **Clone the repository:**
-    git clone https://github.com/your-username/fastcommerce.git cd fastcommerce
+    git clone https://github.com/ct0rm4n/FastCommerce.git cd fastcommerce
 
 2. **Ensure Docker is running:**
    Verify that Docker is installed and running on your system. You can check this by running the following command:
@@ -67,8 +67,6 @@ The project includes an SQL script (`CreateDatabase.sql`) to create the database
 If you would like to contribute to this project, feel free to open a pull request or report issues in the repository.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
-
 This project is licensed under the [MIT License](LICENSE).
 
     
