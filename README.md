@@ -1,7 +1,9 @@
 Fast Architecture:
 
 
-![image](https://drive.google.com/uc?export=view&id=104THkxA-C8nqLZEGZIUikbRla0ZsePtT)
+![image](https://drive.google.com/uc?export=view&id=1UERJQpkr7gxBEl_z1EBlpyxlVE55nTxS)
+<a href="[https://github.com/ThreeMammals/Ocelot](https://drive.google.com/file/d/104THkxA-C8nqLZEGZIUikbRla0ZsePtT/view?usp=sharing)">Diagram</a>
+
 <!-- ROADMAP -->
 ## Roadmap
 
