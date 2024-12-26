@@ -1,8 +1,7 @@
 Fast Architecture:
 
 
-![image](https://drive.google.com/uc?export=view&id=1Wfh4yL5HMHIp9p6GvIZ0jQzvM5ACNg6G)
-
+![image](https://drive.google.com/uc?export=view&id=104THkxA-C8nqLZEGZIUikbRla0ZsePtT)
 <!-- ROADMAP -->
 ## Roadmap
 
