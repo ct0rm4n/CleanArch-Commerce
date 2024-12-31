@@ -141,11 +141,11 @@
         await UpdateDescription();
         var respose = new HttpResponseMessage();
         if(postObject.Id == 0){
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}BlogPost/add", postObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/BlogPost/add", postObject);
         }
         else
         {
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}BlogPost/update", postObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/BlogPost/update", postObject);
         }
         if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
         {

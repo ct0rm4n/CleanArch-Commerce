@@ -70,11 +70,11 @@
     {        
         var respose = new HttpResponseMessage();
         if(roleObject.Id == 0){
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Role/add", roleObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Role/add", roleObject);
         }
         else
         {
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Role/update", roleObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Role/update", roleObject);
         }
         if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
         {

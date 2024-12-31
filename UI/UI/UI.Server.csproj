@@ -505,7 +505,6 @@
   <ItemGroup>
     <Folder Include="Components\Admin\Catalog\Manufacturer\" />
     <Folder Include="Components\Admin\Catalog\Tags\" />
-    <Folder Include="Components\Admin\Catalog\Product\" />
     <Folder Include="Components\Admin\Forum\" />
   </ItemGroup>
 

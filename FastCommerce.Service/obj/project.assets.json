@@ -5732,6 +5732,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Data >= 1.0.0",
+      "Microsoft.AspNetCore.Http >= 2.2.0",
       "Microsoft.AspNetCore.Mvc.Abstractions >= 2.2.0",
       "Microsoft.AspNetCore.Mvc.Core >= 2.2.0",
       "Microsoft.AspNetCore.WebUtilities >= 8.0.4",
@@ -5795,6 +5796,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Http": {
+            "target": "Package",
+            "version": "[2.2.0, )"
+          },
           "Microsoft.AspNetCore.Mvc.Abstractions": {
             "target": "Package",
             "version": "[2.2.0, )"

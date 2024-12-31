@@ -62,11 +62,11 @@
     {        
         var respose = new HttpResponseMessage();
         if(SettingsObject.Id == 0){
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Settings/add", SettingsObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Settings/add", SettingsObject);
         }
         else
         {
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Settings/update", SettingsObject);
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Settings/update", SettingsObject);
         }
         if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
         {

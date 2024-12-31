@@ -18,7 +18,7 @@ services:
   api.catalog:
     build:
       context: .
-      dockerfile: FastCommerce.Api.Catalog/Dockerfile
+      dockerfile: Api.Catalog/Dockerfile
     container_name: api-catalog
     ports:
       - "5001:5001"
@@ -27,6 +27,8 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_HTTP_PORTS=5001
+    volumes:
+       - ./Api.Catalog/CreateDatabase.sql:/app/CreateDatabase.sql
 
   api.checkout:
     build:
@@ -40,6 +42,34 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_HTTP_PORTS=5002
+  
+  api.shipping:
+    build:
+      context: .
+      dockerfile: Api.Shipping/Dockerfile
+    container_name: api-shipping
+    ports:
+      - "5003:5003"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5003
+
+  api.customer:
+    build:
+      context: .
+      dockerfile: Api.Customer/Dockerfile
+    container_name: api-customer
+    ports:
+      - "5004:5004"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5004
+
+
 
   ui.server:
     build:
@@ -64,8 +94,12 @@ services:
       ACCEPT_EULA: "Y"
     networks:
       - fastcommerce
+    volumes:
+      - sqlserver-data:/var/opt/mssql
 
 networks:
   fastcommerce:
 
+volumes:
+  sqlserver-data:
       
