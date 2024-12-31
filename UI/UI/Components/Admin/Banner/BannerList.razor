@@ -167,14 +167,14 @@
     {
         try
         {
-            DefaultUrl = Configuration["Api.Catalog"];
+            DefaultUrl = Configuration["Api.Gateway"];
             _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Banner>>(null, 0, int.MaxValue);
             if (items is null)
             {
                 PageIndex = 1;
 
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Banner>>>($"{DefaultUrl}Banner/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Banner>>>($"{DefaultUrl}catalog-gate/catalog/Banner/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data;
 
                 await BuildPagger(respose);

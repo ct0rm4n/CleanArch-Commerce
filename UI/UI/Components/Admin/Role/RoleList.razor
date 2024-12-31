@@ -123,9 +123,9 @@
             var result = items.AsQueryable();
             if (!string.IsNullOrEmpty(descFilter))
             {
-                string url = Configuration["Api.Catalog"];
+                string url = Configuration["Api.Gateway"];
                 var respose = new PagedResponse<List<Role>>(null, 0, int.MaxValue);
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Role>>>($"{url}Role/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Role>>>($"{url}catalog-gate/catalog/Role/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data;
                 await BuildPagger(respose);
             }
@@ -141,7 +141,7 @@
     {
         try
         {
-            string url = Configuration["Api.Catalog"];
+            string url = Configuration["Api.Gateway"];
             var respose = new PagedResponse<List<Role>>(null, 0, int.MaxValue);
             respose = await _client.GetFromJsonAsync<PagedResponse<List<Role>>>($"{page}");
             items = respose.Data;
@@ -162,14 +162,14 @@
     {
         try
         {
-            string url = Configuration["Api.Catalog"];
+            string url = Configuration["Api.Gateway"];
             _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Role>>(null, 0, int.MaxValue);
             if (items is null)
             {
                 PageIndex = 1;
                 
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Role>>>($"{url}Role/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Role>>>($"{url}catalog-gate/catalog/Role/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data; 
 
                 await BuildPagger(respose);

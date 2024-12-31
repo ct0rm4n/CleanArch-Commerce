@@ -27,6 +27,34 @@
           }
         }
       ]
+    },
+    {
+      "Key": "customer",
+      "Config": [
+        {
+          "Name": "Customer Web Api",
+          "Version": "v1",
+          "url": "http://host.docker.internal:5004/swagger/v1/swagger.json",
+          "Service": {
+            "Name": "customer",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "shipping",
+      "Config": [
+        {
+          "Name": "Shipping Web Api",
+          "Version": "v1",
+          "url": "http://host.docker.internal:5003/swagger/v1/swagger.json",
+          "Service": {
+            "Name": "shipping",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
     }
   
   ]

@@ -113,9 +113,9 @@
             var result = items.AsQueryable();
             if (!string.IsNullOrEmpty(descFilter))
             {
-                string url = Configuration["Api.Catalog"];
+                string url = Configuration["Api.Gateway"];
                 var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}Settings/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}catalog-gate/catalog/Settings/Search?filterText={descFilter}&?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data;
                 await BuildPagger(respose);
             }
@@ -131,7 +131,7 @@
     {
         try
         {
-            string url = Configuration["Api.Catalog"];
+            string url = Configuration["Api.Gateway"];
             var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
             respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{page}");
             items = respose.Data;
@@ -152,14 +152,14 @@
     {
         try
         {
-            string url = Configuration["Api.Catalog"];
+            string url = Configuration["Api.Gateway"];
             _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
             var respose = new PagedResponse<List<Settings>>(null, 0, int.MaxValue);
             if (items is null)
             {
                 PageIndex = 1;
                 
-                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}Settings/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
+                respose = await _client.GetFromJsonAsync<PagedResponse<List<Settings>>>($"{url}catalog-gate/catalog/Settings/getall?PageSize={pagination.ItemsPerPage}&PageIndex={PageIndex}");
                 items = respose.Data; 
 
                 await BuildPagger(respose);

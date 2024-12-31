@@ -122,11 +122,11 @@
             if (itemObject.Id == 0)
             {
 
-                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Banner/add", itemObject);
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}Banner/add", itemObject);
             }
             else
             {
-                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Catalog"]}Banner/update", itemObject);
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}Banner/update", itemObject);
             }
             if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
             {

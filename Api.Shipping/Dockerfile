@@ -4,29 +4,29 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 5002
+EXPOSE 5001
 
 
 # Esta fase é usada para compilar o projeto de serviço
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Api.Customer/Api.Customer.csproj", "Api.Customer/"]
+COPY ["Api.Shipping/Api.Shipping.csproj", "Api.Shipping/"]
 COPY ["FastCommerce.Service/Service.csproj", "FastCommerce.Service/"]
 COPY ["FastCommerce.Data/Data.csproj", "FastCommerce.Data/"]
 COPY ["FastCommerce.Core/Core.csproj", "FastCommerce.Core/"]
-RUN dotnet restore "./Api.Customer/Api.Customer.csproj"
+RUN dotnet restore "./Api.Shipping/Api.Shipping.csproj"
 COPY . .
-WORKDIR "/src/Api.Customer"
-RUN dotnet build "./Api.Customer.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Api.Shipping"
+RUN dotnet build "./Api.Shipping.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta fase é usada para publicar o projeto de serviço a ser copiado para a fase final
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Api.Customer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Api.Shipping.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Esta fase é usada na produção ou quando executada no VS no modo normal (padrão quando não está usando a configuração de Depuração)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Api.Customer.dll"]
+ENTRYPOINT ["dotnet", "Api.Shipping.dll"]

@@ -1,6 +1,0 @@
-@FastCommerce.Api.Catalog_HostAddress = http://localhost:5136
-
-GET {{FastCommerce.Api.Catalog_HostAddress}}/blogpost/Get/
-Accept: application/json
-
-###
