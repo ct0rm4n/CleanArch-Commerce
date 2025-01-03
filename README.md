@@ -1,4 +1,4 @@
-# FastCommerce
+# CleanArch Commerce - Sample
 
 This is an e-commerce project developed with Blazor and .NET 8. The project includes a catalog API, an API gateway using Ocelot, and a Blazor WebAssembly client application.
 
