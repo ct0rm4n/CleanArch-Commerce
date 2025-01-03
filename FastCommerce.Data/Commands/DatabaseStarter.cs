@@ -12,7 +12,7 @@ namespace Data.Commands
         }
         private void EnsureDatabaseCreated()
         {
-            CreateDatabase();
+            //CreateDatabase();
             using (var connection = new SqlConnection(connectionString))
             {
                 try
