@@ -11,17 +11,13 @@ namespace Service.Filter
             this.authService = authService;
         }
 
-
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
-        {            
-            var ajwtToken = context.HttpContext.Request.Headers["Authorization"].ToString();
-            var auth_validate = authService.LoginValidate(ajwtToken);
+        {
+            var auth_validate = authService.LoginValidate(context.HttpContext.Request.Headers["Authorization"].ToString());
             if (auth_validate.Token is null && !auth_validate.Logged)
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;                
             
              return await next(context);
         }
-
-    }
-    
+    }    
 }

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Microsoft.OpenApi.Models;
+using Service.Filter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,10 +57,11 @@ builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(ne
     builder.RegisterModule(new AutofacPersistanceModule());
 });
 
-builder.Services.AddSingleton<Service.Middleware.AuthorizationMiddleware>();
+//builder.Services.AddSingleton<Service.Middleware.AuthorizationMiddleware>();
 
 var app = builder.Build();
 var auth = app.Configuration;
+
 
 app.UseDeveloperExceptionPage();
 app.UseSwagger();
@@ -69,10 +71,10 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Customer We
 app.UseHttpsRedirection();
 
 /*role*/
-app.MapGet("/api/Role/Get/{id}", Results<Ok<Role>, NotFound> (IRoleService setService, int id) =>
+app.MapGet("/api/Role/Get/{id}", Results<Ok<Role>, NotFound> (IRoleService setService, int id, HttpContext context) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/api/Role/GetALl",
     async (IRoleService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
@@ -97,7 +99,7 @@ app.MapGet("/api/Role/GetALl",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/api/Role/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IRoleService setService) =>
@@ -124,7 +126,7 @@ app.MapGet("/api/Role/Search",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapPost("/api/Role/Add", async (IRoleService setService, [FromBody] RoleVM body) =>
 {
@@ -144,7 +146,7 @@ app.MapPost("/api/Role/Add", async (IRoleService setService, [FromBody] RoleVM b
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.MapPost("/api/Role/update", async (IRoleService setService, [FromBody] RoleVM body) =>
@@ -166,7 +168,7 @@ app.MapPost("/api/Role/update", async (IRoleService setService, [FromBody] RoleV
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.Run();

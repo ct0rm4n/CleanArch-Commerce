@@ -1,4 +1,6 @@
-﻿namespace Service.Filter
+﻿using System.Net;
+
+namespace Service.Filter
 {
     public class AuthorizationActionFilter : IEndpointFilter
     {
@@ -10,5 +12,7 @@
 
             return await next(context);
         }
-    }    
+
+    }
+    
 }

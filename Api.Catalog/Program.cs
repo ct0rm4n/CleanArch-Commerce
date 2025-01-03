@@ -23,6 +23,7 @@ using Service.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
 using Autofac.Core;
+using Data.Commands;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,7 +76,8 @@ builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(ne
 builder.Services.AddSingleton<AuthorizationActionFilter>();
 
 var app = builder.Build();
-var auth = app.Configuration;
+
+var databaseVerify = new DatabaseStarter(app.Configuration.GetConnectionString("SqlConnection"));
 
 // Configure the HTTP request pipeline.
 app.UseDeveloperExceptionPage();
@@ -88,12 +90,12 @@ app.UseHttpsRedirection();
 app.MapGet("api/catalog", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(1) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(id) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 
@@ -526,7 +528,7 @@ app.MapPost("/api/Catalog/Banner/update", async (IBannerService setService, [Fro
 app.MapGet("/api/Catalog/product/Get/{id}", Results<Ok<Product>, NotFound> (IProductService setService, int id) =>
         setService.Get(id) is { } post
             ? TypedResults.Ok(post)
-            : TypedResults.NotFound());
+            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/api/Catalog/product/Getall",
     async (IProductService setService, [FromQuery] int? PageNumber, [FromQuery] int? PageSize) =>
@@ -551,7 +553,7 @@ app.MapGet("/api/Catalog/product/Getall",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("/api/Catalog/Product/Search",
     async ([FromQuery] string filterText, [FromQuery] int? PageNumber, [FromQuery] int? PageSize, [FromServices] IProductService setService) =>
@@ -578,7 +580,7 @@ app.MapGet("/api/Catalog/Product/Search",
         {
             return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
-    });
+    }).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapPost("/api/Catalog/Product/Add", async (IProductService setService, [FromBody] ProductVM body) =>
 {
@@ -599,7 +601,7 @@ app.MapPost("/api/Catalog/Product/Add", async (IProductService setService, [From
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 
 
 app.MapPost("/api/Catalog/Product/update", async (IProductService setService, [FromBody] ProductVM body) =>
@@ -621,7 +623,7 @@ app.MapPost("/api/Catalog/Product/update", async (IProductService setService, [F
     {
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
-});
+}).AddEndpointFilter<AuthorizationActionFilter>();
 //login
 
 

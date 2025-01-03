@@ -1,22 +1,19 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace Service.Middleware
 {
     public class AuthorizationMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
 
-        public AuthorizationMiddleware(RequestDelegate next, IConfiguration configuration)
+        public AuthorizationMiddleware(IConfiguration configuration)
         {
-            _next = next;
             _configuration = configuration;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task<(bool isValid, HttpContext context)> ValidApiKey(HttpContext context)
         {
             string apiKey = _configuration["SecretKeys:ApiKey"];
             string apiKeySecondary = _configuration["SecretKeys:ApiKeySecondary"];
@@ -34,19 +31,25 @@ namespace Service.Middleware
 
                 if (!keys.Any(key => key.Equals(apiKeyHeader, StringComparison.OrdinalIgnoreCase)))
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized");
-                    return;
+                    if (!context.Response.HasStarted)
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        await context.Response.WriteAsync("Unauthorized");
+                    }
+                    return (false, context);
                 }
             }
             else
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Unauthorized");
-                return;
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await context.Response.WriteAsync("Unauthorized");
+                }
+                return (false, context);
             }
 
-            await _next(context);
+            return (true, context);
         }
     }
 }
