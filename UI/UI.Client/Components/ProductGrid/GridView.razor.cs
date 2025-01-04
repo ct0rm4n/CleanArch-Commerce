@@ -79,17 +79,9 @@ namespace UI.Client.Components.ProductGrid
         }
 
         private void ShowMessage(string toastType)
-        {
+        {         
 
-            var msg = new 
-            {
-                Type = toastType,
-                Title = "Carrinho atualizado!",
-                HelpText = $"{DateTime.Now}",
-                Message = $"Hello, world! This is a toast message. DateTime: {DateTime.Now}",
-            };
-
-            js.InvokeVoidAsync("ToastOpen", "html");
+            js.InvokeVoidAsync("ToastShow", new object[] { toastType, "Carrinho adicionado com sucesso", "O produto foi adicionado com sucesso ao carrinho de compra" });
         }
         public async Task ChangeCart(int qtd, int productId)
         {
@@ -105,9 +97,11 @@ namespace UI.Client.Components.ProductGrid
                 var base_request = _client.PostAsync(path, null).Result;
                 if (base_request.StatusCode == HttpStatusCode.Unauthorized)
                 {
+                    ShowMessage("error");
+                    await Task.Delay(100);
                     NavigationManager.NavigateTo($"/login");
                 }
-                ShowMessage("Dark");
+                ShowMessage("success");
             }
             catch(Exception ex)
             {

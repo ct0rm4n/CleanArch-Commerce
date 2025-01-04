@@ -12,7 +12,7 @@ namespace Data.Commands
         }
         private void EnsureDatabaseCreated()
         {
-            //CreateDatabase();
+            CreateDatabase();
             using (var connection = new SqlConnection(connectionString))
             {
                 try
@@ -49,8 +49,8 @@ namespace Data.Commands
                     command.CommandText = $@"
                             IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'FastCommerce')
                             BEGIN
-                                CREATE DATABASE [FastCommerce]
-                            END";
+                                CREATE DATABASE FastCommerce
+                            END;";
                     command.ExecuteNonQuery();
                 }
             }

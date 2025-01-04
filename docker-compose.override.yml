@@ -1,5 +1,18 @@
 version: '3.8'
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "teste@12345"
+      ACCEPT_EULA: "Y"
+    networks:
+      - fastcommerce
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
   api.ocelot:
     build:
       context: .
@@ -69,8 +82,6 @@ services:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_HTTP_PORTS=5004
 
-
-
   ui.server:
     build:
       context: .
@@ -83,19 +94,6 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_HTTP_PORTS=5005
-
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
-    ports:
-      - "1433:1433"
-    environment:
-      SA_PASSWORD: "teste@12345"
-      ACCEPT_EULA: "Y"
-    networks:
-      - fastcommerce
-    volumes:
-      - sqlserver-data:/var/opt/mssql
 
 networks:
   fastcommerce:
