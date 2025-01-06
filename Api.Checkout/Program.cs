@@ -71,7 +71,7 @@ app.UseHttpsRedirection();
 
 
 
-app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound, ProblemHttpResult>>  (HttpRequest request,
+app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound, ProblemHttpResult, UnauthorizedHttpResult>>  (HttpRequest request,
     ICheckoutService setService, IUserService userService,
     int idProduto, [FromQuery] int qtd) =>
     {
@@ -85,12 +85,21 @@ app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound
                 if (!string.IsNullOrEmpty(token))
                 {
                     user = await userService.GetCurrentUserByToken(token);
+                    if(user is null)
+                    {
+                        return TypedResults.Unauthorized();
+                    }
                 }
+                var item = new ShoppingCartItem() { Quantity = qtd, ProductId = idProduto, UserId = user.Id, TotalPrice = 100 };
+                item = setService.Add(item);
+                return TypedResults.Ok();
+            }
+            else
+            {
+                return TypedResults.Unauthorized();
             }
 
-            var item = new ShoppingCartItem(){ Quantity = qtd, ProductId = idProduto, UserId = user.Id, TotalPrice = 100 };
-            item = setService.Add(item);
-            return TypedResults.Ok();
+            
         }
         catch (Exception ex)
         {

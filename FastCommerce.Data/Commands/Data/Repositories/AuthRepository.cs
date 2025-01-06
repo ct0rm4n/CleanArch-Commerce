@@ -17,7 +17,7 @@ namespace Data.Commands.Data.Repositories
             try
             {
                 string tableName = GetTableName();
-                string query = $"DECLARE @now DATETIME = GETDATE(); UPDATE  {schema}.[{tableName}] SET IsActive = 0 WHERE [UserId] = '{userId}' AND Expiration < @now AND IsActive = 1";
+                string query = $"UPDATE  {schema}.[{tableName}] SET IsActive = 0 WHERE [UserId] = '{userId}' AND Expiration < GETDATE() AND IsActive = 1 order by InsertedDate asc";
                 var connection = this.GetConnection();
                 connection.Open();
                 var query_result = (connection.Query<dynamic>(query)).First();
@@ -34,7 +34,7 @@ namespace Data.Commands.Data.Repositories
             try
             {
                 string tableName = GetTableName();
-                string query = $"DECLARE @now DATETIME = GETDATE(); select * from {schema}.[{tableName}] WHERE [UserId] = '{userId}' AND Expiration < @now AND IsActive = 1";
+                string query = $"select * from {schema}.[{tableName}] WHERE [UserId] = '{userId}' AND Expiration > GETDATE() AND IsActive = 1 order by InsertedDate desc";
                 var connection = this.GetConnection();
                 connection.Open();
                 var result = connection.Query<AuthUser>(query);
@@ -51,7 +51,7 @@ namespace Data.Commands.Data.Repositories
             try
             {
                 string tableName = GetTableName();
-                string query = $"DECLARE @now DATETIME = GETDATE(); select * from {schema}.[{tableName}] WHERE [Token] = '{token}' AND Expiration < @now AND IsActive = 1";
+                string query = $"select * from {schema}.[{tableName}] WHERE [Token] = '{token}' AND Expiration >  GETDATE() AND IsActive = 1 order by InsertedDate desc";
                 var connection = this.GetConnection();
                 connection.Open();
                 var result = connection.Query<AuthUser>(query);

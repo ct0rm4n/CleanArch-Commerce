@@ -46,7 +46,7 @@ namespace Data.Commands.Data.Repositories
                 string query = $"select u.* from {schema}.[AuthUser] as auth_table " +
                     $"left join [User] u on auth_table.UserId = u.Id " +
                     $"WHERE auth_table.Token = '{Token}' AND " +
-                    $"auth_table.Expiration < GETDATE() AND auth_table.IsActive = 1";
+                    $"auth_table.Expiration > GETDATE() AND auth_table.IsActive = 1";
 
                 var connection = this.GetConnection();
                 connection.Open();

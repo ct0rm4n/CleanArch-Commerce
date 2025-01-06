@@ -90,8 +90,11 @@ namespace UI.Client.Components.ProductGrid
                 _client = new HttpClient();
                 token_jwt = await GetFromSessionStorage("access_token");
                 var path = $"{Configuration["Api.Gateway"]}checkout-gate/Checkout/add/{productId}?qtd={qtd}";
-                if(string.IsNullOrEmpty(token_jwt))
+                if (string.IsNullOrEmpty(token_jwt))
+                {
                     NavigationManager.NavigateTo($"/login");
+                    return;
+                }
 
                 _client.DefaultRequestHeaders.Add("Authorization", token_jwt);
                 var base_request = _client.PostAsync(path, null).Result;
@@ -100,8 +103,11 @@ namespace UI.Client.Components.ProductGrid
                     ShowMessage("error");
                     await Task.Delay(100);
                     NavigationManager.NavigateTo($"/login");
+                    return;
                 }
-                ShowMessage("success");
+                else{
+                    ShowMessage("success");
+                }                
             }
             catch(Exception ex)
             {
