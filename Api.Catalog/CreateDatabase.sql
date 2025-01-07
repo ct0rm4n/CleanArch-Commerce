@@ -45,14 +45,15 @@ CREATE TABLE FastCommerce.dbo.Product (
 	Title nchar(10) COLLATE Latin1_General_CI_AS NULL,
 	ShortDescription varchar(200) COLLATE Latin1_General_CI_AS NULL,
 	FullDescription varchar(MAX) COLLATE Latin1_General_CI_AS NULL,
-	Mpnn varchar(20) COLLATE Latin1_General_CI_AS NULL,
+	Mpn varchar(20) COLLATE Latin1_General_CI_AS NULL,
+	Type varchar(100) COLLATE Latin1_General_CI_AS NULL,
 	Price decimal(10,0) NULL,
 	Html varchar(MAX) COLLATE Latin1_General_CI_AS NULL,
 	Seo varchar(50) COLLATE Latin1_General_CI_AS NULL,
 	Publish bit NULL,
 	Deleted bit NULL,
-	DateStart datetime NOT NULL,
-	DateEnd datetime NOT NULL,
+	DateStart datetime  NULL,
+	DateEnd datetime  NULL,
 	Id int IDENTITY(1,1) NOT NULL,
 	CONSTRAINT PK_Product PRIMARY KEY (Id)
 );

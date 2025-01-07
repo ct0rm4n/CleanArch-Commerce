@@ -1,83 +1,75 @@
-﻿@page "/products/new"
+﻿@page "/admin/products/new"
+@page "/products/new"
 @using Core.Entities.Domain
 @using Blazored.TextEditor
 @using System.Net
+@using Core.ViewModel.Catalog
 @using UI.Server.Utils
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <h3>Product Registration</h3>
-
-<EditForm Model="product" OnSubmit="HandleValidSubmit" FormName="productForm">
+<EditForm Model="@product" formname="bannerVM" EditContext="@editContext"
+OnValidSubmit="@HandleValidSubmit" enctype="multipart/form-data">
     <DataAnnotationsValidator />
     <ValidationSummary />
-
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @((MarkupString)errorMessage)
+        </div>
+    }
     <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <InputText id="title" class="form-control" @bind-Value="product.Title" />
+        <InputText id="Title" class="form-control" @bind-Value="product.Title" />
     </div>
 
     <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <InputText id="name" class="form-control" @bind-Value="product.Name" />
+        <label for="Name" class="form-label">Name</label>
+        <InputText id="Name" class="form-control" @bind-Value="product.Name" />
     </div>
-
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="short-description-tab" data-bs-toggle="tab" data-bs-target="#short-description" type="button" role="tab" aria-controls="short-description" aria-selected="true">Short Description</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="full-description-tab" data-bs-toggle="tab" data-bs-target="#full-description" type="button" role="tab" aria-controls="full-description" aria-selected="false">Full Description</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="html-tab" data-bs-toggle="tab" data-bs-target="#html" type="button" role="tab" aria-controls="html" aria-selected="false">Html</button>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="short-description" role="tabpanel" aria-labelledby="short-description-tab">
-            <div class="mb-3">
-                <label for="shortDescription" class="form-label">Short Description</label>
-                <InputTextArea id="shortDescription" class="form-control" @bind-Value="product.ShortDescription" />
-            </div>
-        </div>
-        <div class="tab-pane fade" id="full-description" role="tabpanel" aria-labelledby="full-description-tab">
-            <div class="mb-3">
-                <label for="fullDescription" class="form-label">Full Description</label>
-                <InputTextArea id="fullDescription" class="form-control" @bind-Value="product.FullDescription" />
-            </div>
-        </div>
-        <div class="tab-pane fade" id="html" role="tabpanel" aria-labelledby="html-tab">
-            <div class="mb-3">
-                <label for="htmlContent" class="form-label">Html</label>
-                <InputTextArea id="htmlContent" class="form-control" @bind-Value="product.Html" />
-            </div>
-        </div>
+  
+    <div class="mb-3">
+        <label for="shortDescription" class="form-label">Short Description</label>
+        <InputTextArea id="ShortDescription" class="form-control" @bind-Value="product.ShortDescription" />
     </div>
 
     <div class="mb-3">
-        <label for="seo" class="form-label">Seo</label>
-        <InputText id="seo" class="form-control" @bind-Value="product.Seo" />
+        <label for="FullDescription" class="form-label">Full Description</label>
+        <InputTextArea id="FullDescription" class="form-control" @bind-Value="product.FullDescription" />
     </div>
 
     <div class="mb-3">
-        <label for="mpn" class="form-label">Mpn</label>
-        <InputText id="mpn" class="form-control" @bind-Value="product.Mpn" />
+        <label for="HtmlContent" class="form-label">Html</label>
+        <InputTextArea id="HtmlContent" class="form-control" @bind-Value="product.Html" />
+    </div>
+
+
+    <div class="mb-3">
+        <label for="Seo" class="form-label">Seo</label>
+        <InputText id="Seo" class="form-control" @bind-Value="product.Seo" />
     </div>
 
     <div class="mb-3">
-        <label for="price" class="form-label">Price</label>
-        <InputNumber id="price" class="form-control" @bind-Value="product.Price" />
+        <label for="Mpn" class="form-label">Mpn</label>
+        <InputText id="Mpn" class="form-control" @bind-Value="product.Mpn" />
     </div>
 
     <div class="mb-3">
-        <label for="type" class="form-label">Type</label>
-        <InputText id="type" class="form-control" @bind-Value="product.Type" />
+        <label for="Price" class="form-label">Price</label>
+        <InputNumber id="Price" class="form-control" @bind-Value="product.Price" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Type" class="form-label">Type</label>
+        <InputText id="Type" class="form-control" @bind-Value="product.Type" />
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
 @code {
-    private Product product = new Product();
+    private ProductVM product = new ProductVM();
     private string? errorMessage;
     private EditContext editContext;
     [Inject]
@@ -85,17 +77,27 @@
 
     private readonly HttpClient _client = new HttpClient();
 
+    protected override async Task OnInitializedAsync()
+    {
+        _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+    }
+
     public async Task HandleValidSubmit()
     {
-        var url = Configuration["Api.Gateway"];
-        var response = await _client.PostAsJsonAsync($"{url}catalog-gate/Catalog/product", product);
-        if (response.IsSuccessStatusCode)
-        {
-            Navigation.NavigateTo("/products");
-        }
-        else
-        {
-            // Handle error
+        try{
+            var url = Configuration["Api.Gateway"];
+            var response = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/Catalog/product/add", product);
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/products");
+            }
+            else
+            {
+                errorMessage = new HandlerErrorMessage().BuildError(response.Content.ReadAsStringAsync().Result, errorMessage);
+                StateHasChanged();
+            }
+        }catch(Exception ex){
+            return;
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Core.ViewModel.Catalog
             InsertedDate = DateTime.Now;
             Status = StatusEntity.Inserted;
         }
-        public string Id { get; set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public string ShortDescription { get; set; }
