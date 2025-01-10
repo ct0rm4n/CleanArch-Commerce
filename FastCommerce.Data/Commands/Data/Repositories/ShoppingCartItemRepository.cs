@@ -1,8 +1,11 @@
-﻿using Core.Entities.Domain.Checkout;
+﻿using Core.Entities.Domain;
+using Core.Entities.Domain.Checkout;
 using Core.ViewModel.Generic.Abstracts;
+using Core.Wrappers;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using System.Data.Common;
+using System.Runtime.CompilerServices;
+using static Dapper.SqlMapper;
 namespace Data.Commands.Data.Repositories
 {
     public class ShoppingCartItemRepository : GenericRepository<ShoppingCartItem, IBaseVM>
@@ -59,6 +62,28 @@ namespace Data.Commands.Data.Repositories
                 connection.Close();
             }
             return (result.FirstOrDefault(), result.Any());
+        }
+
+
+        public List<Tuple<ShoppingCartItem, Product>>? GetAllByCustomerId(int customerId)
+        {
+            var connection = this.GetConnection();
+            string tableName = GetTableName();
+            string query = $@"
+                SELECT scitem.*, p.* 
+                FROM {schema}.{tableName} as scitem
+                LEFT JOIN {schema}.Product p ON scitem.ProductId = p.Id
+                WHERE scitem.UserId = @UserId";
+
+            connection.Open();
+            var result = connection.Query<ShoppingCartItem, Product, Tuple<ShoppingCartItem, Product>>(
+                query,
+                (scitem, p) => new Tuple<ShoppingCartItem, Product>(scitem, p),
+                param: new { UserId = customerId },
+                splitOn: "InsertedDate");
+
+            connection.Close();
+            return result.ToList();
         }
     }
 }

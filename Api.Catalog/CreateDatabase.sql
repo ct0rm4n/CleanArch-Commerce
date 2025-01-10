@@ -21,20 +21,7 @@ CREATE TABLE FastCommerce.dbo.[User] (
 );
 
 
-CREATE TABLE FastCommerce.dbo.ShoppingCartItem (
-	Id int IDENTITY(1,1) NOT NULL,
-	UserId int NOT NULL,
-	ProductId int NOT NULL,
-	Quantity int NOT NULL,
-	UnitPrice decimal(10,2) NOT NULL,
-	TotalPrice decimal(10,2) NOT NULL,
-	InsertionDate datetime DEFAULT getdate() NOT NULL,
-	CreatedDate datetime DEFAULT getdate() NOT NULL,
-	LastModifiedDate datetime DEFAULT getdate() NOT NULL,
-	Status varchar(15) COLLATE Latin1_General_CI_AS NOT NULL,
-	InsertedDate datetime DEFAULT getdate() NOT NULL,
-	CONSTRAINT PK__Shopping__3214EC07B0E71BB4 PRIMARY KEY (Id)
-);
+
 	
 
 CREATE TABLE FastCommerce.dbo.Product (
@@ -58,6 +45,19 @@ CREATE TABLE FastCommerce.dbo.Product (
 	CONSTRAINT PK_Product PRIMARY KEY (Id)
 );
 
+
+CREATE TABLE FastCommerce.dbo.ProductImage (
+	Id int IDENTITY(1,1) NOT NULL,
+	InsertedDate datetime NULL,
+	ProductId int NOT NULL,
+	LastModifiedDate datetime NULL,
+	[Binary] ntext COLLATE Latin1_General_CI_AS NULL,
+	Status int NOT NULL,
+	Publish bit NULL,
+	CONSTRAINT PK_ProductImage PRIMARY KEY (Id)
+);
+
+ALTER TABLE FastCommerce.dbo.ProductImage ADD CONSTRAINT FK__ProductImage__Image FOREIGN KEY (ProductId) REFERENCES FastCommerce.dbo.Product(Id);
 
 CREATE TABLE FastCommerce.dbo.OrderItem (
 	Id int IDENTITY(1,1) NOT NULL,
@@ -97,7 +97,23 @@ ALTER TABLE FastCommerce.dbo.OrderItem ADD CONSTRAINT OrderItem_Order_FK FOREIGN
 
 ALTER TABLE FastCommerce.dbo.[Order] ADD CONSTRAINT FK__Order3__UserId__0E6E26BF FOREIGN KEY (UserId) REFERENCES FastCommerce.dbo.[User](Id);
 
+CREATE TABLE FastCommerce.dbo.ShoppingCartItem (
+	Id int IDENTITY(1,1) NOT NULL,
+	UserId int NOT NULL,
+	ProductId int NOT NULL,
+	Quantity int NOT NULL,
+	UnitPrice decimal(10,2) NOT NULL,
+	TotalPrice decimal(10,2) NOT NULL,
+	InsertionDate datetime DEFAULT getdate() NOT NULL,
+	CreatedDate datetime DEFAULT getdate() NOT NULL,
+	LastModifiedDate datetime DEFAULT getdate() NOT NULL,
+	Status varchar(15) COLLATE Latin1_General_CI_AS NOT NULL,
+	InsertedDate datetime DEFAULT getdate() NOT NULL,
+	CONSTRAINT PK__Shopping__3214EC07B0E71BB4 PRIMARY KEY (Id)
+);
 
+ALTER TABLE FastCommerce.dbo.ShoppingCartItem ADD CONSTRAINT FK__ShoppingCartItem__UserId FOREIGN KEY (UserId) REFERENCES FastCommerce.dbo.[User](Id);
+ALTER TABLE FastCommerce.dbo.ShoppingCartItem ADD CONSTRAINT FK__ShoppingCartItem__ProductId FOREIGN KEY (ProductId) REFERENCES FastCommerce.dbo.[Product](Id);
 
 CREATE TABLE FastCommerce.dbo.Category (
 	Id int IDENTITY(1,1) NOT NULL,
@@ -146,6 +162,7 @@ CREATE TABLE FastCommerce.dbo.Banner (
 	Status varchar(30) COLLATE Latin1_General_CI_AS NULL,
 	CONSTRAINT PK_Banner PRIMARY KEY (Id)
 );
+
 
 
 

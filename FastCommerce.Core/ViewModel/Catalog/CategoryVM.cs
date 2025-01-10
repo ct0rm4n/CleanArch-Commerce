@@ -5,7 +5,7 @@ namespace Core.ViewModel.Catalog
 {
     public class CategoryVM : IBaseVM
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required(ErrorMessage = "Categorie Name is required")]
         [StringLength(20)]
         public string Name { get; set; }

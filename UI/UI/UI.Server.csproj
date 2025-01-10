@@ -234,6 +234,9 @@
     <Content Update="Components\Admin\Admin.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
+    <Content Update="Components\Admin\Catalog\Product\ProductList.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Admin\Post\BlogPostDatails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

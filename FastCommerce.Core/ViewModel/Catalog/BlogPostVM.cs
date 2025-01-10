@@ -1,11 +1,13 @@
 ﻿using Core.ViewModel.Generic.Abstracts;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.ViewModel.Catalog
 {
     public class BlogPostVM : IBaseVM
     {
-        public int Id { get; set; }
+        [NotMapped]
+        public int? Id { get; set; }
         [Required(ErrorMessage = "Post Name is required")]
         [StringLength(20)]
         public string Name { get; set; }

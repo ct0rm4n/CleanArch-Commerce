@@ -9,95 +9,143 @@
 @rendermode InteractiveServer
 
 <h3>Product Registration</h3>
-<EditForm Model="@product" formname="bannerVM" EditContext="@editContext"
-OnValidSubmit="@HandleValidSubmit" enctype="multipart/form-data">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger" role="alert">
-            @((MarkupString)errorMessage)
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <span class="nav-link @(steep == "nav-details" ? "active" : "")" id="nav-details-tab" data-bs-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true" @onclick="@(() => ChangeSteep("nav-details"))">Details</span>
+        <span class="nav-link @(steep == "nav-images" ? "active" : "")" id="nav-images-tab" data-bs-toggle="tab" href="#nav-images" role="tab" aria-controls="nav-images" aria-selected="false" @onclick="@(() => ChangeSteep("nav-images"))">Images</span>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade @(steep == "nav-details" ? "show active" : "")" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+        <EditForm EditContext="@editContext" OnValidSubmit="@HandleValidSubmit" enctype="multipart/form-data">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @((MarkupString)errorMessage)
+                </div>
+            }
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <InputText id="Title" class="form-control" @bind-Value="product.Title" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name</label>
+                <InputText id="Name" class="form-control" @bind-Value="product.Name" />
+            </div>
+
+            <div class="mb-3">
+                <label for="shortDescription" class="form-label">Short Description</label>
+                <InputTextArea id="ShortDescription" class="form-control" @bind-Value="product.ShortDescription" />
+            </div>
+
+            <div class="mb-3">
+                <label for="FullDescription" class="form-label">Full Description</label>
+                <InputTextArea id="FullDescription" class="form-control" @bind-Value="product.FullDescription" />
+            </div>
+
+            <div class="mb-3">
+                <label for="HtmlContent" class="form-label">Html</label>
+                <InputTextArea id="HtmlContent" class="form-control" @bind-Value="product.Html" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Seo" class="form-label">Seo</label>
+                <InputText id="Seo" class="form-control" @bind-Value="product.Seo" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Mpn" class="form-label">Mpn</label>
+                <InputText id="Mpn" class="form-control" @bind-Value="product.Mpn" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Price" class="form-label">Price</label>
+                <InputNumber id="Price" class="form-control" @bind-Value="product.Price" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Type" class="form-label">Type</label>
+                <InputText id="Type" class="form-control" @bind-Value="product.Type" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+    <div class="tab-pane fade @(steep == "nav-images" ? "show active" : "")" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
+        <div class="mb-3">
+            <label for="productImages" class="form-label">Product Images</label>
+            @* <InputFile id="productImages" class="form-control" OnChange="HandleFileSelected" multiple /> *@
         </div>
-    }
-    <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <InputText id="Title" class="form-control" @bind-Value="product.Title" />
+        <div class="row">
+            @* @foreach (var image in productImages) *@
+            @* { *@
+            @*     <div class="col-md-3"> *@
+            @*         <img src="@image" class="img-thumbnail" /> *@
+            @*     </div> *@
+            @* } *@
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label for="Name" class="form-label">Name</label>
-        <InputText id="Name" class="form-control" @bind-Value="product.Name" />
-    </div>
-  
-    <div class="mb-3">
-        <label for="shortDescription" class="form-label">Short Description</label>
-        <InputTextArea id="ShortDescription" class="form-control" @bind-Value="product.ShortDescription" />
-    </div>
-
-    <div class="mb-3">
-        <label for="FullDescription" class="form-label">Full Description</label>
-        <InputTextArea id="FullDescription" class="form-control" @bind-Value="product.FullDescription" />
-    </div>
-
-    <div class="mb-3">
-        <label for="HtmlContent" class="form-label">Html</label>
-        <InputTextArea id="HtmlContent" class="form-control" @bind-Value="product.Html" />
-    </div>
-
-
-    <div class="mb-3">
-        <label for="Seo" class="form-label">Seo</label>
-        <InputText id="Seo" class="form-control" @bind-Value="product.Seo" />
-    </div>
-
-    <div class="mb-3">
-        <label for="Mpn" class="form-label">Mpn</label>
-        <InputText id="Mpn" class="form-control" @bind-Value="product.Mpn" />
-    </div>
-
-    <div class="mb-3">
-        <label for="Price" class="form-label">Price</label>
-        <InputNumber id="Price" class="form-control" @bind-Value="product.Price" />
-    </div>
-
-    <div class="mb-3">
-        <label for="Type" class="form-label">Type</label>
-        <InputText id="Type" class="form-control" @bind-Value="product.Type" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
+</div>
 
 @code {
     private ProductVM product = new ProductVM();
     private string? errorMessage;
-    private EditContext editContext;
+    private EditContext editContext = default!;
+    private List<string> productImages = new List<string>();
+    public string steep { get; set; } = "nav-details";
+
+    public void ChangeSteep(string steep)
+    {
+        this.steep = steep;
+        StateHasChanged();
+    }
+
     [Inject]
-    IConfiguration Configuration { get; set; }
+    IConfiguration Configuration { get; set; } = default!;
 
     private readonly HttpClient _client = new HttpClient();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
+        editContext = new EditContext(product);
         _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
     }
 
+    // private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    // {
+    //     foreach (var file in e.GetMultipleFiles())
+    //     {
+    //         var buffer = new byte[file.Size];
+    //         await file.OpenReadStream().ReadAsync(buffer);
+    //         var base64String = Convert.ToBase64String(buffer);
+    //         productImages.Add($"data:{file.ContentType};base64,{base64String}");
+    //     }
+    // }
+
     public async Task HandleValidSubmit()
     {
-        try{
+        try
+        {
             var url = Configuration["Api.Gateway"];
-            var response = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/Catalog/product/add", product);
+            var response = await _client.PostAsJsonAsync($"{url}catalog-gate/Catalog/product/add", product);
             if (response.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo("/products");
+                Navigation.NavigateTo("/admin/products");
             }
             else
             {
-                errorMessage = new HandlerErrorMessage().BuildError(response.Content.ReadAsStringAsync().Result, errorMessage);
+                errorMessage = new HandlerErrorMessage().BuildError(await response.Content.ReadAsStringAsync(), errorMessage);
                 StateHasChanged();
             }
-        }catch(Exception ex){
-            return;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Exception: {ex.Message}";
+            // Handle exception
         }
     }
 }

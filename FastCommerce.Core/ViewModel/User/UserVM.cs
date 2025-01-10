@@ -10,7 +10,7 @@ namespace Core.ViewModel.User
 {
     public class UserVM
     {
-
+        public int? Id { get; set; }
         public UserVM()
         {
             InsertedDate = DateTime.Now;

@@ -8,6 +8,7 @@ namespace Core.ViewModel.Customer
 {
     public class UserVM : IBaseVM
     {
+        public int? Id { get; set; }
         public UserVM() 
         { 
         

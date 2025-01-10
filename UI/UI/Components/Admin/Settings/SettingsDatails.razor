@@ -61,7 +61,7 @@
     public async Task HandleInValidSubmit(EditContext editContext)
     {        
         var respose = new HttpResponseMessage();
-        if(SettingsObject.Id == 0){
+        if(SettingsObject.Id == null){
             respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Settings/add", SettingsObject);
         }
         else

@@ -69,7 +69,7 @@
     public async Task HandleInValidSubmit(EditContext editContext)
     {        
         var respose = new HttpResponseMessage();
-        if(roleObject.Id == 0){
+        if(roleObject.Id == null){
             respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Role/add", roleObject);
         }
         else

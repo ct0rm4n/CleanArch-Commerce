@@ -1,10 +1,13 @@
 ﻿using Core.ViewModel.Generic.Abstracts;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.ViewModel.Address
 {
     public class AddressVM : IBaseVM
     {
+        [NotMapped]
+        public int? Id { get; set; }
         [Required]
         public string Cep { get; set; }
         [Required]

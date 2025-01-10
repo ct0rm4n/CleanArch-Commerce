@@ -1,230 +1,367 @@
 ﻿@page "/cart"
-@page "/checkout"
+@using Core.Entities.Domain
+@using Core.Entities.Domain.Checkout
 @using UI.Client.Layout
 @layout HomeLayout
-<html lang="en">
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<style>
+    .nav-tabs .nav-item {
+        margin-bottom: -1px;
+        flex: auto;
+    }
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Basket</title>
-</head>
+    .steps-nav {
+        list-style: none;
+        position: relative;
+        overflow-x: visible;
+        z-index: 200;
+    }
 
-<body>
-    <main>
-        <div class="basket">
-            <div class="basket-module">
-                <label for="promo-code">Enter a promotional code</label>
-                <input id="promo-code" type="text" name="promo-code" maxlength="5" class="promo-code-field">
-                <button class="promo-code-cta">Apply</button>
+    .steps-nav .line {
+        position: absolute;
+        height: 2px;
+        width: 80%;
+        background: #dfdfe0;
+        top: 21px;
+        z-index: -1;
+        margin-left: 7%;
+    }
+
+    .steps-nav li {
+        float: inline-start;
+        width: 14%;
+    }
+
+    .steps-nav li a {
+        display: block;
+        text-decoration: none;
+    }
+
+    .steps-nav li h2 {
+        padding-top: 15px;
+        background: #1ea69a;
+        background: white;
+        color: white;
+        color: rgba(95, 95, 95, 0.5);
+        border: solid 1px #dfdfe0;
+        font-size: 14px;
+        -webkit-border-radius: 1.5em;
+        -moz-border-radius: 1.5em;
+        border-radius: 1.5em;
+        width: 3em;
+        height: 3em;
+        text-align: center;
+        margin: auto;
+        margin-bottom: 20px;
+    }
+
+    .steps-nav li p {
+        font-size: 16px;
+        color: rgba(95, 95, 95, 0.5);
+        width: 144px;
+        line-height: 28px;
+        margin-left: calc(50% - 21px);
+    }
+
+    .steps-nav li.active h2, .five-simple-steps .steps-nav li:hover h2 {
+        transition: all 0.5s ease;
+        color: #fff;
+        border: 1px #1ea69a solid;
+        -webkit-border-radius: 1.5em;
+        -moz-border-radius: 1.5em;
+        border-radius: 1.5em;
+        background: #1ea69a !important;
+    }
+
+    h1 {
+        float: inline-end;
+    }
+
+</style>
+<div class="basket">
+    <div class="basket-module" style="display: none">
+        <label for="promo-code">Enter a promotional code</label>
+        <input id="promo-code" type="text" name="promo-code" maxlength="5" class="promo-code-field">
+        <button class="promo-code-cta">Apply</button>
+    </div>
+    <ul class="steps-nav">
+        <div class="line"></div>
+        <li class="step1 active" data-step="1">
+            <a data-scroll="false">
+                <h2>1</h2>
+                <p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Básico</p>
+            </a>
+        </li>
+        <li class="step2" data-step="2">
+
+            <a data-scroll="false">
+                <h2>2</h2>
+                <p><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;Canais | Atividades</p>
+            </a>
+        </li>
+        <li class="step3" data-step="3">
+            <a  data-scroll="false">
+                <h2>3</h2>
+                <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Equipe</p>
+            </a>
+        </li>        
+    </ul>
+    <div class="basket-labels">
+        <ul>
+            <li class="item item-heading">Item</li>
+            <li class="price">Price</li>
+            <li class="quantity">Quantity</li>
+            <li class="subtotal">Subtotal</li>
+        </ul>
+    </div>
+    @foreach(var item in listCart)
+    {
+        <div class="basket-product">
+            <div class="item">
+                <div class="product-image">
+                    <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
+                </div>
+                <div class="product-details">
+                    <h1><strong><span class="item-quantity">@item.Item1.Quantity</span> x Eliza J</strong> @item.Item2.Name</h1>
+                    <p><strong>@item.Item2.Name</strong></p>
+                    <p>Product Code - @item.Item1.ProductId</p>
+                </div>
             </div>
-            <div class="basket-labels">
-                <ul>
-                    <li class="item item-heading">Item</li>
-                    <li class="price">Price</li>
-                    <li class="quantity">Quantity</li>
-                    <li class="subtotal">Subtotal</li>
-                </ul>
+            <div class="price">26.00</div>
+            <div class="quantity">
+                <input type="number" value="4" min="1" class="quantity-field">
             </div>
-            <div class="basket-product">
-                <div class="item">
-                    <div class="product-image">
-                        <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
-                    </div>
-                    <div class="product-details">
-                        <h1><strong><span class="item-quantity">4</span> x Eliza J</strong> Lace Sleeve Cuff Dress</h1>
-                        <p><strong>Navy, Size 18</strong></p>
-                        <p>Product Code - 232321939</p>
-                    </div>
-                </div>
-                <div class="price">26.00</div>
-                <div class="quantity">
-                    <input type="number" value="4" min="1" class="quantity-field">
-                </div>
-                <div class="subtotal">104.00</div>
-                <div class="remove">
-                    <button>Remove</button>
-                </div>
-            </div>
-            <div class="basket-product">
-                <div class="item">
-                    <div class="product-image">
-                        <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
-                    </div>
-                    <div class="product-details">
-                        <h1><strong><span class="item-quantity">1</span> x Whistles</strong> Amella Lace Midi Dress</h1>
-                        <p><strong>Navy, Size 10</strong></p>
-                        <p>Product Code - 232321939</p>
-                    </div>
-                </div>
-                <div class="price">26.00</div>
-                <div class="quantity">
-                    <input type="number" value="1" min="1" class="quantity-field">
-                </div>
-                <div class="subtotal">26.00</div>
-                <div class="remove">
-                    <button>Remove</button>
-                </div>
+            <div class="subtotal">@item.Item1.TotalPrice</div>
+            <div class="remove">
+                <button>Remove</button>
             </div>
         </div>
-        <aside>
-            <div class="summary">
-                <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
-                <div class="summary-subtotal">
-                    <div class="subtotal-title">Subtotal</div>
-                    <div class="subtotal-value final-value" id="basket-subtotal">130.00</div>
-                    <div class="summary-promo hide">
-                        <div class="promo-title">Promotion</div>
-                        <div class="promo-value final-value" id="basket-promo"></div>
-                    </div>
-                </div>
-                <div class="summary-delivery">
-                    <select name="delivery-collection" class="summary-delivery-selection">
-                        <option value="0" selected="selected">Select Collection or Delivery</option>
-                        <option value="collection">Collection</option>
-                        <option value="first-class">Royal Mail 1st Class</option>
-                        <option value="second-class">Royal Mail 2nd Class</option>
-                        <option value="signed-for">Royal Mail Special Delivery</option>
-                    </select>
-                </div>
-                <div class="summary-total">
-                    <div class="total-title">Total</div>
-                    <div class="total-value final-value" id="basket-total">130.00</div>
-                </div>
-                <div class="summary-checkout">
-                    <button class="checkout-cta">Go to Secure Checkout</button>
-                </div>
+    }
+    
+    <div class="basket-product">
+        <div class="item">
+            <div class="product-image">
+                <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
             </div>
-        </aside>
-    </main>
-    <script>
-        /* Set values + misc */
-        var promoCode;
-        var promoPrice;
-        var fadeTime = 300;
+            <div class="product-details">
+                <h1><strong><span class="item-quantity">1</span> x Whistles</strong> Amella Lace Midi Dress</h1>
+                <p><strong>Navy, Size 10</strong></p>
+                <p>Product Code - 232321939</p>
+            </div>
+        </div>
+        <div class="price">26.00</div>
+        <div class="quantity">
+            <input type="number" value="1" min="1" class="quantity-field">
+        </div>
+        <div class="subtotal">26.00</div>
+        <div class="remove">
+            <button>Remove</button>
+        </div>
+    </div>
+</div>
+<aside>
+    <div class="summary">
+        <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
+        <div class="summary-subtotal">
+            <div class="subtotal-title">Subtotal</div>
+            <div class="subtotal-value final-value" id="basket-subtotal">130.00</div>
+            <div class="summary-promo hide">
+                <div class="promo-title">Promotion</div>
+                <div class="promo-value final-value" id="basket-promo"></div>
+            </div>
+        </div>
+        <div class="summary-delivery">
+            <select name="delivery-collection" class="summary-delivery-selection">
+                <option value="0" selected="selected">Select Collection or Delivery</option>
+                <option value="collection">Collection</option>
+                <option value="first-class">Royal Mail 1st Class</option>
+                <option value="second-class">Royal Mail 2nd Class</option>
+                <option value="signed-for">Royal Mail Special Delivery</option>
+            </select>
+        </div>
+        <div class="summary-total">
+            <div class="total-title">Total</div>
+            <div class="total-value final-value" id="basket-total">130.00</div>
+        </div>
+        <div class="summary-checkout">
+            <button class="checkout-cta">Go to Secure Checkout</button>
+        </div>
+    </div>
+</aside>
 
-        /* Assign actions */
-        $(".quantity input").change(function () {
-            updateQuantity(this);
-        });
+<script>
+    /* Set values + misc */
+    var promoCode;
+    var promoPrice;
+    var fadeTime = 300;
 
-        $(".remove button").click(function () {
-            removeItem(this);
-        });
+    /* Assign actions */
+    $(".quantity input").change(function () {
+        updateQuantity(this);
+    });
 
-        $(document).ready(function () {
-            updateSumItems();
-        });
+    $(".remove button").click(function () {
+        removeItem(this);
+    });
 
-        $(".promo-code-cta").click(function () {
-            promoCode = $("#promo-code").val();
+    $(document).ready(function () {
+        updateSumItems();
+    });
 
-            if (promoCode == "10off" || promoCode == "10OFF") {
-                //If promoPrice has no value, set it as 10 for the 10OFF promocode
-                if (!promoPrice) {
-                    promoPrice = 10;
-                } else if (promoCode) {
-                    promoPrice = promoPrice * 1;
-                }
-            } else if (promoCode != "") {
-                alert("Invalid Promo Code");
-                promoPrice = 0;
+    $(".promo-code-cta").click(function () {
+        promoCode = $("#promo-code").val();
+
+        if (promoCode == "10off" || promoCode == "10OFF") {
+            //If promoPrice has no value, set it as 10 for the 10OFF promocode
+            if (!promoPrice) {
+                promoPrice = 10;
+            } else if (promoCode) {
+                promoPrice = promoPrice * 1;
             }
-            //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
-            if (promoPrice) {
-                $(".summary-promo").removeClass("hide");
-                $(".promo-value").text(promoPrice.toFixed(2));
-                recalculateCart(true);
-            }
+        } else if (promoCode != "") {
+            alert("Invalid Promo Code");
+            promoPrice = 0;
+        }
+        //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
+        if (promoPrice) {
+            $(".summary-promo").removeClass("hide");
+            $(".promo-value").text(promoPrice.toFixed(2));
+            recalculateCart(true);
+        }
+    });
+
+    /* Recalculate cart */
+    function recalculateCart(onlyTotal) {
+        var subtotal = 0;
+
+        /* Sum up row totals */
+        $(".basket-product").each(function () {
+            subtotal += parseFloat($(this).children(".subtotal").text());
         });
 
-        /* Recalculate cart */
-        function recalculateCart(onlyTotal) {
-            var subtotal = 0;
+        /* Calculate totals */
+        var total = subtotal;
 
-            /* Sum up row totals */
-            $(".basket-product").each(function () {
-                subtotal += parseFloat($(this).children(".subtotal").text());
-            });
-
-            /* Calculate totals */
-            var total = subtotal;
-
-            //If there is a valid promoCode, and subtotal < 10 subtract from total
-            var promoPrice = parseFloat($(".promo-value").text());
-            if (promoPrice) {
-                if (subtotal >= 10) {
-                    total -= promoPrice;
-                } else {
-                    alert("Order must be more than £10 for Promo code to apply.");
-                    $(".summary-promo").addClass("hide");
-                }
-            }
-
-            /*If switch for update only total, update only total display*/
-            if (onlyTotal) {
-                /* Update total display */
-                $(".total-value").fadeOut(fadeTime, function () {
-                    $("#basket-total").html(total.toFixed(2));
-                    $(".total-value").fadeIn(fadeTime);
-                });
+        //If there is a valid promoCode, and subtotal < 10 subtract from total
+        var promoPrice = parseFloat($(".promo-value").text());
+        if (promoPrice) {
+            if (subtotal >= 10) {
+                total -= promoPrice;
             } else {
-                /* Update summary display. */
-                $(".final-value").fadeOut(fadeTime, function () {
-                    $("#basket-subtotal").html(subtotal.toFixed(2));
-                    $("#basket-total").html(total.toFixed(2));
-                    if (total == 0) {
-                        $(".checkout-cta").fadeOut(fadeTime);
-                    } else {
-                        $(".checkout-cta").fadeIn(fadeTime);
-                    }
-                    $(".final-value").fadeIn(fadeTime);
-                });
+                alert("Order must be more than £10 for Promo code to apply.");
+                $(".summary-promo").addClass("hide");
             }
         }
 
-        /* Update quantity */
-        function updateQuantity(quantityInput) {
-            /* Calculate line price */
-            var productRow = $(quantityInput).parent().parent();
-            var price = parseFloat(productRow.children(".price").text());
-            var quantity = $(quantityInput).val();
-            var linePrice = price * quantity;
-
-            /* Update line price display and recalc cart totals */
-            productRow.children(".subtotal").each(function () {
-                $(this).fadeOut(fadeTime, function () {
-                    $(this).text(linePrice.toFixed(2));
-                    recalculateCart();
-                    $(this).fadeIn(fadeTime);
-                });
+        /*If switch for update only total, update only total display*/
+        if (onlyTotal) {
+            /* Update total display */
+            $(".total-value").fadeOut(fadeTime, function () {
+                $("#basket-total").html(total.toFixed(2));
+                $(".total-value").fadeIn(fadeTime);
             });
-
-            productRow.find(".item-quantity").text(quantity);
-            updateSumItems();
-        }
-
-        function updateSumItems() {
-            var sumItems = 0;
-            $(".quantity input").each(function () {
-                sumItems += parseInt($(this).val());
+        } else {
+            /* Update summary display. */
+            $(".final-value").fadeOut(fadeTime, function () {
+                $("#basket-subtotal").html(subtotal.toFixed(2));
+                $("#basket-total").html(total.toFixed(2));
+                if (total == 0) {
+                    $(".checkout-cta").fadeOut(fadeTime);
+                } else {
+                    $(".checkout-cta").fadeIn(fadeTime);
+                }
+                $(".final-value").fadeIn(fadeTime);
             });
-            $(".total-items").text(sumItems);
         }
+    }
 
-        /* Remove item from cart */
-        function removeItem(removeButton) {
-            /* Remove row from DOM and recalc cart total */
-            var productRow = $(removeButton).parent().parent();
-            productRow.slideUp(fadeTime, function () {
-                productRow.remove();
+    /* Update quantity */
+    function updateQuantity(quantityInput) {
+        /* Calculate line price */
+        var productRow = $(quantityInput).parent().parent();
+        var price = parseFloat(productRow.children(".price").text());
+        var quantity = $(quantityInput).val();
+        var linePrice = price * quantity;
+
+        /* Update line price display and recalc cart totals */
+        productRow.children(".subtotal").each(function () {
+            $(this).fadeOut(fadeTime, function () {
+                $(this).text(linePrice.toFixed(2));
                 recalculateCart();
-                updateSumItems();
+                $(this).fadeIn(fadeTime);
             });
+        });
+
+        productRow.find(".item-quantity").text(quantity);
+        updateSumItems();
+    }
+
+    function updateSumItems() {
+        var sumItems = 0;
+        $(".quantity input").each(function () {
+            sumItems += parseInt($(this).val());
+        });
+        $(".total-items").text(sumItems);
+    }
+
+    /* Remove item from cart */
+    function removeItem(removeButton) {
+        /* Remove row from DOM and recalc cart total */
+        var productRow = $(removeButton).parent().parent();
+        productRow.slideUp(fadeTime, function () {
+            productRow.remove();
+            recalculateCart();
+            updateSumItems();
+        });
+    }
+
+</script>
+
+@code{
+    [Inject]
+    IConfiguration Configuration { get; set; }
+    [Inject]
+    public IJSRuntime js { get; set; }
+    private readonly HttpClient _client = new HttpClient();
+    public List<Tuple<ShoppingCartItem, Product>> listCart { get; set; } = new List<Tuple<ShoppingCartItem, Product>>();
+
+
+    protected override async Task OnAfterRenderAsync(bool firterRender)
+    {
+        if (firterRender)
+        {
+            try{
+                var token = await GetFromSessionStorage("access_token");
+                if (token is not null && token != "null" && !string.IsNullOrEmpty(token))
+                {
+                    _client.DefaultRequestHeaders.Add("Authorization", token);
+                    var respose = _client.GetFromJsonAsync<List<Tuple<ShoppingCartItem, Product>>>($"{Configuration["Api.Gateway"]}checkout-gate/Checkout/GetCartItems").Result;
+                    foreach(var x in respose){
+                        listCart.Add(x);
+                    }
+                    StateHasChanged();
+                }
+                
+            }catch(Exception ex)
+            {
+
+            }
+        }
+        await base.OnAfterRenderAsync(firterRender);
+    }
+    
+    private async Task<string> GetFromSessionStorage(string key)
+    {
+        try
+        {
+            return await js.InvokeAsync<string>("sessionStorage.getItem", key);
+        }
+        catch (Exception ex)
+        {
+            return null;
         }
 
-    </script>
-</body>
+    }
 
-</html>
+}

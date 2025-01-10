@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
 using Autofac.Core;
 using Data.Commands;
+using Service.Helpers;
+using Azure.Core.GeoJson;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -155,7 +157,12 @@ app.MapPost("/api/Catalog/blogpost/Add", async (IBlogPostService postService, [F
     try
     {
         
-        var serialized = JsonConvert.SerializeObject(body);
+
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
+
         List<string> validation = postService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -283,7 +290,10 @@ app.MapPost("/api/Catalog/Category/Add", async (ICategoryService cService, [From
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = cService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -384,7 +394,10 @@ app.MapPost("/api/Catalog/Settings/Add", async (ISettingsService setService, [Fr
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -485,7 +498,10 @@ app.MapPost("/api/Catalog/Banner/Add", async (IBannerService setService, [FromBo
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -587,12 +603,17 @@ app.MapPost("/api/Catalog/Product/Add", async (IProductService setService, [From
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
 
         var insert = setService.Add(JsonConvert.DeserializeObject<Product>(serialized));
+        //if(insert is not null && insert.Id > 0)
+        //    var insert_images = setService.AddImages(JsonConvert.DeserializeObject<ProductImage>(body.Image));
         return insert is not null
         ? TypedResults.Ok(insert)
         : TypedResults.NotFound();

@@ -10,6 +10,7 @@ using Core.Entities.Domain.User;
 using Api.Checkout.Filter;
 using Core.Entities.Domain.Blog;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Core.Entities.Domain;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -106,6 +107,31 @@ app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound
             return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         }
     }).AddEndpointFilter<AuthorizationLoggedActionFilter>();
+
+app.MapGet("/api/Checkout/GetCartItems", async Task<Results<Ok<List<Tuple<ShoppingCartItem, Product>>>, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request,
+    ICheckoutService setService, IUserService userService) =>
+{
+    try
+    {
+        if (request.Headers.TryGetValue("Authorization", out var authorizationHeader) && !string.IsNullOrEmpty(authorizationHeader.ToString()))
+        {
+            var user = await userService.GetCurrentUserByToken(authorizationHeader.ToString());
+            if (user is null)
+                return TypedResults.Unauthorized();
+
+            var item = setService.GetAllByCustomerId(user.Id);
+            return TypedResults.Ok(item);
+        }
+        else
+        {
+            return TypedResults.Unauthorized();
+        }
+    }
+    catch (Exception ex)
+    {
+        return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+}).AddEndpointFilter<AuthorizationLoggedActionFilter>();
 
 app.Run();
 

@@ -1,4 +1,5 @@
-﻿using Core.Entities.Domain.Banner;
+﻿using Core.Entities.Domain;
+using Core.Entities.Domain.Banner;
 using Core.Entities.Domain.Checkout;
 using Data.Commands.Data.Repositories;
 using Data.Interfaces;
@@ -31,6 +32,12 @@ namespace Service.Services
                 return null;
             }
 
+        }
+
+        public List<Tuple<ShoppingCartItem, Product>>? GetAllByCustomerId(int customerId)
+        {
+            var inserted = _shoppingCartItemRepository.GetAllByCustomerId(customerId);            
+            return inserted;
         }
     }
 }
