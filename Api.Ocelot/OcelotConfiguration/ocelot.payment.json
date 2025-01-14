@@ -1,0 +1,19 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "ServiceName": "payment",
+      "UpstreamPathTemplate": "/payment-gate/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "SwaggerKey": "payment",
+      "DownstreamScheme": "http",
+      "PassThroughHeaders": true,
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 5006
+        }
+      ]
+    }
+  ]
+}

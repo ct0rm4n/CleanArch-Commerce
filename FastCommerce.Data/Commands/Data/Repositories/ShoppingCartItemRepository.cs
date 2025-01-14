@@ -1,10 +1,8 @@
 ﻿using Core.Entities.Domain;
 using Core.Entities.Domain.Checkout;
 using Core.ViewModel.Generic.Abstracts;
-using Core.Wrappers;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using System.Runtime.CompilerServices;
 using static Dapper.SqlMapper;
 namespace Data.Commands.Data.Repositories
 {
@@ -24,8 +22,6 @@ namespace Data.Commands.Data.Repositories
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
                 string propertiesValues = GetPropertyValues(entity, excludeKey: true);
-
-                // Obter valores das propriedades UserId e ProductId
                 var userId = GetPropertyValue(entity, "UserId");
                 var productId = GetPropertyValue(entity, "ProductId");
                 var quantity = GetPropertyValue(entity, "Quantity");
@@ -84,6 +80,24 @@ namespace Data.Commands.Data.Repositories
 
             connection.Close();
             return result.ToList();
+        }
+
+        public decimal? GetTotalCartByCustomerId(int customerId)
+        {
+            var connection = this.GetConnection();
+            string tableName = GetTableName();
+            string query = $@"
+                SELECT SUM(scitem.TotalPrice) 
+                FROM {schema}.{tableName} as scitem
+                LEFT JOIN {schema}.Product p ON scitem.ProductId = p.Id
+                WHERE scitem.UserId = @UserId";
+
+            connection.Open();
+            var result = connection.Query<decimal?>(
+                query);
+
+            connection.Close();
+            return result?.FirstOrDefault() ?? 00;
         }
     }
 }

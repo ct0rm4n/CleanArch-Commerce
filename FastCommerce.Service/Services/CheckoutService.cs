@@ -39,5 +39,11 @@ namespace Service.Services
             var inserted = _shoppingCartItemRepository.GetAllByCustomerId(customerId);            
             return inserted;
         }
+
+        public decimal GetTotalByCustomerId(int customerId)
+        {
+            var total = _shoppingCartItemRepository.GetTotalCartByCustomerId(customerId);
+            return (decimal)total;
+        }
     }
 }

@@ -5,7 +5,6 @@ using Data.Ioc;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using Service.Ioc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Core.ViewModel.Catalog;
@@ -15,17 +14,13 @@ using Core.Entities.Abstract;
 using Core.ViewModel.Generic.Abstracts;
 using Core.ViewModel.Banner;
 using Core.Entities.Domain.Banner;
-using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Core.Entities.Domain;
 using Microsoft.OpenApi.Models;
 using Service.Filter;
-using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
-using Autofac.Core;
 using Data.Commands;
 using Service.Helpers;
-using Azure.Core.GeoJson;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -86,13 +81,7 @@ app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Web Api"));
 
-
 app.UseHttpsRedirection();
-
-app.MapGet("api/catalog", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
-        postService.Get(1) is { } post
-            ? TypedResults.Ok(post)
-            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(id) is { } post
@@ -673,7 +662,4 @@ app.MapGet("/api/loginvalidate", async (IAuthService setService, [FromQuery] str
     }
 });
 
-
 app.Run();
-
-

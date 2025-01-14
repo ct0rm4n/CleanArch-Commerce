@@ -55,7 +55,21 @@
           }
         }
       ]
+    },
+    {
+      "Key": "payment",
+      "Config": [
+        {
+          "Name": "Payments Web API",
+          "Version": "v1",
+          "url": "http://host.docker.internal:5006/swagger/v1/swagger.json",
+          "Service": {
+            "Name": "payment",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
     }
-  
+
   ]
 }

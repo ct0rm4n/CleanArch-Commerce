@@ -1,0 +1,39 @@
+﻿@using Core.Entities.Domain.Address
+<h3>ShippingSteep</h3>
+
+@if(Addresses != null)
+{
+    <button @onclick="@(() => add_new = !add_new)">Add new address</button>
+    <table class="table">
+    @foreach (var address in Addresses)
+    {
+        <tr>
+            <td>
+                @address.ZipCode
+            </td>
+            <td>
+                @address.City
+            </td>
+            <td>
+                @address.Neighborhood
+            </td>
+        </tr>
+    }
+    </table>
+    <div id="new_address" style="display: @(add_new is false ? "none" : "block")">
+        <h5>new address</h5>
+    </div>
+}
+
+@code {
+    public List<Address> Addresses { get; set; }
+    public bool add_new { get; set; } = false;
+    protected override void OnInitialized()
+    {
+        Addresses = new List<Address>();
+        if (Addresses.Count == 0)
+        {
+            add_new = true;
+        }
+    }
+}

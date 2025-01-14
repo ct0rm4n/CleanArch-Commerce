@@ -2,80 +2,81 @@
 @using Core.Entities.Domain
 @using Core.Entities.Domain.Checkout
 @using UI.Client.Layout
+@using UI.Client.Components.Checkout
 @layout HomeLayout
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 <style>
     .nav-tabs .nav-item {
-        margin-bottom: -1px;
-        flex: auto;
+    margin-bottom: -1px;
+    flex: auto;
     }
 
     .steps-nav {
-        list-style: none;
-        position: relative;
-        overflow-x: visible;
-        z-index: 200;
+    list-style: none;
+    position: relative;
+    overflow-x: visible;
+    z-index: 200;
     }
 
     .steps-nav .line {
-        position: absolute;
-        height: 2px;
-        width: 80%;
-        background: #dfdfe0;
-        top: 21px;
-        z-index: -1;
-        margin-left: 7%;
+    position: absolute;
+    height: 2px;
+    width: 80%;
+    background: #dfdfe0;
+    top: 21px;
+    z-index: -1;
+    margin-left: 7%;
     }
 
     .steps-nav li {
-        float: inline-start;
-        width: 14%;
+    float: inline-start;
+    width: 20%;
     }
 
     .steps-nav li a {
-        display: block;
-        text-decoration: none;
+    display: block;
+    text-decoration: none;
     }
 
     .steps-nav li h2 {
-        padding-top: 15px;
-        background: #1ea69a;
-        background: white;
-        color: white;
-        color: rgba(95, 95, 95, 0.5);
-        border: solid 1px #dfdfe0;
-        font-size: 14px;
-        -webkit-border-radius: 1.5em;
-        -moz-border-radius: 1.5em;
-        border-radius: 1.5em;
-        width: 3em;
-        height: 3em;
-        text-align: center;
-        margin: auto;
-        margin-bottom: 20px;
+    padding-top: 15px;
+    background: #666;
+    background: white;
+    color: white;
+    color: rgba(95, 95, 95, 0.5);
+    border: solid 1px #dfdfe0;
+    font-size: 14px;
+    -webkit-border-radius: 1.5em;
+    -moz-border-radius: 1.5em;
+    border-radius: 1.5em;
+    width: 3em;
+    height: 3em;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 20px;
     }
 
     .steps-nav li p {
-        font-size: 16px;
-        color: rgba(95, 95, 95, 0.5);
-        width: 144px;
-        line-height: 28px;
-        margin-left: calc(50% - 21px);
+    font-size: 16px;
+    color: rgba(95, 95, 95, 0.5);
+    width: 144px;
+    line-height: 28px;
+    margin-left: calc(50% - 21px);
     }
 
     .steps-nav li.active h2, .five-simple-steps .steps-nav li:hover h2 {
-        transition: all 0.5s ease;
-        color: #fff;
-        border: 1px #1ea69a solid;
-        -webkit-border-radius: 1.5em;
-        -moz-border-radius: 1.5em;
-        border-radius: 1.5em;
-        background: #1ea69a !important;
+    transition: all 0.5s ease;
+    color: #fff;
+    border: 1px #666 solid;
+    -webkit-border-radius: 1.5em;
+    -moz-border-radius: 1.5em;
+    border-radius: 1.5em;
+    background: #666 !important;
     }
 
     h1 {
-        float: inline-end;
+    float: inline-end;
     }
 
 </style>
@@ -87,77 +88,84 @@
     </div>
     <ul class="steps-nav">
         <div class="line"></div>
-        <li class="step1 active" data-step="1">
+        <li class="step1 @(steep == 0 ? "active" : "")" data-step="1" @onclick ="(()=> ChangeSteep(0))">
             <a data-scroll="false">
                 <h2>1</h2>
-                <p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Básico</p>
+                <p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Basic</p>
             </a>
         </li>
-        <li class="step2" data-step="2">
+        <li class="step2 @(steep == 1 ? "active" : "")" data-step="2" @onclick="(()=> ChangeSteep(1))">
 
             <a data-scroll="false">
                 <h2>2</h2>
-                <p><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;Canais | Atividades</p>
+                <p><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;Shipping</p>
             </a>
         </li>
-        <li class="step3" data-step="3">
+        <li class="step3 @(steep == 2 ? "active" : "")" data-step="4" @onclick="(()=> ChangeSteep(2))">
             <a  data-scroll="false">
                 <h2>3</h2>
-                <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Equipe</p>
+                <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Payment</p>
             </a>
-        </li>        
+        </li> 
+        <li class="step3 @(steep == 3 ? "active" : "")" data-step="5" @onclick="(()=> ChangeSteep(3))">
+            <a data-scroll="false">
+                <h2>4</h2>
+                <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Confirm</p>
+            </a>
+        </li>
+        <li class="step3 @(steep == 4 ? "active" : "")" data-step="5" @onclick="(()=> ChangeSteep(4))">
+            <a data-scroll="false">
+                <h2>5</h2>
+                <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Complete</p>
+            </a>
+        </li>
     </ul>
-    <div class="basket-labels">
-        <ul>
-            <li class="item item-heading">Item</li>
-            <li class="price">Price</li>
-            <li class="quantity">Quantity</li>
-            <li class="subtotal">Subtotal</li>
-        </ul>
-    </div>
-    @foreach(var item in listCart)
-    {
-        <div class="basket-product">
-            <div class="item">
-                <div class="product-image">
-                    <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
-                </div>
-                <div class="product-details">
-                    <h1><strong><span class="item-quantity">@item.Item1.Quantity</span> x Eliza J</strong> @item.Item2.Name</h1>
-                    <p><strong>@item.Item2.Name</strong></p>
-                    <p>Product Code - @item.Item1.ProductId</p>
-                </div>
-            </div>
-            <div class="price">26.00</div>
-            <div class="quantity">
-                <input type="number" value="4" min="1" class="quantity-field">
-            </div>
-            <div class="subtotal">@item.Item1.TotalPrice</div>
-            <div class="remove">
-                <button>Remove</button>
-            </div>
-        </div>
-    }
     
-    <div class="basket-product">
-        <div class="item">
-            <div class="product-image">
-                <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
-            </div>
-            <div class="product-details">
-                <h1><strong><span class="item-quantity">1</span> x Whistles</strong> Amella Lace Midi Dress</h1>
-                <p><strong>Navy, Size 10</strong></p>
-                <p>Product Code - 232321939</p>
-            </div>
+    <div class="steep basic" style="display: @(steep == 0 ? "block" : "none")">
+        <div class="basket-labels">
+            <ul>
+                <li class="item item-heading">Item</li>
+                <li class="price">Price</li>
+                <li class="quantity">Quantity</li>
+                <li class="subtotal">Subtotal</li>
+            </ul>
         </div>
-        <div class="price">26.00</div>
-        <div class="quantity">
-            <input type="number" value="1" min="1" class="quantity-field">
-        </div>
-        <div class="subtotal">26.00</div>
-        <div class="remove">
-            <button>Remove</button>
-        </div>
+        @if (listCart != null && listCart.Count > 0)
+        {
+            foreach (var item in listCart)
+            {
+                <div class="basket-product">
+                    <div class="item">
+                        <div class="product-image">
+                            <img src="http://placehold.it/120x166" alt="Placholder Image 2" class="product-frame">
+                        </div>
+                        <div class="product-details">
+                            <h1><strong><span class="item-quantity">@item.Item1.Quantity</span> x Eliza J</strong> @item.Item2.Name</h1>
+                            <p><strong>@item.Item2.Name</strong></p>
+                            <p>Product Code - @item.Item1.ProductId</p>
+                        </div>
+                    </div>
+                    <div class="price">26.00</div>
+                    <div class="quantity">
+                        <input type="number" value="4" min="1" class="quantity-field">
+                    </div>
+                    <div class="subtotal">@item.Item1.TotalPrice</div>
+                    <div class="remove">
+                        <button>Remove</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <h1>Loading..</h1>
+        }
+    </div>
+    <div class="steep shipping" style="display: @(steep == 1 ? "block" : "none")">
+        <UI.Client.Components.Checkout.ShippingSteep/>
+    </div>
+    <div class="steep shipping" style="display: @(steep == 2 ? "block" : "none")">
+        <h1>Payment</h1>
     </div>
 </div>
 <aside>
@@ -198,122 +206,122 @@
 
     /* Assign actions */
     $(".quantity input").change(function () {
-        updateQuantity(this);
+    updateQuantity(this);
     });
 
     $(".remove button").click(function () {
-        removeItem(this);
+    removeItem(this);
     });
 
     $(document).ready(function () {
-        updateSumItems();
+    updateSumItems();
     });
 
     $(".promo-code-cta").click(function () {
-        promoCode = $("#promo-code").val();
+    promoCode = $("#promo-code").val();
 
-        if (promoCode == "10off" || promoCode == "10OFF") {
-            //If promoPrice has no value, set it as 10 for the 10OFF promocode
-            if (!promoPrice) {
-                promoPrice = 10;
-            } else if (promoCode) {
-                promoPrice = promoPrice * 1;
-            }
-        } else if (promoCode != "") {
-            alert("Invalid Promo Code");
-            promoPrice = 0;
-        }
-        //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
-        if (promoPrice) {
-            $(".summary-promo").removeClass("hide");
-            $(".promo-value").text(promoPrice.toFixed(2));
-            recalculateCart(true);
-        }
+    if (promoCode == "10off" || promoCode == "10OFF") {
+    //If promoPrice has no value, set it as 10 for the 10OFF promocode
+    if (!promoPrice) {
+    promoPrice = 10;
+    } else if (promoCode) {
+    promoPrice = promoPrice * 1;
+    }
+    } else if (promoCode != "") {
+    alert("Invalid Promo Code");
+    promoPrice = 0;
+    }
+    //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
+    if (promoPrice) {
+    $(".summary-promo").removeClass("hide");
+    $(".promo-value").text(promoPrice.toFixed(2));
+    recalculateCart(true);
+    }
     });
 
     /* Recalculate cart */
     function recalculateCart(onlyTotal) {
-        var subtotal = 0;
+    var subtotal = 0;
 
-        /* Sum up row totals */
-        $(".basket-product").each(function () {
-            subtotal += parseFloat($(this).children(".subtotal").text());
-        });
+    /* Sum up row totals */
+    $(".basket-product").each(function () {
+    subtotal += parseFloat($(this).children(".subtotal").text());
+    });
 
-        /* Calculate totals */
-        var total = subtotal;
+    /* Calculate totals */
+    var total = subtotal;
 
-        //If there is a valid promoCode, and subtotal < 10 subtract from total
-        var promoPrice = parseFloat($(".promo-value").text());
-        if (promoPrice) {
-            if (subtotal >= 10) {
-                total -= promoPrice;
-            } else {
-                alert("Order must be more than £10 for Promo code to apply.");
-                $(".summary-promo").addClass("hide");
-            }
-        }
+    //If there is a valid promoCode, and subtotal < 10 subtract from total
+    var promoPrice = parseFloat($(".promo-value").text());
+    if (promoPrice) {
+    if (subtotal >= 10) {
+    total -= promoPrice;
+    } else {
+    alert("Order must be more than £10 for Promo code to apply.");
+    $(".summary-promo").addClass("hide");
+    }
+    }
 
-        /*If switch for update only total, update only total display*/
-        if (onlyTotal) {
-            /* Update total display */
-            $(".total-value").fadeOut(fadeTime, function () {
-                $("#basket-total").html(total.toFixed(2));
-                $(".total-value").fadeIn(fadeTime);
-            });
-        } else {
-            /* Update summary display. */
-            $(".final-value").fadeOut(fadeTime, function () {
-                $("#basket-subtotal").html(subtotal.toFixed(2));
-                $("#basket-total").html(total.toFixed(2));
-                if (total == 0) {
-                    $(".checkout-cta").fadeOut(fadeTime);
-                } else {
-                    $(".checkout-cta").fadeIn(fadeTime);
-                }
-                $(".final-value").fadeIn(fadeTime);
-            });
-        }
+    /*If switch for update only total, update only total display*/
+    if (onlyTotal) {
+    /* Update total display */
+    $(".total-value").fadeOut(fadeTime, function () {
+    $("#basket-total").html(total.toFixed(2));
+    $(".total-value").fadeIn(fadeTime);
+    });
+    } else {
+    /* Update summary display. */
+    $(".final-value").fadeOut(fadeTime, function () {
+    $("#basket-subtotal").html(subtotal.toFixed(2));
+    $("#basket-total").html(total.toFixed(2));
+    if (total == 0) {
+    $(".checkout-cta").fadeOut(fadeTime);
+    } else {
+    $(".checkout-cta").fadeIn(fadeTime);
+    }
+    $(".final-value").fadeIn(fadeTime);
+    });
+    }
     }
 
     /* Update quantity */
     function updateQuantity(quantityInput) {
-        /* Calculate line price */
-        var productRow = $(quantityInput).parent().parent();
-        var price = parseFloat(productRow.children(".price").text());
-        var quantity = $(quantityInput).val();
-        var linePrice = price * quantity;
+    /* Calculate line price */
+    var productRow = $(quantityInput).parent().parent();
+    var price = parseFloat(productRow.children(".price").text());
+    var quantity = $(quantityInput).val();
+    var linePrice = price * quantity;
 
-        /* Update line price display and recalc cart totals */
-        productRow.children(".subtotal").each(function () {
-            $(this).fadeOut(fadeTime, function () {
-                $(this).text(linePrice.toFixed(2));
-                recalculateCart();
-                $(this).fadeIn(fadeTime);
-            });
-        });
+    /* Update line price display and recalc cart totals */
+    productRow.children(".subtotal").each(function () {
+    $(this).fadeOut(fadeTime, function () {
+    $(this).text(linePrice.toFixed(2));
+    recalculateCart();
+    $(this).fadeIn(fadeTime);
+    });
+    });
 
-        productRow.find(".item-quantity").text(quantity);
-        updateSumItems();
+    productRow.find(".item-quantity").text(quantity);
+    updateSumItems();
     }
 
     function updateSumItems() {
-        var sumItems = 0;
-        $(".quantity input").each(function () {
-            sumItems += parseInt($(this).val());
-        });
-        $(".total-items").text(sumItems);
+    var sumItems = 0;
+    $(".quantity input").each(function () {
+    sumItems += parseInt($(this).val());
+    });
+    $(".total-items").text(sumItems);
     }
 
     /* Remove item from cart */
     function removeItem(removeButton) {
-        /* Remove row from DOM and recalc cart total */
-        var productRow = $(removeButton).parent().parent();
-        productRow.slideUp(fadeTime, function () {
-            productRow.remove();
-            recalculateCart();
-            updateSumItems();
-        });
+    /* Remove row from DOM and recalc cart total */
+    var productRow = $(removeButton).parent().parent();
+    productRow.slideUp(fadeTime, function () {
+    productRow.remove();
+    recalculateCart();
+    updateSumItems();
+    });
     }
 
 </script>
@@ -325,7 +333,12 @@
     public IJSRuntime js { get; set; }
     private readonly HttpClient _client = new HttpClient();
     public List<Tuple<ShoppingCartItem, Product>> listCart { get; set; } = new List<Tuple<ShoppingCartItem, Product>>();
+    public int steep { get; set; } = 0;
 
+    public void ChangeSteep(int steepChange){
+        steep = steepChange;
+        StateHasChanged();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firterRender)
     {
