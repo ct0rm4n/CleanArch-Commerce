@@ -78,10 +78,10 @@ namespace UI.Client.Components.ProductGrid
             ChangeCart(Quantidade, productId);
         }
 
-        private void ShowMessage(string toastType)
+        private void ShowMessage(string toastType, string title, string description)
         {         
 
-            js.InvokeVoidAsync("ToastShow", new object[] { toastType, "Carrinho adicionado com sucesso", "O produto foi adicionado com sucesso ao carrinho de compra" });
+            js.InvokeVoidAsync("ToastShow", new object[] { toastType, title, description });
         }
         public async Task ChangeCart(int qtd, int productId)
         {
@@ -100,13 +100,13 @@ namespace UI.Client.Components.ProductGrid
                 var base_request = _client.PostAsync(path, null).Result;
                 if (base_request.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    ShowMessage("error");
-                    await Task.Delay(100);
+                    ShowMessage("error", "Não autorizado", "Você precisa estar logado para realizar essa ação");
+                    await Task.Delay(3000);
                     NavigationManager.NavigateTo($"/login");
                     return;
                 }
                 else{
-                    ShowMessage("success");
+                    ShowMessage("success", "Carrinho adicionado com sucesso", "O produto foi adicionado com sucesso ao carrinho de compra");
                 }                
             }
             catch(Exception ex)

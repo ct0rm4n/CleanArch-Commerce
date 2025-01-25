@@ -86,6 +86,20 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_HTTP_PORTS=5004
+  
+  api.payment:
+    build:
+      target: debug
+      context: .
+      dockerfile: Api.Payment/Dockerfile
+    container_name: api-payment
+    ports:
+      - "5006:5006"
+    networks:
+      - fastcommerce
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - ASPNETCORE_HTTP_PORTS=5006
 
   ui.server:
     build:

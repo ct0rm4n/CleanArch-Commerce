@@ -140,8 +140,9 @@
     {        
         await UpdateDescription();
         var respose = new HttpResponseMessage();
-        if(postObject.Id == 0){
-            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/BlogPost/add", postObject);
+        if (postObject.Id == null)
+        {
+            respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/Catalog/blogpost/Add", postObject);
         }
         else
         {

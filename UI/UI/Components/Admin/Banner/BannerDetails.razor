@@ -119,14 +119,14 @@
         try
         {
             var respose = new HttpResponseMessage();
-            if (itemObject.Id == 0)
+            if (itemObject.Id == null)
             {
 
-                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}Banner/add", itemObject);
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Banner/add", itemObject);
             }
             else
             {
-                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}Banner/update", itemObject);
+                respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/Banner/update", itemObject);
             }
             if (respose.StatusCode == HttpStatusCode.OK || respose.StatusCode == HttpStatusCode.Created)
             {

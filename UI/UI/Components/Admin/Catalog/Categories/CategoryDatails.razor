@@ -132,7 +132,8 @@
     {        
         await UpdateDescription();
         var respose = new HttpResponseMessage();
-        if(postObject.Id == 0){
+        if (postObject.Id == null)
+        {
             respose = await _client.PostAsJsonAsync($"{Configuration["Api.Gateway"]}catalog-gate/catalog/category/add", postObject);
         }
         else

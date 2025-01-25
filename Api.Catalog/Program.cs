@@ -5,7 +5,6 @@ using Data.Ioc;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using Service.Ioc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Core.ViewModel.Catalog;
@@ -15,15 +14,13 @@ using Core.Entities.Abstract;
 using Core.ViewModel.Generic.Abstracts;
 using Core.ViewModel.Banner;
 using Core.Entities.Domain.Banner;
-using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Core.Entities.Domain;
 using Microsoft.OpenApi.Models;
 using Service.Filter;
-using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
-using Autofac.Core;
 using Data.Commands;
+using Service.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,13 +81,7 @@ app.UseDeveloperExceptionPage();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog Web Api"));
 
-
 app.UseHttpsRedirection();
-
-app.MapGet("api/catalog", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
-        postService.Get(1) is { } post
-            ? TypedResults.Ok(post)
-            : TypedResults.NotFound()).AddEndpointFilter<AuthorizationActionFilter>();
 
 app.MapGet("api/Catalog/blogpost/Get/{id}", Results<Ok<BlogPost>, NotFound> (IBlogPostService postService, int id) =>
         postService.Get(id) is { } post
@@ -155,7 +146,12 @@ app.MapPost("/api/Catalog/blogpost/Add", async (IBlogPostService postService, [F
     try
     {
         
-        var serialized = JsonConvert.SerializeObject(body);
+
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
+
         List<string> validation = postService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -283,7 +279,10 @@ app.MapPost("/api/Catalog/Category/Add", async (ICategoryService cService, [From
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = cService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -384,7 +383,10 @@ app.MapPost("/api/Catalog/Settings/Add", async (ISettingsService setService, [Fr
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -485,7 +487,10 @@ app.MapPost("/api/Catalog/Banner/Add", async (IBannerService setService, [FromBo
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
@@ -587,12 +592,17 @@ app.MapPost("/api/Catalog/Product/Add", async (IProductService setService, [From
     try
     {
 
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));
 
         var insert = setService.Add(JsonConvert.DeserializeObject<Product>(serialized));
+        //if(insert is not null && insert.Id > 0)
+        //    var insert_images = setService.AddImages(JsonConvert.DeserializeObject<ProductImage>(body.Image));
         return insert is not null
         ? TypedResults.Ok(insert)
         : TypedResults.NotFound();
@@ -652,7 +662,4 @@ app.MapGet("/api/loginvalidate", async (IAuthService setService, [FromQuery] str
     }
 });
 
-
 app.Run();
-
-

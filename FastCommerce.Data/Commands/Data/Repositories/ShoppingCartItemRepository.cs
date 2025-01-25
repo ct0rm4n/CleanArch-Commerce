@@ -1,8 +1,9 @@
-﻿using Core.Entities.Domain.Checkout;
+﻿using Core.Entities.Domain;
+using Core.Entities.Domain.Checkout;
 using Core.ViewModel.Generic.Abstracts;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using System.Data.Common;
+using static Dapper.SqlMapper;
 namespace Data.Commands.Data.Repositories
 {
     public class ShoppingCartItemRepository : GenericRepository<ShoppingCartItem, IBaseVM>
@@ -21,8 +22,6 @@ namespace Data.Commands.Data.Repositories
                 string columns = GetColumns(excludeKey: true);
                 string properties = GetPropertyNames(excludeKey: true);
                 string propertiesValues = GetPropertyValues(entity, excludeKey: true);
-
-                // Obter valores das propriedades UserId e ProductId
                 var userId = GetPropertyValue(entity, "UserId");
                 var productId = GetPropertyValue(entity, "ProductId");
                 var quantity = GetPropertyValue(entity, "Quantity");
@@ -59,6 +58,46 @@ namespace Data.Commands.Data.Repositories
                 connection.Close();
             }
             return (result.FirstOrDefault(), result.Any());
+        }
+
+
+        public List<Tuple<ShoppingCartItem, Product>>? GetAllByCustomerId(int customerId)
+        {
+            var connection = this.GetConnection();
+            string tableName = GetTableName();
+            string query = $@"
+                SELECT scitem.*, p.* 
+                FROM {schema}.{tableName} as scitem
+                LEFT JOIN {schema}.Product p ON scitem.ProductId = p.Id
+                WHERE scitem.UserId = @UserId";
+
+            connection.Open();
+            var result = connection.Query<ShoppingCartItem, Product, Tuple<ShoppingCartItem, Product>>(
+                query,
+                (scitem, p) => new Tuple<ShoppingCartItem, Product>(scitem, p),
+                param: new { UserId = customerId },
+                splitOn: "InsertedDate");
+
+            connection.Close();
+            return result.ToList();
+        }
+
+        public decimal? GetTotalCartByCustomerId(int customerId)
+        {
+            var connection = this.GetConnection();
+            string tableName = GetTableName();
+            string query = $@"
+                SELECT SUM(scitem.TotalPrice) 
+                FROM {schema}.{tableName} as scitem
+                LEFT JOIN {schema}.Product p ON scitem.ProductId = p.Id
+                WHERE scitem.UserId = @UserId";
+
+            connection.Open();
+            var result = connection.Query<decimal?>(
+                query);
+
+            connection.Close();
+            return result?.FirstOrDefault() ?? 00;
         }
     }
 }

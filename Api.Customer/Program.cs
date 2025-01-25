@@ -10,6 +10,7 @@ using Core.Entities.Domain.User;
 using Core.ViewModel.User;
 using Microsoft.OpenApi.Models;
 using Service.Filter;
+using Service.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -132,7 +133,10 @@ app.MapPost("/api/Role/Add", async (IRoleService setService, [FromBody] RoleVM b
 {
     try
     {
-        var serialized = JsonConvert.SerializeObject(body);
+        var serialized = JsonConvert.SerializeObject(body, new JsonSerializerSettings()
+        {
+            ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+        });
         List<string> validation = setService.GetValidation(body).ToList();
         if (validation is not null && validation.Count() > 0)
             return TypedResults.Problem(JsonConvert.SerializeObject(validation));

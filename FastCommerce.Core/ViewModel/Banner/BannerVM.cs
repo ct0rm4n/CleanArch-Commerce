@@ -7,7 +7,8 @@ namespace Core.ViewModel.Banner
 {
     public class BannerVM : IBaseVM
     {
-        public int Id { get; set; }
+        [NotMapped]
+        public int? Id { get; set; }
         public string Title { get; set; }
         [Required(ErrorMessage ="You need select one or more file(s)")]
         public string Binary { get; set; }

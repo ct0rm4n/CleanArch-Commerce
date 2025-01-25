@@ -1,0 +1,111 @@
+﻿<style>
+.nav-tabs .nav-item {
+    margin-bottom: -1px;
+    flex: auto;
+}
+
+.steps-nav {
+    list-style: none;
+    position: relative;
+    overflow-x: visible;
+    z-index: 200;
+}
+
+.steps-nav .line {
+    position: absolute;
+    height: 2px;
+    width: 80%;
+    background: #dfdfe0;
+    top: 21px;
+    z-index: -1;
+    margin-left: 10%;
+}
+
+.steps-nav li {
+    float: inline-start;
+    width: 20%;
+}
+
+.steps-nav li a {
+    display: block;
+    text-decoration: none;
+}
+
+.steps-nav li h2 {
+    padding-top: 15px;
+    background: #1ea69a;
+    background: white;
+    color: white;
+    color: rgba(95, 95, 95, 0.5);
+    border: solid 1px #dfdfe0;
+    font-size: 14px;
+    -webkit-border-radius: 1.5em;
+    -moz-border-radius: 1.5em;
+    border-radius: 1.5em;
+    width: 3em;
+    height: 3em;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.steps-nav li p {
+    font-size: 16px;
+    color: rgba(95, 95, 95, 0.5);
+    width: 144px;
+    line-height: 28px;
+    margin-left: calc(50% - 21px);
+}
+
+.steps-nav li.active h2, .five-simple-steps .steps-nav li:hover h2 {
+    transition: all 0.5s ease;
+    color: #fff;
+    border: 1px #666 solid;
+    -webkit-border-radius: 1.5em;
+    -moz-border-radius: 1.5em;
+    border-radius: 1.5em;
+    background: #666 !important;
+}
+
+h1 {
+    float: inline-end;
+}
+
+</style>
+<ul class="steps-nav">
+	<div class="line"></div>
+	<li class="#step1 active">
+		<a data-scroll="false">
+			<h2>1</h2>
+			<p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Basic</p>
+		</a>
+	</li>
+	<li class="#step2">
+		<a data-scroll="false">
+			<h2>2</h2>
+			<p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Shipping</p>
+		</a>
+	</li>
+	<li class="#step3">
+		<a data-scroll="false">
+			<h2>3</h2>
+			<p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Payment</p>
+		</a>
+	</li>
+    <li class="#step3">
+        <a data-scroll="false">
+            <h2>4</h2>
+            <p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Confirm</p>
+        </a>
+    </li>
+    <li class="#step3">
+        <a data-scroll="false">
+            <h2>3</h2>
+            <p><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Complete</p>
+        </a>
+    </li>
+</ul>
+
+@code {
+
+}

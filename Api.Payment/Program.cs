@@ -3,15 +3,16 @@ using Data.Ioc;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Microsoft.OpenApi.Models;
+using Core.Dto.OpenPix;
+using RestSharp;
 using Service.Interfaces;
-using Core.Entities.Domain.Checkout;
+using Service.Filter;
+using Azure.Core;
 using Core.Entities.Domain.User;
-using Api.Checkout.Filter;
-using Core.Entities.Domain.Blog;
+using Service;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Core.Entities.Domain;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Checkout Web Api", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payments Web Api", Version = "v1" });
 });
+
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -58,27 +60,24 @@ builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(ne
     builder.RegisterModule(new AutofacPersistanceModule());
 });
 
-//builder.Services.InjectConfigureServices();
-builder.Services.AddSingleton<AuthorizationLoggedActionFilter>();
-
 var app = builder.Build();
 var auth = app.Configuration;
 
-// Configure the HTTP request pipeline.
+
+app.UseDeveloperExceptionPage();
 app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Checkout Web Api"));
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Payments Web Api"));
+
 
 app.UseHttpsRedirection();
 
 
-
-app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound, ProblemHttpResult, UnauthorizedHttpResult>>  (HttpRequest request,
-    ICheckoutService setService, IUserService userService,
-    int idProduto, [FromQuery] int qtd) =>
+app.MapGet("/api/Payments", async Task<Results<Ok<ChargeRoot?>, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request, ICheckoutService cartService, IUserService userService) =>
     {
         try
         {
             var token = string.Empty;
+            var total = decimal.Zero;
             var user = new User();
             if (request.Headers.TryGetValue("Authorization", out var authorizationHeader))
             {
@@ -86,21 +85,37 @@ app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound
                 if (!string.IsNullOrEmpty(token))
                 {
                     user = await userService.GetCurrentUserByToken(token);
-                    if(user is null)
+                    if (user is null)
                     {
                         return TypedResults.Unauthorized();
                     }
                 }
-                var item = new ShoppingCartItem() { Quantity = qtd, ProductId = idProduto, UserId = user.Id, TotalPrice = 100 };
-                item = setService.Add(item);
-                return TypedResults.Ok();
-            }
-            else
-            {
-                return TypedResults.Unauthorized();
+                total = cartService.GetTotalByCustomerId(user.Id);
+                var options = new RestClientOptions(auth["UrlPayment"])
+                {
+                    MaxTimeout = -1,
+                };
+                var client = new RestClient(options);
+                var requestApi = new RestRequest("/api/v1/charge", Method.Post);
+                var apiKey = auth["ApiKeyPayment"];
+                requestApi.AddHeader("Authorization", apiKey);
+                requestApi.AddHeader("Content-Type", "application/json");
+                var body = @"{
+                " + "\n" +
+                            @"    ""correlationID"": """ + Guid.NewGuid() + @""",
+                " + "\n" +
+                            @"    ""value"": " + total + @",
+                " + "\n" +
+                            @"    ""comment"" : ""loja""
+                " + "\n" +
+                            @"}";
+                requestApi.AddStringBody(body, DataFormat.Json);
+                RestResponse response = await client.ExecuteAsync(requestApi);
+                var respones = JsonConvert.DeserializeObject<ChargeRoot>(response.Content);
+                return TypedResults.Ok(respones);
             }
 
-            
+            return TypedResults.Unauthorized();
         }
         catch (Exception ex)
         {
@@ -108,31 +123,4 @@ app.MapPost("/api/Checkout/add/{idProduto:int}", async Task<Results<Ok, NotFound
         }
     }).AddEndpointFilter<AuthorizationLoggedActionFilter>();
 
-app.MapGet("/api/Checkout/GetCartItems", async Task<Results<Ok<List<Tuple<ShoppingCartItem, Product>>>, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request,
-    ICheckoutService setService, IUserService userService) =>
-{
-    try
-    {
-        if (request.Headers.TryGetValue("Authorization", out var authorizationHeader) && !string.IsNullOrEmpty(authorizationHeader.ToString()))
-        {
-            var user = await userService.GetCurrentUserByToken(authorizationHeader.ToString());
-            if (user is null)
-                return TypedResults.Unauthorized();
-
-            var item = setService.GetAllByCustomerId(user.Id);
-            return TypedResults.Ok(item);
-        }
-        else
-        {
-            return TypedResults.Unauthorized();
-        }
-    }
-    catch (Exception ex)
-    {
-        return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-    }
-}).AddEndpointFilter<AuthorizationLoggedActionFilter>();
-
 app.Run();
-
-
