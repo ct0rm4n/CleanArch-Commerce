@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 5002
+EXPOSE 5004
 
 
 # Esta fase é usada para compilar o projeto de serviço

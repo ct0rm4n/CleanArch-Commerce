@@ -1,6 +1,4 @@
-﻿using BlazorBootstrap;
-using Core.Entities.Domain;
-using Core.ViewModel.Catalog;
+﻿using Core.Entities.Domain;
 using Core.Wrappers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

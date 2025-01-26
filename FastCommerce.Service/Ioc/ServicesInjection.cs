@@ -1,5 +1,5 @@
-﻿using Data.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Service.Factory;
 
 namespace Service.Ioc
 {
@@ -7,7 +7,7 @@ namespace Service.Ioc
     {
         public static void InjectConfigureServices(this IServiceCollection builder)
         {
-            builder.AddScoped<IUserService, UserService>();
+            builder.AddAutoMapper(typeof(AddressProfile));
         }
     }
 }

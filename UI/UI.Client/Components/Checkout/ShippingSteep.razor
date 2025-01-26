@@ -1,4 +1,5 @@
 ﻿@using Core.Entities.Domain.Address
+@using Core.Wrappers
 <h3>ShippingSteep</h3>
 
 @if(Addresses != null)
@@ -22,12 +23,29 @@
     </table>
     <div id="new_address" style="display: @(add_new is false ? "none" : "block")">
         <h5>new address</h5>
+        <input id="ZipCode" class="form-control" placeholder="ZipCode" @bind="ZipCode" @oninput="e => ZipCode = (getAddressByZipCode(e.Value.ToString()).Result)" />
+        @if(listofStates != null){
+            <select class="form-control" >
+                @foreach (var state in listofStates)
+                {
+                    <option value="@state.Uf">@state.Name</option>
+                }
+            </select>
+        }
     </div>
 }
 
 @code {
+
     public List<Address> Addresses { get; set; }
+    
+    public Address NewAddress { get; set; }
+    public List<States> listofStates { get; set; }
+    
+    public string ZipCode { get; set; }
+    
     public bool add_new { get; set; } = false;
+    
     protected override void OnInitialized()
     {
         Addresses = new List<Address>();
@@ -36,4 +54,43 @@
             add_new = true;
         }
     }
+
+    public async Task<string> getAddressByZipCode(string zipCode)
+    {        
+        try
+        {
+            var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getAddress/viacep?cep={ZipCode}";
+            _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+            var respose = await _client.GetFromJsonAsync<string>(path);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return "";
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getStates";
+        _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
+        var respose = await _client.GetFromJsonAsync<List<States>>(path);
+        listofStates = respose;
+        await base.OnInitializedAsync();
+    }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+
+    [Inject]
+    public IJSRuntime js { get; set; }
+
+    public HttpClient _client = new HttpClient();
+    
+    public string token_jwt { get; set; }
+
+   
 }

@@ -2,15 +2,15 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/{everything}",
-      "ServiceName": "checkout",
-      "UpstreamPathTemplate": "/checkout-gate/{everything}",
+      "ServiceName": "shipping",
+      "UpstreamPathTemplate": "/shipping-gate/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "SwaggerKey": "checkout",
+      "SwaggerKey": "shipping",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 5002
+          "Port": 5003
         }
       ]
     }

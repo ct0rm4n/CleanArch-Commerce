@@ -216,6 +216,25 @@
       "HostOverride": null,
       "TransformByOcelotConfig": true,
       "TakeServersFromDownstreamService": false
+    },
+    {
+      "Key": "shipping",
+      "VersionPlaceholder": "{version}",
+      "KeyToPath": "shipping",
+      "Config": [
+        {
+          "Name": "Shipping Web Api",
+          "Version": "v1",
+          "Url": null,
+          "Service": {
+            "Name": "shipping",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ],
+      "HostOverride": null,
+      "TransformByOcelotConfig": true,
+      "TakeServersFromDownstreamService": false
     }
   ]
 }

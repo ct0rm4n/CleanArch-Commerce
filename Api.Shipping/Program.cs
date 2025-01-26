@@ -7,25 +7,74 @@ using Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Core.Entities.Domain.User;
 using Core.ViewModel.Address;
-
+using Service.Helpers;
+using Core.Entities.Domain.Address;
+using Autofac;
+using Data.Ioc;
+using Microsoft.OpenApi.Models;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+//using DependencyResolvers.Autofac;
+//using DependencyResolvers;
+using Service.Ioc;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+    {
+        Description = "api key.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "basic"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "basic"
+                },
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shipping Web Api", Version = "v1" });
+});
+
+builder.Services.InjectConfigureServices();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new AutofacDataModule());
+});
+builder.Host.ConfigureServices(x => x.AddAutofac()).UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new AutofacPersistanceModule());
+});
 
 var app = builder.Build();
+var auth = app.Configuration;
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseDeveloperExceptionPage();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shipping Web Api"));
+
+var mapper = app.Services.GetService<IMapper>();
 
 app.UseHttpsRedirection();
-
 
 app.MapGet("api/shipping/getAddress", (string cep) =>
 {
@@ -46,8 +95,31 @@ app.MapGet("api/shipping/getAddress", (string cep) =>
     }
 });
 
+app.MapGet("api/shipping/getAddress/viacep", (IAddressService addressService, [FromQuery]string cep) =>
+{
+    try
+    {
+        var options = new RestClientOptions($"https://viacep.com.br")
+        {
+            MaxTimeout = -1,
+        };
+        var client = new RestClient(options);
+        var request = new RestRequest($"/ws/{cep}/json", Method.Get);
+        RestResponse response = client.Execute(request);
+        var reponseDto = JsonConvert.DeserializeObject<ViacepDto>(response.Content);
+        var state = addressService.GetStatesByUf(reponseDto.uf);
+        var states = mapper.Map<StatesVM>(state);
+        return Results.Ok(reponseDto);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+
 app.MapPost("/api/shipping/add/address", async Task<Results<Ok, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request,
-    ICheckoutService setService, IUserService userService,
+    ICheckoutService setService, IUserService userService, IAddressService addressService,
     [FromBody] AddressVM address) =>
 {
     try
@@ -64,9 +136,21 @@ app.MapPost("/api/shipping/add/address", async Task<Results<Ok, NotFound, Proble
                 {
                     return TypedResults.Unauthorized();
                 }
+                address.UserId = user.Id;
+                var serialized = JsonConvert.SerializeObject(address, new JsonSerializerSettings()
+                {
+                    ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
+                });
+                List<string> validation = addressService.GetValidation(address).ToList();
+                if (validation is not null && validation.Count() > 0)
+                    return TypedResults.Problem(JsonConvert.SerializeObject(validation));
+
+                var insert = addressService.Add(JsonConvert.DeserializeObject<Address>(serialized));
+                return insert is not null
+                ? TypedResults.Ok()
+                : TypedResults.NotFound();
             }
-            //var item = new ShoppingCartItem() { Quantity = qtd, ProductId = idProduto, UserId = user.Id, TotalPrice = 100 };
-            //item = setService.Add(item);
+
             return TypedResults.Ok();
         }
         else
@@ -82,6 +166,35 @@ app.MapPost("/api/shipping/add/address", async Task<Results<Ok, NotFound, Proble
     }
 });//.AddEndpointFilter<AuthorizationLoggedActionFilter>();
 
+app.MapGet("/api/shipping/getStates", async (IAddressService addressService) =>
+{
+    try
+    {
+        var insert = addressService.GetStates();
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
+
+app.MapGet("/api/shipping/CityByState", async (IAddressService addressService, [FromQuery] int stateId) =>
+{
+    try
+    {
+        var insert = addressService.GetCityByStates(stateId);
+        return insert is not null
+        ? TypedResults.Ok(insert)
+        : TypedResults.NotFound();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+    }
+});
 
 app.Run();
 

@@ -1,5 +1,9 @@
 ﻿using Autofac;
+using AutoMapper;
+using Core.Entities.Domain.Address;
+using Core.ViewModel.Address;
 using Microsoft.Extensions.Configuration;
+using Service.Factory;
 using System.Reflection;
 using Module = Autofac.Module;
 
@@ -22,6 +26,7 @@ namespace Data.Ioc
             builder.RegisterAssemblyTypes(dataAccess)
                 .Where(t => t.Name.EndsWith("Service"))
                 .AsImplementedInterfaces();
+
         }
     }
 }

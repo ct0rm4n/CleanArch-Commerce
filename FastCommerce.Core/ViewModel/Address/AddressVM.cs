@@ -18,8 +18,8 @@ namespace Core.ViewModel.Address
         [Required]
         public string Number { get; set; }
         [Required]
-        public string City { get; set; }
-        
+        public int CityId { get; set; }
+
         public bool Deleted { get; set; }
 
         /// <summary>
@@ -28,5 +28,21 @@ namespace Core.ViewModel.Address
         public int? UserId { get; set; }
         public int StateId { get; set; }
         public int CountryId { get; set; }
+    }
+    public class CityVM  : IBaseVM
+    {
+        public int? Id { get; set; }
+
+        public int CityId { get; set; }
+        public string Name { get; set; }
+        public int Uf { get; set; }
+    }
+    public class StatesVM : IBaseVM
+    {
+        public int? Id { get; set; }
+        public int UfId { get; set; }
+        public string Name { get; set; }
+        public string Uf { get; set; }
+        public int Region { get; set; }
     }
 }
