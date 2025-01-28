@@ -1,25 +1,29 @@
-﻿@using Core.Entities.Domain.Address
+﻿@using Core.Dto
+@using Core.Entities.Domain.Address
+@using Core.ViewModel.Address
 @using Core.Wrappers
+@using System.Text.RegularExpressions
+@using Newtonsoft.Json
 <h3>ShippingSteep</h3>
 
 @if(Addresses != null)
 {
     <button @onclick="@(() => add_new = !add_new)">Add new address</button>
     <table class="table">
-    @foreach (var address in Addresses)
-    {
-        <tr>
-            <td>
-                @address.ZipCode
-            </td>
-            <td>
-                @address.City
-            </td>
-            <td>
-                @address.Neighborhood
-            </td>
-        </tr>
-    }
+        @foreach (var address in Addresses)
+        {
+            <tr>
+                <td>
+                    @address.ZipCode
+                </td>
+                <td>
+                    @address.City
+                </td>
+                <td>
+                    @address.Neighborhood
+                </td>
+            </tr>
+        }
     </table>
     <div id="new_address" style="display: @(add_new is false ? "none" : "block")">
         <h5>new address</h5>
@@ -28,7 +32,14 @@
             <select class="form-control" >
                 @foreach (var state in listofStates)
                 {
-                    <option value="@state.Uf">@state.Name</option>
+                    if (responseApi is not null && state.Uf == responseApi.State.Uf)
+                    {
+                        <option value="@state.Uf" selected>@state.Name</option>
+                    }
+                    else{
+                        <option value="@state.Uf" selected>@state.Name</option>
+                    }
+
                 }
             </select>
         }
@@ -38,14 +49,17 @@
 @code {
 
     public List<Address> Addresses { get; set; }
-    
+
+    public ResponseAddressVM responseApi { get; set; }
+
     public Address NewAddress { get; set; }
+
     public List<States> listofStates { get; set; }
-    
+
     public string ZipCode { get; set; }
-    
+
     public bool add_new { get; set; } = false;
-    
+
     protected override void OnInitialized()
     {
         Addresses = new List<Address>();
@@ -59,16 +73,36 @@
     {        
         try
         {
-            var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getAddress/viacep?cep={ZipCode}";
+            zipCode = RemoveSpecial(zipCode);
+            if (zipCode.Length != 8)
+                return zipCode;
+             
+            var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getAddress/viacep?cep={zipCode}";
+            _client = new HttpClient();
             _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
-            var respose = await _client.GetFromJsonAsync<string>(path);
+            var Json = await _client.GetFromJsonAsync<string>(path);
+            var respose = JsonConvert.DeserializeObject<ResponseAddressVM>(Json.ToString());
+            if (respose != null)
+            {
+                responseApi = respose;
+                StateHasChanged();
+            }           
+            
         }
         catch (Exception ex)
         {
-
+            return zipCode;
         }
-        return "";
+        return zipCode;
     }
+
+    public string RemoveSpecial(string input)
+    {
+        string pattern = @"[^a-zA-Z0-9\s]";
+        string result = Regex.Replace(input, pattern, "");
+        return result;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getStates";

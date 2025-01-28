@@ -14,9 +14,8 @@ using Data.Ioc;
 using Microsoft.OpenApi.Models;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
-//using DependencyResolvers.Autofac;
-//using DependencyResolvers;
 using Service.Ioc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -95,7 +94,7 @@ app.MapGet("api/shipping/getAddress", (string cep) =>
     }
 });
 
-app.MapGet("api/shipping/getAddress/viacep", (IAddressService addressService, [FromQuery]string cep) =>
+app.MapGet("api/shipping/getAddress/viacep", async Task<Results<Ok<ResponseAddressVM>, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (IAddressService addressService, [FromQuery]string cep) =>
 {
     try
     {
@@ -104,16 +103,19 @@ app.MapGet("api/shipping/getAddress/viacep", (IAddressService addressService, [F
             MaxTimeout = -1,
         };
         var client = new RestClient(options);
-        var request = new RestRequest($"/ws/{cep}/json", Method.Get);
-        RestResponse response = client.Execute(request);
+        var requestApi = new RestRequest($"/ws/{cep}/json", Method.Get);
+        RestResponse response = client.Execute(requestApi);
         var reponseDto = JsonConvert.DeserializeObject<ViacepDto>(response.Content);
-        var state = addressService.GetStatesByUf(reponseDto.uf);
-        var states = mapper.Map<StatesVM>(state);
-        return Results.Ok(reponseDto);
+        var stateEnity = addressService.GetStatesByUf(reponseDto.uf);
+        var states = mapper.Map<StatesVM>(stateEnity);
+        var cityEnity = addressService.GetCityByName(reponseDto.localidade);
+        var city = mapper.Map<CityVM>(cityEnity);
+        var responseVM = new ResponseAddressVM(reponseDto, states, city);
+        return TypedResults.Ok(responseVM);
     }
     catch (Exception ex)
     {
-        return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        return TypedResults.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
 

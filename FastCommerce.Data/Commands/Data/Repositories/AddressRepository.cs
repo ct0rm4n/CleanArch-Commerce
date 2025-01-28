@@ -59,5 +59,21 @@ namespace Data.Commands.Data.Repositories
                 return null;
             }
         }
+        public async Task<City?> GetCityByName(string CityName)
+        {
+            try
+            {
+                string tableName = GetTableName();
+                string query = $"Select * from  {schema}.[City] where Name = '{CityName}'";
+                var connection = this.GetConnection();
+                connection.Open();
+                var query_result = (connection.Query<City>(query));
+                return query_result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

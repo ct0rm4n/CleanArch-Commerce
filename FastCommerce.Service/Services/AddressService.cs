@@ -131,5 +131,10 @@ namespace Service
         {
             return _repository.GetStatesByUf(uf).Result;
         }
+
+        public City? GetCityByName(string name)
+        {
+            return _repository.GetCityByName(name).Result;
+        }
     }
 }

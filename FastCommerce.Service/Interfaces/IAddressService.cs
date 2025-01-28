@@ -17,5 +17,6 @@ namespace Data.Interfaces
         IEnumerable<States> GetStates();
         IEnumerable<City> GetCityByStates(int stateId);
         States? GetStatesByUf(string uf);
+        City? GetCityByName(string name);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.ViewModel.Generic.Abstracts;
+﻿using Core.Dto;
+using Core.ViewModel.Generic.Abstracts;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -44,5 +45,17 @@ namespace Core.ViewModel.Address
         public string Name { get; set; }
         public string Uf { get; set; }
         public int Region { get; set; }
+    }
+    public class ResponseAddressVM
+    {
+        public ResponseAddressVM(ViacepDto viacepDto, StatesVM statesVM, CityVM cityVM)
+        {
+            City = cityVM;
+            State = statesVM;
+            ViacepDto = viacepDto;
+        }
+        public CityVM City { get; set; }
+        public StatesVM State { get; set; }
+        public ViacepDto ViacepDto { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace Data.Commands
                             connection_2.Open();
                             var command = connection_2.CreateCommand();
                             command.CommandText = script;
+                            command.CommandTimeout = 2000;
                             command.ExecuteNonQuery();
                         }
                     }
