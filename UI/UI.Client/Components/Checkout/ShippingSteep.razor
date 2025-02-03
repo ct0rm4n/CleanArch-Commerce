@@ -27,6 +27,8 @@
     </table>
     <div id="new_address" style="display: @(add_new is false ? "none" : "block")">
         <h5>new address</h5>
+        <hr />
+        <label>States</label>
         <input id="ZipCode" class="form-control" placeholder="ZipCode" @bind="ZipCode" @oninput="e => ZipCode = (getAddressByZipCode(e.Value.ToString()).Result)" />
         @if(listofStates != null){
             <select class="form-control" >
@@ -37,10 +39,33 @@
                         <option value="@state.Uf" selected>@state.Name</option>
                     }
                     else{
-                        <option value="@state.Uf" selected>@state.Name</option>
+                        <option value="@state.Uf">@state.Name</option>
                     }
 
                 }
+            </select>
+        }
+        @if (listofCitys != null)
+        {
+            <label>City</label>
+            <select class="form-control">
+                @foreach (var city in listofCitys)
+                {
+                    if (responseApi is not null && city.Id == responseApi.City.Id)
+                    {
+                        <option value="@city.Name" selected>@city.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@city.Name">@city.Name</option>
+                    }
+
+                }
+            </select>
+        }else{
+            <label>City</label>
+            <select class="form-control">
+                <option value="select_state">--select state--</option>
             </select>
         }
     </div>
@@ -54,7 +79,9 @@
 
     public Address NewAddress { get; set; }
 
-    public List<States> listofStates { get; set; }
+    public List<StatesVM> listofStates { get; set; }
+
+    public List<CityVM> listofCitys { get; set; }
 
     public string ZipCode { get; set; }
 
@@ -77,14 +104,13 @@
             if (zipCode.Length != 8)
                 return zipCode;
              
-            var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getAddress/viacep?cep={zipCode}";
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
-            var Json = await _client.GetFromJsonAsync<string>(path);
-            var respose = JsonConvert.DeserializeObject<ResponseAddressVM>(Json.ToString());
+            var respose =  _client.GetFromJsonAsync<ResponseAddressVM>($"{Configuration["Api.Gateway"]}shipping-gate/shipping/getAddress/viacep?cep={zipCode}").Result;
             if (respose != null)
             {
                 responseApi = respose;
+                listofCitys = _client.GetFromJsonAsync<List<CityVM>>($"{Configuration["Api.Gateway"]}shipping-gate/shipping/CityByState?stateId={respose.State.Id}").Result;
                 StateHasChanged();
             }           
             
@@ -107,7 +133,7 @@
     {
         var path = $"{Configuration["Api.Gateway"]}shipping-gate/shipping/getStates";
         _client.DefaultRequestHeaders.Add("Authorization", Configuration["SecretKeys.ApiKey"]);
-        var respose = await _client.GetFromJsonAsync<List<States>>(path);
+        var respose = await _client.GetFromJsonAsync<List<StatesVM>>(path);
         listofStates = respose;
         await base.OnInitializedAsync();
     }

@@ -48,6 +48,9 @@ namespace Core.ViewModel.Address
     }
     public class ResponseAddressVM
     {
+        public ResponseAddressVM()
+        {
+        }
         public ResponseAddressVM(ViacepDto viacepDto, StatesVM statesVM, CityVM cityVM)
         {
             City = cityVM;

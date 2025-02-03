@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Service.Ioc;
+using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,10 +107,8 @@ app.MapGet("api/shipping/getAddress/viacep", async Task<Results<Ok<ResponseAddre
         var requestApi = new RestRequest($"/ws/{cep}/json", Method.Get);
         RestResponse response = client.Execute(requestApi);
         var reponseDto = JsonConvert.DeserializeObject<ViacepDto>(response.Content);
-        var stateEnity = addressService.GetStatesByUf(reponseDto.uf);
-        var states = mapper.Map<StatesVM>(stateEnity);
-        var cityEnity = addressService.GetCityByName(reponseDto.localidade);
-        var city = mapper.Map<CityVM>(cityEnity);
+        var states = mapper.Map<StatesVM>(addressService.GetStatesByUf(reponseDto.uf));
+        var city = mapper.Map<CityVM>(addressService.GetCityByName(reponseDto.localidade));
         var responseVM = new ResponseAddressVM(reponseDto, states, city);
         return TypedResults.Ok(responseVM);
     }
@@ -120,40 +119,35 @@ app.MapGet("api/shipping/getAddress/viacep", async Task<Results<Ok<ResponseAddre
 });
 
 
-app.MapPost("/api/shipping/add/address", async Task<Results<Ok, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request,
+app.MapPost("/api/shipping/add/address", async Task<Results<Ok<Address>, NotFound, ProblemHttpResult, UnauthorizedHttpResult>> (HttpRequest request,
     ICheckoutService setService, IUserService userService, IAddressService addressService,
     [FromBody] AddressVM address) =>
 {
     try
     {
-        var token = string.Empty;
-        var user = new User();
         if (request.Headers.TryGetValue("Authorization", out var authorizationHeader))
         {
-            token = authorizationHeader.ToString();
+            var token = authorizationHeader.ToString();
             if (!string.IsNullOrEmpty(token))
             {
-                user = await userService.GetCurrentUserByToken(token);
+                var user = await userService.GetCurrentUserByToken(token);
                 if (user is null)
                 {
                     return TypedResults.Unauthorized();
                 }
-                address.UserId = user.Id;
-                var serialized = JsonConvert.SerializeObject(address, new JsonSerializerSettings()
-                {
-                    ContractResolver = new IgnorePropertiesResolver(new[] { "Id" })
-                });
+                address.UserId = user.Id;                
                 List<string> validation = addressService.GetValidation(address).ToList();
                 if (validation is not null && validation.Count() > 0)
                     return TypedResults.Problem(JsonConvert.SerializeObject(validation));
 
-                var insert = addressService.Add(JsonConvert.DeserializeObject<Address>(serialized));
-                return insert is not null
-                ? TypedResults.Ok()
-                : TypedResults.NotFound();
+                var addressEntity = mapper.Map<Address>(address);
+                var insert = addressService.Add(addressEntity);
+                return insert is not null ? TypedResults.Ok(insert) : TypedResults.NotFound();
             }
-
-            return TypedResults.Ok();
+            else
+            {
+                return TypedResults.Unauthorized();
+            }
         }
         else
         {
@@ -172,7 +166,7 @@ app.MapGet("/api/shipping/getStates", async (IAddressService addressService) =>
 {
     try
     {
-        var insert = addressService.GetStates();
+        var insert = mapper.Map<List<StatesVM>>(addressService.GetStates().ToList());
         return insert is not null
         ? TypedResults.Ok(insert)
         : TypedResults.NotFound();
@@ -187,7 +181,7 @@ app.MapGet("/api/shipping/CityByState", async (IAddressService addressService, [
 {
     try
     {
-        var insert = addressService.GetCityByStates(stateId);
+        var insert = mapper.Map<List<CityVM>>(addressService.GetCityByStates(stateId).ToList());
         return insert is not null
         ? TypedResults.Ok(insert)
         : TypedResults.NotFound();
@@ -197,6 +191,9 @@ app.MapGet("/api/shipping/CityByState", async (IAddressService addressService, [
         return Results.Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
     }
 });
+
+
+
 
 app.Run();
 
